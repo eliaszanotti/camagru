@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node server.js",
-		"build:css": "postcss public/app.css -o public/style.css",
+		"build:css": "postcss public/app.css -o public/style.css --watch",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
