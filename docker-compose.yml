@@ -1,0 +1,10 @@
+services:
+  express:
+    build:
+      context: ./express
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./express:/usr/src/app
+    env_file:
+      - .env
