@@ -2,12 +2,12 @@ FROM node:23-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-
-RUN npm install
-
+RUN npm install -g pnpm
+COPY package.json ./
+RUN pnpm install
 COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
+# CMD ["tail", "-f", "/dev/null"]

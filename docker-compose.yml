@@ -4,7 +4,7 @@ services:
       context: ./express
     ports:
       - "3000:3000"
-    volumes:
-      - ./express:/usr/src/app
+    # volumes:
+    # - ./express:/usr/src/app
     env_file:
       - .env
