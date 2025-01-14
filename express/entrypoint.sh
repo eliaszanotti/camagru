@@ -1,5 +1,8 @@
 #!/bin/sh
 
 pnpm install
-pnpm run build:css &
-pnpm start
+
+# dev
+pnpm dev
+# prod
+# pnpm start
