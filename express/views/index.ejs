@@ -7,8 +7,10 @@
 		<title>Bienvenue sur Camagru</title>
 	</head>
 	<body>
-		<h1 class="text-[#00ff00] text-4xl">Bienvenue sur Camagru !</h1>
-		<p>Ceci est votre première page avec Express dans Docker.</p>
+		<%- include('parts/header') %>
+		<p class="grid place-items-center text-2xl">
+			Ceci est votre première page avec Express dans Docker.
+		</p>
 		<a class="btn btn-accent" href="https://google.com">Accueil de Google</a>
 	</body>
 </html>
