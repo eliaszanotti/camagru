@@ -1434,9 +1434,6 @@
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
-  .bg-red-400 {
-    background-color: var(--color-red-400);
-  }
   .bg-red-500 {
     background-color: var(--color-red-500);
   }
@@ -1879,9 +1876,6 @@
   }
   .scheme-only-light {
     color-scheme: only light;
-  }
-  .opacity-10 {
-    opacity: 10%;
   }
   .mix-blend-plus-darker {
     mix-blend-mode: plus-darker;
