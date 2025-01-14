@@ -1,16 +1,23 @@
 {
-  "name": "camagru",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.21.2"
-  }
+	"name": "camagru",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node server.js",
+		"build:css": "postcss public/app.css -o public/output.css",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@tailwindcss/postcss": "4.0.0-beta.9",
+		"express": "^4.21.2",
+		"tailwindcss": "4.0.0-beta.9"
+	},
+	"devDependencies": {
+		"postcss": "^8.5.1",
+		"postcss-cli": "^11.0.0"
+	}
 }
