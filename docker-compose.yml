@@ -2,9 +2,31 @@ services:
   express:
     build:
       context: ./express
+    restart: always
     ports:
       - "3000:3000"
     volumes:
       - ./express:/usr/src/app
     env_file:
       - .env
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./mongo:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8084:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
