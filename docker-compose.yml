@@ -24,13 +24,8 @@ services:
     volumes:
       - ./mongo:/data/db
     environment:
-      # MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      # MONGO_INITDB_ROOT_PASSWORD: example
-    #
-    # env_file:
-    # - .env
 
   # mongo-express:
   #   image: mongo-express
