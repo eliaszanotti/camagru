@@ -7107,9 +7107,6 @@
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
-  .bg-base-100 {
-    background-color: var(--color-base-100);
-  }
   .bg-base-200 {
     background-color: var(--color-base-200);
   }
