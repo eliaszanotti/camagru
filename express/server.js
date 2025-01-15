@@ -1,8 +1,15 @@
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const mongoURI = process.env.MONGO_URI || 'mongodb://root:example@mongo:27017/votre_db';
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+	.then(() => console.log("Connecté à MongoDB"))
+	.catch(err => console.error("Erreur de connexion à MongoDB:", err));
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
