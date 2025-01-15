@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="stylesheet" href="/style.css" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Bienvenue sur Camagru</title>
-	</head>
-	<body class="bg-base-200">
-		<%- include('parts/header') %>
-		<p class="grid place-items-center text-2xl">
-			Ceci est votre première page avec Express dans Docker.
-		</p>
-		<a class="btn btn-accent" href="https://google.com">Accueil de Google</a>
-	</body>
-</html>
+<%- include('includes/head') %>
+<main class="grid place-items-center min-h-screen bg-base-200 py-10">
+	<p class="grid place-items-center text-2xl">
+		Ceci est votre première page avec Express dans Docker.
+	</p>
+	<a class="btn btn-accent" href="https://google.com">Accueil de Google</a>
+</main>
+<%- include('includes/foot') %>

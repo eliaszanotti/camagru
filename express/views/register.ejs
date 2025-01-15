@@ -1,0 +1,26 @@
+<%- include('includes/head') %>
+<main class="grid place-items-center min-h-screen py-10">
+	<section
+		class="grid gap-10 max-w-xl w-full bg-base-100 border border-base-300 rounded-box p-10"
+	>
+		<form action="/register" method="POST" class="grid gap-10">
+			<h1 class="text-4xl">Create an account</h1>
+			<div>
+				<label for="email">Email</label>
+				<input type="email" id="email" name="email" required />
+			</div>
+			<div>
+				<label for="username">Username</label>
+				<input type="text" id="username" name="username" required />
+			</div>
+			<div>
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" required />
+			</div>
+			<div class="w-full grid justify-items-end">
+				<button type="submit" class="btn btn-primary">Create an account</button>
+			</div>
+		</form>
+	</section>
+</main>
+<%- include('includes/foot') %>
