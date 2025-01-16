@@ -11,16 +11,18 @@ router.get("/register", (req, res) => {
 	res.render("register", { title: "Créer un Compte" });
 });
 
-router.get("/add-user", async (req, res) => {
+router.post("/register", async (req, res) => {
+	const { username, email, password } = req.body;
+
 	const newUser = new User({
-		username: "testuser",
-		email: "testuser@example.com",
-		password: "password123",
+		username,
+		email,
+		password,
 	});
 
 	try {
 		await newUser.save();
-		res.send("Utilisateur ajouté avec succès !");
+		res.redirect("/");
 	} catch (error) {
 		console.error("Erreur lors de l'ajout de l'utilisateur:", error);
 		res.status(500).send("Erreur lors de l'ajout de l'utilisateur");
