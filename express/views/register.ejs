@@ -25,10 +25,10 @@
 				<label class="input validator">
 					<%- include('icons/user') %>
 					<input
-						type="text"
-						id="username"
-						name="username"
 						required
+						type="text"
+						name="username"
+						placeholder="username69"
 						minlength="4"
 						maxlength="16"
 						pattern="^[a-zA-Z0-9]+$|^(?!.*\s).*$"
@@ -47,6 +47,7 @@
 					<input
 						required
 						type="password"
+						name="password"
 						placeholder="Password"
 						minlength="8"
 						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
