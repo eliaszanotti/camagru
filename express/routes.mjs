@@ -1,6 +1,6 @@
 import express from "express";
 import User from "./models/User.mjs";
-import { passwordValidation } from "./utils/passwordValidation.mjs";
+import { passwordValidation } from "./public/utils/passwordValidation.mjs";
 
 const router = express.Router();
 
