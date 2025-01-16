@@ -8021,6 +8021,9 @@
     color: var(--color-warning);
     --range-thumb: var(--color-warning-content);
   }
+  .text-error {
+    color: var(--color-error);
+  }
   .tooltip-accent {
     --tt-bg: var(--color-accent);
     > .tooltip-content, &[data-tip]:before {

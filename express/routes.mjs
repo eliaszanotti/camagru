@@ -5,22 +5,22 @@ import { passwordValidation } from "./utils/passwordValidation.mjs";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-	res.render("index", { title: "Accueil" });
+	res.render("index", { title: "Podium" });
 });
 
 router.get("/register", (req, res) => {
-	res.render("register", { title: "Créer un Compte" });
+	res.render("register", { title: "Register" });
 });
 
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
 	if (!passwordValidation(password)) {
-		return res
-			.status(400)
-			.send(
-				"Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
-			);
+		return res.render("register", {
+			field: "password",
+			error:
+				"The password must be more than 8 characters long, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
+		});
 	}
 
 	const newUser = new User({
