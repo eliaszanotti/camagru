@@ -20,6 +20,9 @@
 				<div class="validator-hint hidden">
 					<p>Enter valid email address</p>
 				</div>
+				<% if (typeof id !== 'undefined' && id === 'email') { %>
+				<p class="fieldset-label text-error"><%= message %></p>
+				<% } %>
 			</fieldset>
 
 			<fieldset class="fieldset">
@@ -40,10 +43,13 @@
 					<p>Must contain only letters, numbers, and hyphens</p>
 					<p>Must be between 4 and 16 characters</p>
 				</div>
+				<% if (typeof id !== 'undefined' && id === 'username') { %>
+				<p class="fieldset-label text-error"><%= message %></p>
+				<% } %>
 			</fieldset>
 
 			<fieldset class="fieldset">
-				<legend class="fieldset-legend">Password</legend>
+				<legend class="fieldset-title">Password</legend>
 				<label class="input validator">
 					<%- include('icons/password') %>
 					<input
@@ -62,11 +68,10 @@
 					<p>At least one uppercase letter</p>
 					<p>At least one special character</p>
 				</div>
+				<% if (typeof id !== 'undefined' && id === 'password') { %>
+				<p class="fieldset-label text-error"><%= message %></p>
+				<% } %>
 			</fieldset>
-
-			<% if (typeof error !== 'undefined') { %>
-			<p class="text-error text-xs"><%= field %> <%= error %></p>
-			<% } %>
 
 			<div class="w-full grid justify-items-end">
 				<button type="submit" class="btn btn-primary">Create an account</button>

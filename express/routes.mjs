@@ -19,22 +19,22 @@ router.post("/register", async (req, res) => {
 
 	if (!emailValidation(email)) {
 		return res.render("register", {
-			field: "Email",
-			error: "validation error: incorect format",
+			id: "email",
+			message: "Email validation error: incorect format",
 		});
 	}
 
 	if (!usernameValidation(username)) {
 		return res.render("register", {
-			field: "Username",
-			error: "validation error: incorect format",
+			id: "username",
+			message: "Username validation error: incorect format",
 		});
 	}
 
 	if (!passwordValidation(password)) {
 		return res.render("register", {
-			field: "Password",
-			error: "validation error: incorect format",
+			id: "password",
+			message: "Password validation error: incorect format",
 		});
 	}
 

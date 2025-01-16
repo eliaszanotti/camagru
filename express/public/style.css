@@ -7600,10 +7600,6 @@
     font-size: var(--text-4xl);
     line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
-  .text-xs {
-    font-size: var(--text-xs);
-    line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
   .file-input-lg {
     --size: calc(var(--size-field, 0.25rem) * 12);
     font-size: 1.125rem;
