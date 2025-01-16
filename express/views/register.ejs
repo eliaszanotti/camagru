@@ -3,20 +3,69 @@
 	<section
 		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
 	>
-		<form action="/register" method="POST" class="grid gap-10">
+		<form action="/register" method="POST" class="grid gap-8">
 			<h1 class="text-4xl">Create an account</h1>
-			<div>
-				<label for="email">Email</label>
-				<input type="email" id="email" name="email" required />
-			</div>
-			<div>
-				<label for="username">Username</label>
-				<input type="text" id="username" name="username" required />
-			</div>
-			<div>
-				<label for="password">Password</label>
-				<input type="password" id="password" name="password" required />
-			</div>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Email</legend>
+				<label class="input validator">
+					<%- include('icons/email') %>
+					<input
+						required
+						type="email"
+						name="email"
+						placeholder="mail@site.com"
+					/>
+				</label>
+				<div class="validator-hint hidden">Enter valid email address</div>
+			</fieldset>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Username</legend>
+				<label class="input validator">
+					<%- include('icons/user') %>
+					<input
+						type="text"
+						id="username"
+						name="username"
+						required
+						minlength="4"
+						maxlength="16"
+						pattern="^[a-zA-Z0-9]+$|^(?!.*\s).*$"
+					/>
+				</label>
+				<div class="validator-hint hidden">
+					<p>Must contain only letters, numbers, and hyphens</p>
+					<p>Must be between 4 and 16 characters</p>
+				</div>
+			</fieldset>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Password</legend>
+				<label class="input validator">
+					<%- include('icons/password') %>
+					<input
+						required
+						type="password"
+						placeholder="Password"
+						minlength="8"
+						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
+					/>
+					<p class="validator-hint hidden">
+						Must be more than 8 characters, including
+						<br />At least one number <br />At least one lowercase letter
+						<br />At least one uppercase letter <br />At least one special
+						character
+					</p>
+				</label>
+				<div class="validator-hint hidden">
+					<p>Must be more than 8 characters, including</p>
+					<p>At least one number</p>
+					<p>At least one lowercase letter</p>
+					<p>At least one uppercase letter</p>
+					<p>At least one special character</p>
+				</div>
+			</fieldset>
 			<div class="w-full grid justify-items-end">
 				<button type="submit" class="btn btn-primary">Create an account</button>
 			</div>
@@ -26,20 +75,20 @@
 <%- include('includes/foot') %>
 
 <script type="module">
-	import { passwordValidation } from "./utils/passwordValidation.mjs";
+	// import { passwordValidation } from "./utils/passwordValidation.mjs";
 
-	const passwordInput = document.getElementById("password");
-	const feedback = document.createElement("div");
-	feedback.id = "password-feedback";
-	passwordInput.parentNode.insertBefore(feedback, passwordInput.nextSibling);
+	// const passwordInput = document.getElementById("password");
+	// const feedback = document.createElement("div");
+	// feedback.id = "password-feedback";
+	// passwordInput.parentNode.insertBefore(feedback, passwordInput.nextSibling);
 
-	passwordInput.addEventListener("input", function () {
-		const password = passwordInput.value;
-		const isStrong = passwordValidation(password);
-		console.log(isStrong);
-		feedback.textContent = isStrong
-			? "Mot de passe fort"
-			: "Mot de passe faible";
-		feedback.style.color = isStrong ? "green" : "red";
-	});
+	// passwordInput.addEventListener("input", function () {
+	// 	const password = passwordInput.value;
+	// 	const isStrong = passwordValidation(password);
+	// 	console.log(isStrong);
+	// 	feedback.textContent = isStrong
+	// 		? "Mot de passe fort"
+	// 		: "Mot de passe faible";
+	// 	feedback.style.color = isStrong ? "green" : "red";
+	// });
 </script>
