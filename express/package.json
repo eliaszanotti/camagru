@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node server.js",
+		"start": "node server.mjs",
 		"build:css": "postcss public/app.css -o public/style.css --watch",
 		"dev": "pnpm run build:css & pnpm start",
 		"test": "echo \"Error: no test specified\" && exit 1"

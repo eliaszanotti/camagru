@@ -1,7 +1,9 @@
-const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
-const User = require("./models/User.mjs");
+import express from "express";
+import path from "path";
+import mongoose from "mongoose";
+import User from "./models/User.mjs";
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
