@@ -17,7 +17,9 @@
 						placeholder="mail@site.com"
 					/>
 				</label>
-				<div class="validator-hint hidden">Enter valid email address</div>
+				<div class="validator-hint hidden">
+					<p>Enter valid email address</p>
+				</div>
 			</fieldset>
 
 			<fieldset class="fieldset">
@@ -63,9 +65,7 @@
 			</fieldset>
 
 			<% if (typeof error !== 'undefined') { %>
-			<p class="text-error text-xs">
-				<%= field %> <%= error %>
-			</p>
+			<p class="text-error text-xs"><%= field %> <%= error %></p>
 			<% } %>
 
 			<div class="w-full grid justify-items-end">

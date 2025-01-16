@@ -1,7 +1,8 @@
 import express from "express";
 import User from "./models/User.mjs";
-import { passwordValidation } from "./utils/passwordValidation.mjs";
+import { emailValidation } from "./utils/emailValidation.mjs";
 import { usernameValidation } from "./utils/usernameValidation.mjs";
+import { passwordValidation } from "./utils/passwordValidation.mjs";
 
 const router = express.Router();
 
@@ -16,9 +17,9 @@ router.get("/register", (req, res) => {
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
-	if (!passwordValidation(password)) {
+	if (!emailValidation(email)) {
 		return res.render("register", {
-			field: "Password",
+			field: "Email",
 			error: "validation error: incorect format",
 		});
 	}
@@ -26,6 +27,13 @@ router.post("/register", async (req, res) => {
 	if (!usernameValidation(username)) {
 		return res.render("register", {
 			field: "Username",
+			error: "validation error: incorect format",
+		});
+	}
+
+	if (!passwordValidation(password)) {
+		return res.render("register", {
+			field: "Password",
 			error: "validation error: incorect format",
 		});
 	}
