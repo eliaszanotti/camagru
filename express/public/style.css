@@ -5817,9 +5817,6 @@
   .h-20 {
     height: calc(var(--spacing) * 20);
   }
-  .h-\[1em\] {
-    height: 1em;
-  }
   .h-full {
     height: 100%;
   }
@@ -6510,9 +6507,6 @@
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
-  }
-  .gap-4 {
-    gap: calc(var(--spacing) * 4);
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
@@ -8235,9 +8229,6 @@
   }
   .scheme-only-light {
     color-scheme: only light;
-  }
-  .opacity-50 {
-    opacity: 50%;
   }
   .swap-active {
     .swap-off {
