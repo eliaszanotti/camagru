@@ -18,17 +18,15 @@ router.post("/register", async (req, res) => {
 
 	if (!passwordValidation(password)) {
 		return res.render("register", {
-			field: "password",
-			error:
-				"Password must be more than 8 characters long, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
+			field: "Password",
+			error: "validation error: incorect format",
 		});
 	}
 
 	if (!usernameValidation(username)) {
 		return res.render("register", {
-			field: "username",
-			error:
-				"Username must contain only letters, numbers, and hyphens, and must be between 4 and 16 characters",
+			field: "Username",
+			error: "validation error: incorect format",
 		});
 	}
 

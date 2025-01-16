@@ -38,9 +38,6 @@
 					<p>Must contain only letters, numbers, and hyphens</p>
 					<p>Must be between 4 and 16 characters</p>
 				</div>
-				<% if (typeof field !== 'undefined' && field === 'username') { %>
-				<div class="fieldset-label text-error"><%= error %></div>
-				<% } %>
 			</fieldset>
 
 			<fieldset class="fieldset">
@@ -63,10 +60,14 @@
 					<p>At least one uppercase letter</p>
 					<p>At least one special character</p>
 				</div>
-				<% if (typeof field !== 'undefined' && field === 'password') { %>
-				<div class="fieldset-label text-error"><%= error %></div>
-				<% } %>
 			</fieldset>
+
+			<% if (typeof error !== 'undefined') { %>
+			<p class="text-error text-xs">
+				<%= field %> <%= error %>
+			</p>
+			<% } %>
+
 			<div class="w-full grid justify-items-end">
 				<button type="submit" class="btn btn-primary">Create an account</button>
 			</div>
