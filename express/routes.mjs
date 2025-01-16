@@ -1,6 +1,7 @@
 import express from "express";
 import User from "./models/User.mjs";
 import { passwordValidation } from "./utils/passwordValidation.mjs";
+import { usernameValidation } from "./utils/usernameValidation.mjs";
 
 const router = express.Router();
 
@@ -19,7 +20,15 @@ router.post("/register", async (req, res) => {
 		return res.render("register", {
 			field: "password",
 			error:
-				"The password must be more than 8 characters long, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
+				"Password must be more than 8 characters long, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
+		});
+	}
+
+	if (!usernameValidation(username)) {
+		return res.render("register", {
+			field: "username",
+			error:
+				"Username must contain only letters, numbers, and hyphens, and must be between 4 and 16 characters",
 		});
 	}
 

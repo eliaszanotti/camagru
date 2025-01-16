@@ -38,6 +38,9 @@
 					<p>Must contain only letters, numbers, and hyphens</p>
 					<p>Must be between 4 and 16 characters</p>
 				</div>
+				<% if (typeof field !== 'undefined' && field === 'username') { %>
+				<div class="fieldset-label text-error"><%= error %></div>
+				<% } %>
 			</fieldset>
 
 			<fieldset class="fieldset">
