@@ -73,6 +73,10 @@
 				<% } %>
 			</fieldset>
 
+			<% if (typeof id !== 'undefined' && id === 'global') { %>
+			<p class="text-error text-xs"><%= message %></p>
+			<% } %>
+
 			<div class="w-full grid justify-items-end">
 				<button type="submit" class="btn btn-primary">Create an account</button>
 			</div>

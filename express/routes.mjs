@@ -38,6 +38,22 @@ router.post("/register", async (req, res) => {
 		});
 	}
 
+	const existingEmail = await User.findOne({ email });
+	if (existingEmail) {
+		return res.render("register", {
+			id: "email",
+			message: "Email already in use",
+		});
+	}
+
+	const existingUsername = await User.findOne({ username });
+	if (existingUsername) {
+		return res.render("register", {
+			id: "username",
+			message: "Username already in use",
+		});
+	}
+
 	const newUser = new User({
 		username,
 		email,
@@ -46,10 +62,12 @@ router.post("/register", async (req, res) => {
 
 	try {
 		await newUser.save();
-		res.send("Utilisateur ajouté avec succès !");
+		res.send("User added successfully !");
 	} catch (error) {
-		console.error("Erreur lors de l'ajout de l'utilisateur:", error);
-		res.status(500).send("Erreur lors de l'ajout de l'utilisateur");
+		res.status(500).render("register", {
+			id: "global",
+			message: "Error during user addition",
+		});
 	}
 });
 
