@@ -5946,6 +5946,12 @@
   .w-4\/5 {
     width: calc(4/5 * 100%);
   }
+  .w-50 {
+    width: calc(var(--spacing) * 50);
+  }
+  .w-fit {
+    width: fit-content;
+  }
   .w-full {
     width: 100%;
   }
