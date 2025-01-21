@@ -2850,6 +2850,83 @@
       opacity: 30%;
     }
   }
+  .range\! {
+    appearance: none !important;
+    webkit-appearance: none !important;
+    --range-thumb: var(--color-base-100) !important;
+    --range-thumb-size: calc(var(--size-selector, 0.25rem) * 6) !important;
+    --range-progress: currentColor !important;
+    --range-fill: 1 !important;
+    --range-p: 0.25rem !important;
+    --range-bg: color-mix(in oklab, currentColor 10%, transparent) !important;
+    cursor: pointer !important;
+    overflow: hidden !important;
+    background-color: transparent !important;
+    vertical-align: middle !important;
+    width: clamp(3rem, 20rem, 100%) !important;
+    border-radius: calc(var(--radius-selector) + var(--range-p) + 1px) !important;
+    border: none !important;
+    height: var(--range-thumb-size) !important;
+    [dir="rtl"] & {
+      --range-dir: -1 !important;
+    }
+    &:focus {
+      outline: none !important;
+    }
+    &:focus-visible {
+      outline: 2px solid !important;
+      outline-offset: 2px !important;
+    }
+    &::-webkit-slider-runnable-track {
+      width: 100% !important;
+      background-color: var(--range-bg) !important;
+      border-radius: var(--radius-selector) !important;
+      height: calc(var(--range-thumb-size) * 0.5) !important;
+      @media (forced-colors: active) {
+        border: 1px solid !important;
+      }
+    }
+    &::-webkit-slider-thumb {
+      position: relative !important;
+      box-sizing: border-box !important;
+      border-radius: calc(var(--radius-selector) + var(--range-p) + 1px) !important;
+      background-color: currentColor !important;
+      height: var(--range-thumb-size) !important;
+      width: var(--range-thumb-size) !important;
+      border: var(--range-p) solid !important;
+      appearance: none !important;
+      webkit-appearance: none !important;
+      top: 50% !important;
+      color: var(--range-progress) !important;
+      transform: translateY(-50%) !important;
+      box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), transparent), 0 0 0 2rem var(--range-thumb) inset, calc((var(--range-dir, 1) * -100rem) - (var(--range-dir, 1) * var(--range-thumb-size) / 2)) 0 0 calc(100rem * var(--range-fill)) !important;
+    }
+    &::-moz-range-track {
+      width: 100% !important;
+      background-color: var(--range-bg) !important;
+      border-radius: var(--radius-selector) !important;
+      height: calc(var(--range-thumb-size) * 0.5) !important;
+      @media (forced-colors: active) {
+        border: 1px solid !important;
+      }
+    }
+    &::-moz-range-thumb {
+      position: relative !important;
+      box-sizing: border-box !important;
+      border-radius: calc(var(--radius-selector) + var(--range-p) + 1px) !important;
+      background-color: currentColor !important;
+      height: var(--range-thumb-size) !important;
+      width: var(--range-thumb-size) !important;
+      border: var(--range-p) solid !important;
+      top: 50% !important;
+      color: var(--range-progress) !important;
+      box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), transparent), 0 0 0 2rem var(--range-thumb) inset, calc((var(--range-dir, 1) * -100rem) - (var(--range-dir, 1) * var(--range-thumb-size) / 2)) 0 0 calc(100rem * var(--range-fill)) !important;
+    }
+    &:disabled {
+      cursor: not-allowed !important;
+      opacity: 30% !important;
+    }
+  }
   .table {
     font-size: 0.875rem;
     position: relative;
@@ -5946,12 +6023,6 @@
   .w-4\/5 {
     width: calc(4/5 * 100%);
   }
-  .w-50 {
-    width: calc(var(--spacing) * 50);
-  }
-  .w-fit {
-    width: fit-content;
-  }
   .w-full {
     width: 100%;
   }
@@ -7606,10 +7677,6 @@
     font-size: var(--text-4xl);
     line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
-  .text-sm {
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
-  }
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
@@ -8467,6 +8534,9 @@
   }
   .forced-color-adjust-none {
     forced-color-adjust: none;
+  }
+  .\[keywords\:node-addon-api\] {
+    keywords: node-addon-api;
   }
   .backface-hidden {
     backface-visibility: hidden;
