@@ -1,6 +1,8 @@
 import express from "express";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { usernameValidation } from "../utils/usernameValidation.mjs";
@@ -17,15 +19,15 @@ const transporter = nodemailer.createTransport({
 });
 
 router.get("/register", (req, res) => {
-	res.render("register", { title: "Register" });
+	res.render("register");
 });
 
 router.get("/check-email", (req, res) => {
-	res.render("checkEmail", { title: "Check Your Email" });
+	res.render("checkEmail");
 });
 
 router.get("/login", (req, res) => {
-	res.render("login", { title: "Login" });
+	res.render("login");
 });
 
 router.post("/register", async (req, res) => {
@@ -124,7 +126,30 @@ router.get("/verify-email/:token", async (req, res) => {
 router.post("/login", async (req, res) => {
 	const { username, password } = req.body;
 
-	const user = await User.findOne({ username });
+	const user = await User.findOne({ $or: [{ username }, { email: username }] });
+	if (!user) {
+		return res.status(401).render("login", {
+			id: "global",
+			message: "Username or password incorrect",
+		});
+	}
+	console.log(user);
+
+	const isMatch = await bcrypt.compare(password, user.password);
+	if (!isMatch) {
+		return res.status(401).render("login", {
+			id: "global",
+			message: "Username or password incorrect",
+		});
+	}
+	console.log(isMatch);
+	res.json({ message: "Login temporary success" });
+
+	// const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+	// 	expiresIn: "1h",
+	// });
+
+	// res.json({ token });
 });
 
 export default router;
