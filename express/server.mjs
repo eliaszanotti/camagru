@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
-import routes from "./routes.mjs";
+import routes from "./routes/index.mjs";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
