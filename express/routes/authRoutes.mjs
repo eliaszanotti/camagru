@@ -75,6 +75,7 @@ router.post("/register", async (req, res) => {
 			to: email,
 			subject: "Vérification de votre email",
 			html: `
+			<h1>Hi ${username}, welcome to Podium !</h1>
 			<p>Please click on this link to verify your email: 
 				<a href="${process.env.SERVER_URL}/auth/verify-email/${newUser.emailVerificationToken}">
 				Verify my email</a>
