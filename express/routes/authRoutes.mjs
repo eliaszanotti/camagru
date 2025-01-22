@@ -87,9 +87,7 @@ router.post("/register", async (req, res) => {
 		};
 
 		await transporter.sendMail(mailOptions);
-		res.send(
-			"User added successfully! Please check your email for verification."
-		);
+		res.render("checkEmail", { title: "Check Your Email" });
 	} catch (error) {
 		res.status(500).render("register", {
 			id: "global",
