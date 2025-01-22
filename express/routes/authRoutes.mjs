@@ -7,6 +7,7 @@ import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { usernameValidation } from "../utils/usernameValidation.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
+import { authMiddleware } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 
@@ -28,6 +29,15 @@ router.get("/check-email", (req, res) => {
 
 router.get("/login", (req, res) => {
 	res.render("login");
+});
+
+router.get("/logout", (req, res) => {
+	res.clearCookie("token");
+	res.redirect("/auth/login");
+});
+
+router.get("/protected", authMiddleware, (req, res) => {
+	res.render("protected", { user: req.user });
 });
 
 router.post("/register", async (req, res) => {
