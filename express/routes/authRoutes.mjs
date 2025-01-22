@@ -24,6 +24,10 @@ router.get("/check-email", (req, res) => {
 	res.render("checkEmail", { title: "Check Your Email" });
 });
 
+router.get("/login", (req, res) => {
+	res.render("login", { title: "Login" });
+});
+
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
@@ -115,6 +119,12 @@ router.get("/verify-email/:token", async (req, res) => {
 		console.error("Error verifying email:", error);
 		res.status(500).send("Error verifying email.");
 	}
+});
+
+router.post("/login", async (req, res) => {
+	const { username, password } = req.body;
+
+	const user = await User.findOne({ username });
 });
 
 export default router;

@@ -1,0 +1,41 @@
+<%- include("includes/head") %>
+<main class="grid place-items-center min-h-screen py-10">
+	<section
+		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
+	>
+		<form action="/auth/login" method="POST" class="grid gap-8">
+			<h1 class="text-4xl">Login</h1>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Username or email</legend>
+				<label class="input w-full">
+					<%- include('icons/user') %>
+					<input
+						required
+						type="text"
+						name="username"
+						placeholder="username69"
+					/>
+				</label>
+			</fieldset>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Password</legend>
+				<label class="input w-full">
+					<%- include('icons/password') %>
+					<input
+						required
+						type="password"
+						name="password"
+						placeholder="Password"
+					/>
+				</label>
+			</fieldset>
+
+			<div class="w-full grid justify-items-end">
+				<button type="submit" class="btn btn-primary">Login</button>
+			</div>
+		</form>
+	</section>
+</main>
+<%- include("includes/foot") %>
