@@ -74,7 +74,11 @@ router.post("/register", async (req, res) => {
 			from: process.env.GOOGLE_USER,
 			to: email,
 			subject: "Vérification de votre email",
-			html: `<p>Veuillez cliquer sur ce lien pour vérifier votre email : <a href="${process.env.SERVER_URL}/auth/verify-email/${newUser.emailVerificationToken}">Vérifier mon email</a></p>`,
+			html: `
+			<p>Please click on this link to verify your email: 
+				<a href="${process.env.SERVER_URL}/auth/verify-email/${newUser.emailVerificationToken}">
+				Verify my email</a>
+			</p>`,
 		};
 
 		await transporter.sendMail(mailOptions);
@@ -90,13 +94,13 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/verify-email/:token", async (req, res) => {
-    const { token } = req.params;
+	const { token } = req.params;
 
-    try {
-        const user = await User.findOne({ emailVerificationToken: token });
-        if (!user) {
-            return res.status(404).send("Invalid or expired token.");
-        }
+	try {
+		const user = await User.findOne({ emailVerificationToken: token });
+		if (!user) {
+			return res.status(404).send("Invalid or expired token.");
+		}
 
 		user.isEmailVerified = true;
 		user.emailVerificationToken = undefined;
