@@ -7,8 +7,84 @@ import { passwordValidation } from "../utils/passwordValidation.mjs";
 
 const router = express.Router();
 
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.GOOGLE_USER,
+		pass: process.env.GOOGLE_APP_PASSWORD,
+	},
+});
+
 router.get("/register", (req, res) => {
 	res.render("register", { title: "Register" });
+});
+
+router.post("/register", async (req, res) => {
+	const { username, email, password } = req.body;
+
+	if (!emailValidation(email)) {
+		return res.render("register", {
+			id: "email",
+			message: "Email validation error: incorrect format",
+		});
+	}
+
+	if (!usernameValidation(username)) {
+		return res.render("register", {
+			id: "username",
+			message: "Username validation error: incorrect format",
+		});
+	}
+
+	if (!passwordValidation(password)) {
+		return res.render("register", {
+			id: "password",
+			message: "Password validation error: incorrect format",
+		});
+	}
+
+	const existingEmail = await User.findOne({ email });
+	if (existingEmail) {
+		return res.render("register", {
+			id: "email",
+			message: "Email already in use",
+		});
+	}
+
+	const existingUsername = await User.findOne({ username });
+	if (existingUsername) {
+		return res.render("register", {
+			id: "username",
+			message: "Username already in use",
+		});
+	}
+
+	const newUser = new User({
+		username,
+		email,
+		password,
+	});
+
+	try {
+		await newUser.save();
+
+		const mailOptions = {
+			from: process.env.GOOGLE_USER,
+			to: email,
+			subject: "Vérification de votre email",
+			html: `<p>Veuillez cliquer sur ce lien pour vérifier votre email : <a href="http://localhost:3000/verify-email/${newUser._id}">Vérifier mon email</a></p>`,
+		};
+
+		await transporter.sendMail(mailOptions);
+		res.send(
+			"User added successfully! Please check your email for verification."
+		);
+	} catch (error) {
+		res.status(500).render("register", {
+			id: "global",
+			message: "Error during user addition",
+		});
+	}
 });
 
 export default router;
