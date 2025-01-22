@@ -1,5 +1,6 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import crypto from "crypto";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { usernameValidation } from "../utils/usernameValidation.mjs";
@@ -63,6 +64,7 @@ router.post("/register", async (req, res) => {
 		username,
 		email,
 		password,
+		emailVerificationToken: crypto.randomBytes(32).toString("hex"),
 	});
 
 	try {
@@ -72,7 +74,7 @@ router.post("/register", async (req, res) => {
 			from: process.env.GOOGLE_USER,
 			to: email,
 			subject: "Vérification de votre email",
-			html: `<p>Veuillez cliquer sur ce lien pour vérifier votre email : <a href="http://localhost:3000/verify-email/${newUser._id}">Vérifier mon email</a></p>`,
+			html: `<p>Veuillez cliquer sur ce lien pour vérifier votre email : <a href="${process.env.SERVER_URL}/auth/verify-email/${newUser.emailVerificationToken}">Vérifier mon email</a></p>`,
 		};
 
 		await transporter.sendMail(mailOptions);
@@ -84,6 +86,26 @@ router.post("/register", async (req, res) => {
 			id: "global",
 			message: "Error during user addition",
 		});
+	}
+});
+
+router.get("/verify-email/:token", async (req, res) => {
+    const { token } = req.params;
+
+    try {
+        const user = await User.findOne({ emailVerificationToken: token });
+        if (!user) {
+            return res.status(404).send("Invalid or expired token.");
+        }
+
+		user.isEmailVerified = true;
+		user.emailVerificationToken = undefined;
+		await user.save();
+
+		res.send("Email successfully verified! You can now log in.");
+	} catch (error) {
+		console.error("Error verifying email:", error);
+		res.status(500).send("Error verifying email.");
 	}
 });
 
