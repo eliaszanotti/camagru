@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import routes from "./routes/index.mjs";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -20,7 +21,7 @@ app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 app.use("/", routes);
 
 app.listen(PORT, () => {
