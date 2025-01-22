@@ -142,14 +142,19 @@ router.post("/login", async (req, res) => {
 			message: "Username or password incorrect",
 		});
 	}
-	console.log(isMatch);
-	res.json({ message: "Login temporary success" });
 
-	// const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-	// 	expiresIn: "1h",
-	// });
+	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+		expiresIn: "1h",
+	});
 
-	// res.json({ token });
+	res.cookie("token", token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production", // Use secure if in production
+		sameSite: "Strict",
+		maxAge: 3600000, // 1 Hour
+	});
+
+	res.json({ message: "Login success" });
 });
 
 export default router;
