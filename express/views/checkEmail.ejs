@@ -1,0 +1,41 @@
+<%- include("includes/head") %>
+<main class="grid place-items-center min-h-screen py-10">
+	<section
+		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
+	>
+		<h1 class="text-4xl">Check Your Email</h1>
+		<p>
+			Thank you for registering! Please check your email for a verification link
+			to activate your account.
+		</p>
+		<p>If you don't see the email, please check your spam folder.</p>
+		<div class="grid grid-cols-3 gap-4">
+			<a
+				href="https://mail.google.com"
+				target="_blank"
+				class="btn btn-secondary"
+			>
+				<%- include("icons/gmail") %> Open Gmail
+			</a>
+			<a
+				href="https://outlook.live.com"
+				target="_blank"
+				class="btn btn-secondary"
+			>
+				<%- include("icons/microsoft") %> Open Outlook
+			</a>
+			<a
+				href="https://mail.yahoo.com"
+				target="_blank"
+				class="btn btn-secondary"
+			>
+				<%- include("icons/yahoo") %> Open Yahoo
+			</a>
+		</div>
+		<p>Once you've verified your account, you can log in to your account.</p>
+		<div class="flex justify-end">
+			<a href="/auth/login" class="btn btn-primary">Login</a>
+		</div>
+	</section>
+</main>
+<%- include("includes/foot") %>

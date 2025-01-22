@@ -20,6 +20,10 @@ router.get("/register", (req, res) => {
 	res.render("register", { title: "Register" });
 });
 
+router.get("/check-email", (req, res) => {
+	res.render("checkEmail", { title: "Check Your Email" });
+});
+
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
@@ -108,6 +112,7 @@ router.get("/verify-email/:token", async (req, res) => {
 		await user.save();
 
 		res.send("Email successfully verified! You can now log in.");
+		// TODO add a page to redirect to
 	} catch (error) {
 		console.error("Error verifying email:", error);
 		res.status(500).send("Error verifying email.");
