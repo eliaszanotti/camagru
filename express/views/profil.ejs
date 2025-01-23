@@ -5,7 +5,9 @@
 	>
 		<h1 class="text-4xl">Profil</h1>
 		<p>Hello, <%= user.username %>!</p>
-		<a href="/auth/logout" class="btn btn-primary">Logout</a>
+		<div class="flex justify-end">
+			<a href="/auth/logout" class="btn btn-primary">Logout</a>
+		</div>
 	</section>
 </main>
 <%- include('includes/foot') %>

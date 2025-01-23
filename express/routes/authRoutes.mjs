@@ -36,10 +36,6 @@ router.get("/logout", (req, res) => {
 	res.redirect("/auth/login");
 });
 
-router.get("/protected", authMiddleware, (req, res) => {
-	res.render("protected", { user: req.user });
-});
-
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
