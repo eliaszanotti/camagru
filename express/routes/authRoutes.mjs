@@ -148,7 +148,7 @@ router.get("/verify-email/:token", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-	const { username, password, next } = req.body;
+	const { username, password, next = "/profil" } = req.body;
 
 	const user = await User.findOne({ $or: [{ username }, { email: username }] });
 	if (!user) {
