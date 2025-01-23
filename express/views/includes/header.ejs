@@ -5,9 +5,16 @@
 			<a href="/stats" class="btn btn-primary btn-ghost">Stats</a>
 		</div>
 		<div class="flex items-center gap-2">
+			<% if (isLoggedIn) { %>
+			<p>Logged in</p>
+			<% } else { %>
+			<p>Logged out</p>
+			<% } %>
+
 			<a href="/profil" class="btn btn-primary btn-ghost">Profil</a>
 			<a href="/auth/login" class="btn btn-primary btn-ghost">Login</a>
 			<a href="/auth/register" class="btn btn-primary">Register</a>
+			<a href="/auth/logout" class="btn btn-primary">Logout</a>
 		</div>
 	</div>
 </header>
