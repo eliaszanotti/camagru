@@ -141,10 +141,8 @@ router.get("/verify-email/:token", async (req, res) => {
 		user.emailVerificationToken = undefined;
 		await user.save();
 
-		res.send("Email successfully verified! You can now log in.");
-		// TODO add a page to redirect to
+		res.redirect("/auth/login");
 	} catch (error) {
-		console.error("Error verifying email:", error);
 		res.status(500).send("Error verifying email.");
 	}
 });
