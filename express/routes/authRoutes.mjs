@@ -1,22 +1,17 @@
 import express from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import User from "../models/User.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
 import registerRoute from "./auth/register.mjs";
 import forgotPasswordRoute from "./auth/forgotPassword.mjs";
+import loginRoute from "./auth/login.mjs";
 
 const router = express.Router();
 router.use(registerRoute);
 router.use(forgotPasswordRoute);
+router.use(loginRoute);
 
 router.get("/check-email", (req, res) => {
 	res.render("checkEmail");
-});
-
-router.get("/login", (req, res) => {
-	const next = req.query.next || "/profil";
-	res.render("login", { next });
 });
 
 router.get("/logout", (req, res) => {
@@ -57,43 +52,6 @@ router.get("/verify-email/:token", async (req, res) => {
 	} catch (error) {
 		res.status(500).send("Error verifying email.");
 	}
-});
-
-router.post("/login", async (req, res) => {
-	const { username, password, next = "/profil" } = req.body;
-
-	const user = await User.findOne({ $or: [{ username }, { email: username }] });
-	if (!user) {
-		return res.status(401).render("login", {
-			id: "global",
-			message: "Username or password incorrect",
-		});
-	}
-
-	const isMatch = await bcrypt.compare(password, user.password);
-	if (!isMatch) {
-		return res.status(401).render("login", {
-			id: "global",
-			message: "Username or password incorrect",
-		});
-	}
-
-	const token = jwt.sign(
-		{ id: user._id, username: user.username },
-		process.env.JWT_SECRET,
-		{
-			expiresIn: "1h",
-		}
-	);
-
-	res.cookie("token", token, {
-		httpOnly: true,
-		secure: process.env.NODE_ENV === "production", // Use secure if in production
-		sameSite: "Strict",
-		maxAge: 3600000, // 1 Hour
-	});
-
-	res.redirect(next);
 });
 
 router.post("/reset-password/:token", async (req, res) => {
