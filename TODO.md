@@ -8,7 +8,3 @@ Ajouter les bonnes redirections notaament apres le login vers une page profile o
 Ajouter un refresh token parce que le jwt expire au bout d'1 heure
 
 rename profil -> profile
-
-add account created date to user
-
-add change password in profil`
