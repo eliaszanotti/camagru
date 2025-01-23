@@ -100,12 +100,9 @@ router.post("/register", async (req, res) => {
 	});
 
 	try {
-		console.log(newUser);
 		await newUser.save();
-		console.log("User saved");
 
 		const mailOptions = getMailOptions(newUser);
-
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
