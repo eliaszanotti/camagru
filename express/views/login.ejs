@@ -6,6 +6,10 @@
 		<form action="/auth/login" method="POST" class="grid gap-8">
 			<h1 class="text-4xl">Login</h1>
 
+			<% if (typeof next !== 'undefined') { %>
+			<input type="hidden" name="next" value="<%= next %>" />
+			<% } %>
+
 			<fieldset class="fieldset">
 				<legend class="fieldset-legend">Username or email</legend>
 				<label class="input w-full">

@@ -28,7 +28,8 @@ router.get("/check-email", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-	res.render("login");
+	const next = req.query.next || "/profil";
+	res.render("login", { next });
 });
 
 router.get("/logout", (req, res) => {
@@ -130,8 +131,7 @@ router.get("/verify-email/:token", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-	const { username, password } = req.body;
-	const next = req.query.next || "/profil";
+	const { username, password, next } = req.body;
 
 	const user = await User.findOne({ $or: [{ username }, { email: username }] });
 	if (!user) {
