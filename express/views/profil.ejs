@@ -7,9 +7,20 @@
 		<p>Hello, <%= user.username %>!</p>
 
 		<fieldset class="fieldset grid grid-cols-[1fr_auto] gap-2">
+			<legend class="fieldset-legend">Email</legend>
+			<label class="input w-full">
+				<%- include('icons/email') %>
+				<input disabled type="email" name="email" value="<%= user.email %>" />
+			</label>
+			<a href="/auth/change-email" class="btn btn-primary btn-block">
+				<%- include('icons/edit') %>
+			</a>
+		</fieldset>
+
+		<fieldset class="fieldset grid grid-cols-[1fr_auto] gap-2">
 			<legend class="fieldset-legend">Username</legend>
-			<label class="input validator w-full">
-				<%- include('../icons/user') %>
+			<label class="input w-full">
+				<%- include('icons/user') %>
 				<input
 					disabled
 					type="text"
@@ -18,7 +29,7 @@
 				/>
 			</label>
 			<a href="/auth/change-username" class="btn btn-primary btn-block">
-				<%- include('../icons/edit') %>
+				<%- include('icons/edit') %>
 			</a>
 		</fieldset>
 
