@@ -180,9 +180,9 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/forgot-password", async (req, res) => {
-	const { username } = req.body;
+	const { email } = req.body;
 
-	const user = await User.findOne({ $or: [{ username }, { email: username }] });
+	const user = await User.findOne({ email });
 	if (!user) {
 		return res.status(404).render("forgotPassword", {
 			id: "global",
