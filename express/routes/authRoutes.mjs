@@ -163,7 +163,12 @@ router.post("/login", async (req, res) => {
 		maxAge: 3600000, // 1 Hour
 	});
 
-	res.json({ message: "Login success" });
+	// TODO add a redirect parameter to the login form (next)
+	// if (req.body.redirect) {
+	// res.redirect(req.body.redirect);
+	// } else {
+	res.redirect("/profil");
+	// }
 });
 
 export default router;
