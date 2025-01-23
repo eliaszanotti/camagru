@@ -93,7 +93,7 @@ router.post("/register", async (req, res) => {
 		const mailOptions = {
 			from: process.env.GOOGLE_USER,
 			to: email,
-			subject: "Vérification de votre email",
+			subject: "Verification of your email",
 			html: `
 			<h1>Hi ${username}, welcome to Podium !</h1>
 			<p>Please click on this link to verify your email: 
@@ -168,6 +168,46 @@ router.post("/login", async (req, res) => {
 	});
 
 	res.redirect(next);
+});
+
+router.post("/forgot-password", async (req, res) => {
+	const { username } = req.body;
+
+	const user = await User.findOne({ $or: [{ username }, { email: username }] });
+	if (!user) {
+		return res.status(404).render("forgotPassword", {
+			id: "global",
+			message: "User not found",
+		});
+	}
+
+	const resetToken = crypto.randomBytes(32).toString("hex");
+	user.resetPasswordToken = resetToken;
+	user.resetPasswordExpires = Date.now() + 600000;
+	await user.save();
+
+	const mailOptions = {
+		from: process.env.GOOGLE_USER,
+		to: user.email,
+		subject: "Reset your password",
+		html: `
+		<h1>Hi ${user.username},</h1>
+		<p>Please click on this link to reset your password: 
+			<a href="${process.env.SERVER_URL}/auth/reset-password/${resetToken}">
+			Reset my password</a>
+		</p>
+		<p>This link will expire in 10 minutes.</p>`,
+	};
+
+	try {
+		await transporter.sendMail(mailOptions);
+		res.redirect("/auth/check-reset-email");
+	} catch (error) {
+		res.status(500).render("forgotPassword", {
+			id: "global",
+			message: "Error during password reset",
+		});
+	}
 });
 
 export default router;
