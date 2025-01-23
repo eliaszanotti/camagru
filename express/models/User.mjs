@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
 	emailVerificationToken: { type: String, default: null },
 	resetPasswordToken: { type: String, default: null },
 	resetPasswordExpires: { type: Date, default: null },
+	createdAt: { type: Date, default: Date.now },
 });
 
 userSchema.pre("save", async function (next) {

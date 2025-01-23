@@ -34,7 +34,14 @@
 		</fieldset>
 
 		<div class="flex justify-end">
-			<a href="/auth/logout" class="btn btn-primary">Logout</a>
+			<a href="/auth/change-password" class="btn btn-primary">
+				<%- include('icons/edit') %> Change password
+			</a>
+		</div>
+
+		<div class="flex justify-between items-center gap-4">
+			<p>Account creation date: <%= user.createdAt.toLocaleDateString() %></p>
+			<a href="/auth/delete-account" class="btn btn-error">Delete account</a>
 		</div>
 	</section>
 </main>
