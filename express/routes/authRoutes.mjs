@@ -1,8 +1,8 @@
 import express from "express";
 import User from "../models/User.mjs";
-import registerRoute from "./auth/register.mjs";
-import forgotPasswordRoute from "./auth/forgotPassword.mjs";
-import loginRoute from "./auth/login.mjs";
+import registerRoute from "./register.mjs";
+import forgotPasswordRoute from "./forgotPassword.mjs";
+import loginRoute from "./login.mjs";
 import resetPasswordRoute from "./auth/resetPassword.mjs";
 
 const router = express.Router();

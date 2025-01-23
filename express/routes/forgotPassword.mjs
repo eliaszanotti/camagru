@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../../models/User.mjs";
+import User from "../models/User.mjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
