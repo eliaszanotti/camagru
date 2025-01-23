@@ -4,8 +4,6 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
-import { usernameValidation } from "../utils/usernameValidation.mjs";
-import { passwordValidation } from "../utils/passwordValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
