@@ -44,9 +44,16 @@ router.get("/check-email-password", (req, res) => {
 	res.render("checkEmailPassword");
 });
 
-router.get("/reset-password/:token", (req, res) => {
+router.get("/reset-password/:token", async (req, res) => {
 	const { token } = req.params;
-	res.render("resetPassword", { token });
+	const user = await User.findOne({ resetPasswordToken: token });
+	if (!user) {
+		return res.status(404).send("Invalid or expired token.");
+	}
+	if (user.resetPasswordExpires < Date.now()) {
+		return res.status(404).send("Token expired.");
+	}
+	res.render("resetPassword", { token, user });
 });
 
 router.post("/register", async (req, res) => {
@@ -224,6 +231,10 @@ router.post("/reset-password/:token", async (req, res) => {
 	const { password } = req.body;
 
 	try {
+		return res.render("resetPassword", {
+			id: "password",
+			message: "Password validation error: incorrect format",
+		});
 		const user = await User.findOne({ resetPasswordToken: token });
 		if (!user) {
 			return res.status(404).send("Invalid or expired token.");
@@ -233,6 +244,13 @@ router.post("/reset-password/:token", async (req, res) => {
 			return res.status(404).send("Token expired.");
 		}
 
+		if (!passwordValidation(password)) {
+			return res.render("resetPassword", {
+				id: "password",
+				message: "Password validation error: incorrect format",
+			});
+		}
+
 		user.password = password;
 		user.resetPasswordToken = undefined;
 		user.resetPasswordExpires = undefined;
@@ -240,8 +258,10 @@ router.post("/reset-password/:token", async (req, res) => {
 
 		res.redirect("/auth/login");
 	} catch (error) {
-		console.error("Error resetting password:", error);
-		res.status(500).send("Error resetting password.");
+		res.status(500).render("resetPassword", {
+			id: "global",
+			message: "Error resetting password",
+		});
 	}
 });
 
