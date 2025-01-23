@@ -14,6 +14,28 @@ router.get("/change-email", authMiddleware, (req, res) => {
 	res.render("changeEmail");
 });
 
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.GOOGLE_USER,
+		pass: process.env.GOOGLE_APP_PASSWORD,
+	},
+});
+
+const getMailOptions = (user) => {
+	return {
+		from: process.env.GOOGLE_USER,
+		to: user.email,
+		subject: "Verification of your email",
+		html: `
+		<h1>Hi ${user.username}, welcome to Podium !</h1>
+		<p>Please click on this link to verify your email: 
+			<a href="${process.env.SERVER_URL}/auth/verify-email/${user.emailVerificationToken}">
+			Verify my email</a>
+		</p>`,
+	};
+};
+
 router.post("/change-email", authMiddleware, async (req, res) => {
 	const { email, password } = req.body;
 
@@ -40,11 +62,15 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 		});
 	}
 
+	// TODO DRY this with register.mjs
 	user.isEmailVerified = false;
 	user.email = email;
 	user.emailVerificationToken = crypto.randomBytes(32).toString("hex");
 	try {
 		await user.save();
+
+		const mailOptions = getMailOptions(user);
+		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
 		return res.render("changeEmail", {
