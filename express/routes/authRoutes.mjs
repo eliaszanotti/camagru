@@ -4,12 +4,14 @@ import registerRoute from "./register.mjs";
 import forgotPasswordRoute from "./forgotPassword.mjs";
 import loginRoute from "./login.mjs";
 import resetPasswordRoute from "./resetPassword.mjs";
+import changeEmailRoute from "./changeEmail.mjs";
 
 const router = express.Router();
 router.use(registerRoute);
 router.use(forgotPasswordRoute);
 router.use(loginRoute);
 router.use(resetPasswordRoute);
+router.use(changeEmailRoute);
 
 router.get("/check-email", (req, res) => {
 	res.render("checkEmail");

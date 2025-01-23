@@ -1,0 +1,51 @@
+<%- include('includes/head', { title: 'Change email' }) %>
+<main class="grid place-items-center min-h-screen py-10">
+	<section
+		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
+	>
+		<form action="/auth/change-email" method="POST" class="grid gap-8">
+			<h1 class="text-4xl">Change email</h1>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">New email</legend>
+				<label class="input validator w-full">
+					<%- include('icons/email') %>
+					<input
+						required
+						type="email"
+						name="email"
+						placeholder="mail@site.com"
+					/>
+				</label>
+				<div class="validator-hint hidden">
+					<p>Enter valid email address</p>
+				</div>
+				<% if (typeof id !== 'undefined' && id === 'email') { %>
+				<p class="fieldset-label text-error"><%= message %></p>
+				<% } %>
+			</fieldset>
+
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Password</legend>
+				<label class="input validator w-full">
+					<%- include('icons/password') %>
+					<input
+						required
+						type="password"
+						name="password"
+						placeholder="Password"
+					/>
+				</label>
+			</fieldset>
+
+			<% if (typeof id !== 'undefined' && id === 'global') { %>
+			<p class="text-error text-xs"><%= message %></p>
+			<% } %>
+
+			<div class="w-full grid justify-items-end">
+				<button type="submit" class="btn btn-primary">Change email</button>
+			</div>
+		</form>
+	</section>
+</main>
+<%- include('includes/foot') %>
