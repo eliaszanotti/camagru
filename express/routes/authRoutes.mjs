@@ -44,6 +44,11 @@ router.get("/check-email-password", (req, res) => {
 	res.render("checkEmailPassword");
 });
 
+router.get("/reset-password/:token", (req, res) => {
+	const { token } = req.params;
+	res.render("resetPassword", { token });
+});
+
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
@@ -211,6 +216,32 @@ router.post("/forgot-password", async (req, res) => {
 			id: "global",
 			message: "Error during password reset",
 		});
+	}
+});
+
+router.post("/reset-password/:token", async (req, res) => {
+	const { token } = req.params;
+	const { password } = req.body;
+
+	try {
+		const user = await User.findOne({ resetPasswordToken: token });
+		if (!user) {
+			return res.status(404).send("Invalid or expired token.");
+		}
+
+		if (user.resetPasswordExpires < Date.now()) {
+			return res.status(404).send("Token expired.");
+		}
+
+		user.password = password;
+		user.resetPasswordToken = undefined;
+		user.resetPasswordExpires = undefined;
+		await user.save();
+
+		res.redirect("/auth/login");
+	} catch (error) {
+		console.error("Error resetting password:", error);
+		res.status(500).send("Error resetting password.");
 	}
 });
 
