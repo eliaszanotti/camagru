@@ -1,22 +1,14 @@
 import express from "express";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
 import registerRoute from "./auth/register.mjs";
+import forgotPasswordRoute from "./auth/forgotPassword.mjs";
 
 const router = express.Router();
 router.use(registerRoute);
-
-const transporter = nodemailer.createTransport({
-	service: "gmail",
-	auth: {
-		user: process.env.GOOGLE_USER,
-		pass: process.env.GOOGLE_APP_PASSWORD,
-	},
-});
+router.use(forgotPasswordRoute);
 
 router.get("/check-email", (req, res) => {
 	res.render("checkEmail");
@@ -30,10 +22,6 @@ router.get("/login", (req, res) => {
 router.get("/logout", (req, res) => {
 	res.clearCookie("token");
 	res.redirect("/auth/login");
-});
-
-router.get("/forgot-password", (req, res) => {
-	res.render("forgotPassword");
 });
 
 router.get("/check-email-password", (req, res) => {
@@ -106,46 +94,6 @@ router.post("/login", async (req, res) => {
 	});
 
 	res.redirect(next);
-});
-
-router.post("/forgot-password", async (req, res) => {
-	const { email } = req.body;
-
-	const user = await User.findOne({ email });
-	if (!user) {
-		return res.status(404).render("forgotPassword", {
-			id: "global",
-			message: "User not found",
-		});
-	}
-
-	const resetToken = crypto.randomBytes(32).toString("hex");
-	user.resetPasswordToken = resetToken;
-	user.resetPasswordExpires = Date.now() + 600000;
-	await user.save();
-
-	const mailOptions = {
-		from: process.env.GOOGLE_USER,
-		to: user.email,
-		subject: "Reset your password",
-		html: `
-		<h1>Hi ${user.username},</h1>
-		<p>Please click on this link to reset your password: 
-			<a href="${process.env.SERVER_URL}/auth/reset-password/${resetToken}">
-			Reset my password</a>
-		</p>
-		<p>This link will expire in 10 minutes.</p>`,
-	};
-
-	try {
-		await transporter.sendMail(mailOptions);
-		res.redirect("/auth/check-email-password");
-	} catch (error) {
-		res.status(500).render("forgotPassword", {
-			id: "global",
-			message: "Error during password reset",
-		});
-	}
 });
 
 router.post("/reset-password/:token", async (req, res) => {
