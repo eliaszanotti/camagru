@@ -131,6 +131,7 @@ router.get("/verify-email/:token", async (req, res) => {
 
 router.post("/login", async (req, res) => {
 	const { username, password } = req.body;
+	const next = req.query.next || "/profil";
 
 	const user = await User.findOne({ $or: [{ username }, { email: username }] });
 	if (!user) {
@@ -163,12 +164,7 @@ router.post("/login", async (req, res) => {
 		maxAge: 3600000, // 1 Hour
 	});
 
-	// TODO add a redirect parameter to the login form (next)
-	// if (req.body.redirect) {
-	// res.redirect(req.body.redirect);
-	// } else {
-	res.redirect("/profil");
-	// }
+	res.redirect(next);
 });
 
 export default router;

@@ -4,7 +4,7 @@ export const authMiddleware = (req, res, next) => {
 	const token = req.cookies.token;
 
 	if (!token) {
-		return res.redirect("/auth/login");
+		return res.redirect("/auth/login?next=" + encodeURIComponent(req.originalUrl));
 	}
 
 	try {
