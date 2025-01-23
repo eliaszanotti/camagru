@@ -3,7 +3,7 @@ import User from "../models/User.mjs";
 import registerRoute from "./register.mjs";
 import forgotPasswordRoute from "./forgotPassword.mjs";
 import loginRoute from "./login.mjs";
-import resetPasswordRoute from "./auth/resetPassword.mjs";
+import resetPasswordRoute from "./resetPassword.mjs";
 
 const router = express.Router();
 router.use(registerRoute);
