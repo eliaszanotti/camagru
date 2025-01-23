@@ -2,10 +2,8 @@
 	<div class="h-full w-4/5 flex items-center justify-between">
 		<a href="/" class="text-2xl">Podium</a>
 		<div class="flex items-center gap-2">
-			<a href="/stats" class="btn btn-primary btn-ghost">Stats</a>
-		</div>
-		<div class="flex items-center gap-2">
 			<% if (isLoggedIn) { %>
+			<a href="/stats" class="btn btn-primary btn-ghost">Stats</a>
 			<a href="/profil" class="btn btn-primary btn-ghost">Profil</a>
 			<a href="/auth/logout" class="btn btn-primary">Logout</a>
 			<% } else { %>
