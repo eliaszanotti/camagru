@@ -7,7 +7,6 @@ import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { usernameValidation } from "../utils/usernameValidation.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
-import { authMiddleware } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 
@@ -35,6 +34,10 @@ router.get("/login", (req, res) => {
 router.get("/logout", (req, res) => {
 	res.clearCookie("token");
 	res.redirect("/auth/login");
+});
+
+router.get("/forgot-password", (req, res) => {
+	res.render("forgotPassword");
 });
 
 router.post("/register", async (req, res) => {
