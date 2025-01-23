@@ -40,6 +40,10 @@ router.get("/forgot-password", (req, res) => {
 	res.render("forgotPassword");
 });
 
+router.get("/check-email-password", (req, res) => {
+	res.render("checkEmailPassword");
+});
+
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
@@ -201,7 +205,7 @@ router.post("/forgot-password", async (req, res) => {
 
 	try {
 		await transporter.sendMail(mailOptions);
-		res.redirect("/auth/check-reset-email");
+		res.redirect("/auth/check-email-password");
 	} catch (error) {
 		res.status(500).render("forgotPassword", {
 			id: "global",
