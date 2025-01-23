@@ -4,11 +4,11 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.mjs";
-import { emailValidation } from "../utils/emailValidation.mjs";
-import { usernameValidation } from "../utils/usernameValidation.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
+import registerRoute from "./auth/register.mjs";
 
 const router = express.Router();
+router.use(registerRoute);
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -16,10 +16,6 @@ const transporter = nodemailer.createTransport({
 		user: process.env.GOOGLE_USER,
 		pass: process.env.GOOGLE_APP_PASSWORD,
 	},
-});
-
-router.get("/register", (req, res) => {
-	res.render("register");
 });
 
 router.get("/check-email", (req, res) => {
@@ -54,78 +50,6 @@ router.get("/reset-password/:token", async (req, res) => {
 		return res.status(404).send("Token expired.");
 	}
 	res.render("resetPassword", { token });
-});
-
-router.post("/register", async (req, res) => {
-	const { username, email, password } = req.body;
-
-	if (!emailValidation(email)) {
-		return res.render("register", {
-			id: "email",
-			message: "Email validation error: incorrect format",
-		});
-	}
-
-	if (!usernameValidation(username)) {
-		return res.render("register", {
-			id: "username",
-			message: "Username validation error: incorrect format",
-		});
-	}
-
-	if (!passwordValidation(password)) {
-		return res.render("register", {
-			id: "password",
-			message: "Password validation error: incorrect format",
-		});
-	}
-
-	const existingEmail = await User.findOne({ email });
-	if (existingEmail) {
-		return res.render("register", {
-			id: "email",
-			message: "Email already in use",
-		});
-	}
-
-	const existingUsername = await User.findOne({ username });
-	if (existingUsername) {
-		return res.render("register", {
-			id: "username",
-			message: "Username already in use",
-		});
-	}
-
-	const newUser = new User({
-		username,
-		email,
-		password,
-		emailVerificationToken: crypto.randomBytes(32).toString("hex"),
-	});
-
-	try {
-		await newUser.save();
-
-		const mailOptions = {
-			from: process.env.GOOGLE_USER,
-			to: email,
-			subject: "Verification of your email",
-			html: `
-			<h1>Hi ${username}, welcome to Podium !</h1>
-			<p>Please click on this link to verify your email: 
-				<a href="${process.env.SERVER_URL}/auth/verify-email/${newUser.emailVerificationToken}">
-				Verify my email</a>
-			</p>`,
-		};
-
-		await transporter.sendMail(mailOptions);
-		res.redirect("/auth/check-email");
-	} catch (error) {
-		res.status(500).render("register", {
-			id: "global",
-			message: "Error during user addition",
-		});
-	}
 });
 
 router.get("/verify-email/:token", async (req, res) => {
