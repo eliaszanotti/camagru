@@ -5,6 +5,23 @@
 	>
 		<h1 class="text-4xl">Profil</h1>
 		<p>Hello, <%= user.username %>!</p>
+
+		<fieldset class="fieldset grid grid-cols-[1fr_auto] gap-2">
+			<legend class="fieldset-legend">Username</legend>
+			<label class="input validator w-full">
+				<%- include('../icons/user') %>
+				<input
+					disabled
+					type="text"
+					name="username"
+					value="<%= user.username %>"
+				/>
+			</label>
+			<a href="/auth/change-username" class="btn btn-primary btn-block">
+				<%- include('../icons/edit') %>
+			</a>
+		</fieldset>
+
 		<div class="flex justify-end">
 			<a href="/auth/logout" class="btn btn-primary">Logout</a>
 		</div>
