@@ -1,0 +1,11 @@
+<%- include('includes/head', { title: 'Profil' }) %>
+<main class="grid place-items-center min-h-screen py-10">
+	<section
+		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
+	>
+		<h1 class="text-4xl">Profil</h1>
+		<p>Hello, <%= user.username %>!</p>
+		<a href="/auth/logout" class="btn btn-primary">Logout</a>
+	</section>
+</main>
+<%- include('includes/foot') %>
