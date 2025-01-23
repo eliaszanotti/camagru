@@ -53,7 +53,7 @@ router.get("/reset-password/:token", async (req, res) => {
 	if (user.resetPasswordExpires < Date.now()) {
 		return res.status(404).send("Token expired.");
 	}
-	res.render("resetPassword", { token, user });
+	res.render("resetPassword", { token });
 });
 
 router.post("/register", async (req, res) => {
@@ -231,10 +231,6 @@ router.post("/reset-password/:token", async (req, res) => {
 	const { password } = req.body;
 
 	try {
-		return res.render("resetPassword", {
-			id: "password",
-			message: "Password validation error: incorrect format",
-		});
 		const user = await User.findOne({ resetPasswordToken: token });
 		if (!user) {
 			return res.status(404).send("Invalid or expired token.");
