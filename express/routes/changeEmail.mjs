@@ -44,6 +44,14 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 		});
 	}
 
+	const existingUser = await User.findOne({ email });
+	if (existingUser) {
+		return res.render("changeEmail", {
+			id: "email",
+			message: "Email already in use",
+		});
+	}
+
 	const user = await User.findById(req.user.id);
 	if (!user) {
 		return res.render("changeEmail", {
