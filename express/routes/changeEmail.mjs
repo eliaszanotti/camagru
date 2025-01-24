@@ -2,7 +2,7 @@ import express from "express";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
-import { emailValidation } from "../utils/emailValidation.mjs";
+import { emailValidation } from "../utils/validations.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import { verifyMailOptions } from "../utils/mailOptions.mjs";
 import transporter from "../utils/emailTransporter.mjs";

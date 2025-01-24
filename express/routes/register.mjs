@@ -1,9 +1,7 @@
 import express from "express";
 import crypto from "crypto";
 import User from "../models/User.mjs";
-import { emailValidation } from "../utils/emailValidation.mjs";
-import { usernameValidation } from "../utils/usernameValidation.mjs";
-import { passwordValidation } from "../utils/passwordValidation.mjs";
+import { emailValidation, usernameValidation, passwordValidation } from "../utils/validations.mjs";
 import { verifyMailOptions } from "../utils/mailOptions.mjs";
 import transporter from "../utils/emailTransporter.mjs";
 import { errors } from "../utils/errors.mjs";

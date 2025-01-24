@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
-import { usernameValidation } from "../utils/usernameValidation.mjs";
+import { usernameValidation } from "../utils/validations.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import { errors } from "../utils/errors.mjs";
 
