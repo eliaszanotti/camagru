@@ -1,24 +1,16 @@
 import express from "express";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import { verifyMailOptions } from "../utils/verifyMailOptions.mjs";
+import transporter from "../utils/emailTransporter.mjs";
 
 const router = express.Router();
 
 router.get("/change-email", authMiddleware, (req, res) => {
 	res.render("changeEmail");
-});
-
-const transporter = nodemailer.createTransport({
-	service: "gmail",
-	auth: {
-		user: process.env.GOOGLE_USER,
-		pass: process.env.GOOGLE_APP_PASSWORD,
-	},
 });
 
 router.post("/change-email", authMiddleware, async (req, res) => {
