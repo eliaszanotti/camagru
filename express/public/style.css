@@ -6023,6 +6023,9 @@
   .w-4\/5 {
     width: calc(4/5 * 100%);
   }
+  .w-8 {
+    width: calc(var(--spacing) * 8);
+  }
   .w-full {
     width: 100%;
   }
@@ -7028,6 +7031,10 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .border-2 {
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+  }
   .border-x {
     border-inline-style: var(--tw-border-style);
     border-inline-width: 1px;
@@ -7158,6 +7165,12 @@
   .border-base-300 {
     border-color: var(--color-base-300);
   }
+  .border-error {
+    border-color: var(--color-error);
+  }
+  .border-warning {
+    border-color: var(--color-warning);
+  }
   .glass {
     border: none;
     backdrop-filter: blur(var(--glass-blur, 40px));
@@ -7255,8 +7268,14 @@
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
+  .bg-base-100 {
+    background-color: var(--color-base-100);
+  }
   .bg-base-200 {
     background-color: var(--color-base-200);
+  }
+  .bg-error\/15 {
+    background-color: color-mix(in oklab, var(--color-error) 15%, transparent);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -7266,6 +7285,12 @@
   }
   .bg-red-500\/\[50\%\] {
     background-color: color-mix(in oklab, var(--color-red-500) 50%, transparent);
+  }
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
+  .bg-warning\/15 {
+    background-color: color-mix(in oklab, var(--color-warning) 15%, transparent);
   }
   .divider-accent {
     &:before, &:after {
@@ -7516,6 +7541,12 @@
   .checkbox-xs {
     padding: 0.125rem;
     --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
+  }
+  .p-8 {
+    padding: calc(var(--spacing) * 8);
   }
   .p-10 {
     padding: calc(var(--spacing) * 10);
@@ -8119,6 +8150,9 @@
   }
   .text-error {
     color: var(--color-error);
+  }
+  .text-warning {
+    color: var(--color-warning);
   }
   .tooltip-accent {
     --tt-bg: var(--color-accent);
@@ -9581,7 +9615,7 @@ video {
       --color-info-content: oklch(98% 0.002 247.839);
       --color-success: oklch(79% 0.209 151.711);
       --color-success-content: oklch(98% 0.002 247.839);
-      --color-warning: oklch(70% 0.213 47.604);
+      --color-warning: oklch(70.77% 0.1907 50.74);
       --color-warning-content: oklch(98% 0.002 247.839);
       --color-error: oklch(64% 0.246 16.439);
       --color-error-content: oklch(98% 0.002 247.839);
@@ -9615,7 +9649,7 @@ video {
     --color-info-content: oklch(98% 0.002 247.839);
     --color-success: oklch(79% 0.209 151.711);
     --color-success-content: oklch(98% 0.002 247.839);
-    --color-warning: oklch(70% 0.213 47.604);
+    --color-warning: oklch(70.77% 0.1907 50.74);
     --color-warning-content: oklch(98% 0.002 247.839);
     --color-error: oklch(64% 0.246 16.439);
     --color-error-content: oklch(98% 0.002 247.839);

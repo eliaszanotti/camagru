@@ -2,8 +2,6 @@ Ajouter une option "renvoyer le mail de vérification" sur la page checkEmail
 
 Ajouter un refresh token parce que le jwt expire au bout d'1 heure
 
-Ajouter un delete account button sur la page profil
-
 rename profil -> profile
 
 Pour DEMAIN :

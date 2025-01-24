@@ -6,7 +6,18 @@
 		<h1 class="text-4xl">Profil</h1>
 		<p>Hello, <%= user.username %>!</p>
 
-		<!-- TODO if email is not verified on met une belle alert orange -->
+		<% if (!user.isEmailVerified) { %>
+		<div
+			role="alert"
+			class="rounded-field bg-warning/15 grid place-items-center gap-4 p-8"
+		>
+			<%- include('icons/warning') %>
+			<p>Your email is not verified!</p>
+			<a href="/auth/verify-email" class="btn btn-warning"
+				>Send verification email</a
+			>
+		</div>
+		<% } %>
 
 		<fieldset class="fieldset grid grid-cols-[1fr_auto] gap-2">
 			<legend class="fieldset-legend">Email</legend>
