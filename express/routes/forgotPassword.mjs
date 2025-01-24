@@ -2,27 +2,13 @@ import express from "express";
 import User from "../models/User.mjs";
 import crypto from "crypto";
 import transporter from "../utils/emailTransporter.mjs";
+import { resetPasswordMailOptions } from "../utils/mailOptions.mjs";
 
 const router = express.Router();
 
 router.get("/forgot-password", (req, res) => {
 	res.render("forgotPassword");
 });
-
-const getMailOptions = (user) => {
-	return {
-		from: process.env.GOOGLE_USER,
-		to: user.email,
-		subject: "Reset your password",
-		html: `
-		<h1>Hi ${user.username},</h1>
-		<p>Please click on this link to reset your password: 
-			<a href="${process.env.SERVER_URL}/auth/reset-password/${user.resetPasswordToken}">
-			Reset my password</a>
-		</p>
-		<p>This link will expire in 10 minutes.</p>`,
-	};
-};
 
 router.post("/forgot-password", async (req, res) => {
 	const { email } = req.body;
@@ -41,7 +27,7 @@ router.post("/forgot-password", async (req, res) => {
 	await user.save();
 
 	try {
-		const mailOptions = getMailOptions(user);
+		const mailOptions = resetPasswordMailOptions(user);
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email-password");
 	} catch (error) {

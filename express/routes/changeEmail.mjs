@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
-import { verifyMailOptions } from "../utils/verifyMailOptions.mjs";
+import { verifyMailOptions } from "../utils/mailOptions.mjs";
 import transporter from "../utils/emailTransporter.mjs";
 
 const router = express.Router();
