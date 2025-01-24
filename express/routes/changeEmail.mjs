@@ -6,6 +6,7 @@ import { emailValidation } from "../utils/validations.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import { verifyMailOptions } from "../utils/mailOptions.mjs";
 import transporter from "../utils/emailTransporter.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -35,10 +36,10 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 		return res.render("changeEmail", errors.INVALID_PASSWORD);
 	}
 
-	// TODO DRY this with register.mjs
 	user.isEmailVerified = false;
 	user.email = email;
 	user.emailVerificationToken = crypto.randomBytes(32).toString("hex");
+
 	try {
 		await user.save();
 
