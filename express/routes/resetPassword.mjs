@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/User.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -31,10 +32,7 @@ router.post("/reset-password/:token", async (req, res) => {
 		}
 
 		if (!passwordValidation(password)) {
-			return res.render("resetPassword", {
-				id: "password",
-				message: "Password validation error: incorrect format",
-			});
+			return res.render("resetPassword", errors.PASSWORD_FORMAT);
 		}
 
 		user.password = password;
@@ -44,10 +42,7 @@ router.post("/reset-password/:token", async (req, res) => {
 
 		res.redirect("/auth/login");
 	} catch (error) {
-		res.status(500).render("resetPassword", {
-			id: "global",
-			message: "Error resetting password",
-		});
+		res.status(500).render("resetPassword", errors.SAVING_USER);
 	}
 });
 

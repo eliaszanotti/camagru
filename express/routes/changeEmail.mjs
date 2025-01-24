@@ -17,34 +17,22 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!emailValidation(email)) {
-		return res.render("changeEmail", {
-			id: "email",
-			message: "Invalid email",
-		});
+		return res.render("changeEmail", errors.EMAIL_FORMAT);
 	}
 
 	const existingUser = await User.findOne({ email });
 	if (existingUser) {
-		return res.render("changeEmail", {
-			id: "email",
-			message: "Email already in use",
-		});
+		return res.render("changeEmail", errors.EMAIL_IN_USE);
 	}
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("changeEmail", {
-			id: "global",
-			message: "User not found",
-		});
+		return res.render("changeEmail", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("changeEmail", {
-			id: "global",
-			message: "Invalid password",
-		});
+		return res.render("changeEmail", errors.INVALID_PASSWORD);
 	}
 
 	// TODO DRY this with register.mjs
@@ -58,10 +46,7 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
-		return res.render("changeEmail", {
-			id: "global",
-			message: "Error saving user",
-		});
+		return res.render("changeEmail", errors.SAVING_USER);
 	}
 });
 

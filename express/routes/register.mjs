@@ -6,6 +6,7 @@ import { usernameValidation } from "../utils/usernameValidation.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
 import { verifyMailOptions } from "../utils/mailOptions.mjs";
 import transporter from "../utils/emailTransporter.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -17,40 +18,25 @@ router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
 	if (!emailValidation(email)) {
-		return res.render("register", {
-			id: "email",
-			message: "Email validation error: incorrect format",
-		});
+		return res.render("register", errors.EMAIL_FORMAT);
 	}
 
 	if (!usernameValidation(username)) {
-		return res.render("register", {
-			id: "username",
-			message: "Username validation error: incorrect format",
-		});
+		return res.render("register", errors.USERNAME_FORMAT);
 	}
 
 	if (!passwordValidation(password)) {
-		return res.render("register", {
-			id: "password",
-			message: "Password validation error: incorrect format",
-		});
+		return res.render("register", errors.PASSWORD_FORMAT);
 	}
 
 	const existingEmail = await User.findOne({ email });
 	if (existingEmail) {
-		return res.render("register", {
-			id: "email",
-			message: "Email already in use",
-		});
+		return res.render("register", errors.EMAIL_IN_USE);
 	}
 
 	const existingUsername = await User.findOne({ username });
 	if (existingUsername) {
-		return res.render("register", {
-			id: "username",
-			message: "Username already in use",
-		});
+		return res.render("register", errors.USERNAME_IN_USE);
 	}
 
 	const newUser = new User({
@@ -67,10 +53,7 @@ router.post("/register", async (req, res) => {
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
-		res.status(500).render("register", {
-			id: "global",
-			message: "Error during user addition",
-		});
+		res.status(500).render("register", errors.SAVING_USER);
 	}
 });
 

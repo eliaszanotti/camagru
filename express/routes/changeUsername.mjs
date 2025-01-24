@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { usernameValidation } from "../utils/usernameValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -14,34 +15,22 @@ router.post("/change-username", authMiddleware, async (req, res) => {
 	const { username, password } = req.body;
 
 	if (!usernameValidation(username)) {
-		return res.render("changeUsername", {
-			id: "username",
-			message: "Invalid username",
-		});
+		return res.render("changeUsername", errors.USERNAME_FORMAT);
 	}
 
 	const existingUser = await User.findOne({ username });
 	if (existingUser) {
-		return res.render("changeUsername", {
-			id: "username",
-			message: "Username already in use",
-		});
+		return res.render("changeUsername", errors.USERNAME_IN_USE);
 	}
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("changeUsername", {
-			id: "global",
-			message: "User not found",
-		});
+		return res.render("changeUsername", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("changeUsername", {
-			id: "global",
-			message: "Invalid password",
-		});
+		return res.render("changeUsername", errors.INVALID_PASSWORD);
 	}
 
 	user.username = username;
@@ -49,10 +38,7 @@ router.post("/change-username", authMiddleware, async (req, res) => {
 		await user.save();
 		res.redirect("/profil");
 	} catch (error) {
-		return res.render("changeUsername", {
-			id: "global",
-			message: "Error during username change",
-		});
+		return res.render("changeUsername", errors.SAVING_USER);
 	}
 });
 

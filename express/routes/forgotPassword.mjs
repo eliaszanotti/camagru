@@ -3,6 +3,7 @@ import User from "../models/User.mjs";
 import crypto from "crypto";
 import transporter from "../utils/emailTransporter.mjs";
 import { resetPasswordMailOptions } from "../utils/mailOptions.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -15,26 +16,20 @@ router.post("/forgot-password", async (req, res) => {
 
 	const user = await User.findOne({ email });
 	if (!user) {
-		return res.status(404).render("forgotPassword", {
-			id: "global",
-			message: "User not found",
-		});
+		return res.status(404).render("forgotPassword", errors.USER_NOT_FOUND);
 	}
 
 	const resetToken = crypto.randomBytes(32).toString("hex");
 	user.resetPasswordToken = resetToken;
 	user.resetPasswordExpires = Date.now() + 600000;
-	await user.save();
 
 	try {
+		await user.save();
 		const mailOptions = resetPasswordMailOptions(user);
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email-password");
 	} catch (error) {
-		res.status(500).render("forgotPassword", {
-			id: "global",
-			message: "Error during password reset",
-		});
+		res.status(500).render("forgotPassword", errors.SAVING_USER);
 	}
 });
 

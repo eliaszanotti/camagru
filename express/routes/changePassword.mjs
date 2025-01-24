@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { passwordValidation } from "../utils/passwordValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -14,26 +15,17 @@ router.post("/change-password", authMiddleware, async (req, res) => {
 	const { password, newPassword } = req.body;
 
 	if (!passwordValidation(newPassword)) {
-		return res.render("changePassword", {
-			id: "password",
-			message: "Invalid password",
-		});
+		return res.render("changePassword", errors.PASSWORD_FORMAT);
 	}
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("changePassword", {
-			id: "global",
-			message: "User not found",
-		});
+		return res.render("changePassword", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("changePassword", {
-			id: "global",
-			message: "Invalid password",
-		});
+		return res.render("changePassword", errors.INVALID_PASSWORD);
 	}
 
 	user.password = newPassword;
@@ -41,10 +33,7 @@ router.post("/change-password", authMiddleware, async (req, res) => {
 		await user.save();
 		res.redirect("/profil");
 	} catch (error) {
-		return res.render("changePassword", {
-			id: "global",
-			message: "Error during password change",
-		});
+		return res.render("changePassword", errors.SAVING_USER);
 	}
 });
 

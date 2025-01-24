@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.mjs";
+import { errors } from "../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -15,27 +16,17 @@ router.post("/login", async (req, res) => {
 
 	const user = await User.findOne({ $or: [{ username }, { email: username }] });
 	if (!user) {
-		return res.status(401).render("login", {
-			id: "global",
-			message: "Username or password incorrect",
-		});
+		return res.status(401).render("login", errors.INVALID_CREDENTIALS);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.status(401).render("login", {
-			id: "global",
-			message: "Username or password incorrect",
-		});
+		return res.status(401).render("login", errors.INVALID_CREDENTIALS);
 	}
 
-	const token = jwt.sign(
-		{ id: user._id },
-		process.env.JWT_SECRET,
-		{
-			expiresIn: "1h",
-		}
-	);
+	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+		expiresIn: "1h",
+	});
 
 	res.cookie("token", token, {
 		httpOnly: true,
