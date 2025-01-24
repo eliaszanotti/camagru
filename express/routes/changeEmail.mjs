@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.mjs";
 import { emailValidation } from "../utils/emailValidation.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
+import { verifyMailOptions } from "../utils/verifyMailOptions.mjs";
 
 const router = express.Router();
 
@@ -19,20 +20,6 @@ const transporter = nodemailer.createTransport({
 		pass: process.env.GOOGLE_APP_PASSWORD,
 	},
 });
-
-const getMailOptions = (user) => {
-	return {
-		from: process.env.GOOGLE_USER,
-		to: user.email,
-		subject: "Verification of your email",
-		html: `
-		<h1>Hi ${user.username}, welcome to Podium !</h1>
-		<p>Please click on this link to verify your email: 
-			<a href="${process.env.SERVER_URL}/auth/verify-email/${user.emailVerificationToken}">
-			Verify my email</a>
-		</p>`,
-	};
-};
 
 router.post("/change-email", authMiddleware, async (req, res) => {
 	const { email, password } = req.body;
@@ -75,7 +62,7 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 	try {
 		await user.save();
 
-		const mailOptions = getMailOptions(user);
+		const mailOptions = verifyMailOptions(user);
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
