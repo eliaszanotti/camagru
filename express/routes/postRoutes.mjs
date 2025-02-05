@@ -13,4 +13,8 @@ router.get("/get-dual", async (req, res) => {
 	}
 });
 
+router.get("/create", (req, res) => {
+	res.render("createPost");
+});
+
 export default router;
