@@ -1,5 +1,6 @@
 import express from "express";
 import authRoutes from "./authRoutes.mjs";
+import postRoutes from "./postRoutes.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import User from "../models/User.mjs";
 
@@ -19,5 +20,6 @@ router.get("/profil", authMiddleware, async (req, res) => {
 });
 
 router.use("/auth", authRoutes);
+router.use("/post", postRoutes);
 
 export default router;

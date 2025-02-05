@@ -20,4 +20,5 @@ export const errors = {
 		message: "Invalid username or password",
 	},
 	SAVING_USER: { id: "global", message: "Error saving user" },
+	GETTING_POSTS: { id: "global", message: "Error getting posts" },
 };
