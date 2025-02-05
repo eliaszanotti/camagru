@@ -4,17 +4,48 @@
 		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
 	>
 		<h1 class="text-4xl">Publish a new post</h1>
-		<form action="/post/publish" method="post" class="flex flex-col gap-4">
+		<form
+			action="/post/publish"
+			method="post"
+			class="flex flex-col gap-4"
+			enctype="multipart/form-data"
+		>
 			<div class="grid grid-cols-2 gap-4">
 				<button
+					type="button"
 					class="btn btn-primary h-48 flex flex-col items-center justify-center gap-4"
+					onclick="openCamera()"
 				>
 					Open live camera <%- include('icons/addFace') %>
 				</button>
-				<button
+				<label
 					class="btn btn-neutral h-48 flex flex-col items-center justify-center gap-4"
 				>
 					Import an image <%- include('icons/addImage') %>
+					<input
+						type="file"
+						id="imageFile"
+						name="imageFile"
+						accept="image/*"
+						onchange="previewImage(event)"
+						style="display: none"
+						required
+					/>
+				</label>
+			</div>
+
+			<div
+				id="imagePreviewContainer"
+				class="hidden flex-col justify-center items-center gap-4"
+			>
+				<img
+					id="imagePreview"
+					src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg"
+					alt="Aperçu de l'image"
+					class="h-48 aspect-square object-cover rounded-field"
+				/>
+				<button type="button" class="btn btn-error" onclick="removeImage()">
+					Delete <%- include('icons/trash') %>
 				</button>
 			</div>
 
@@ -25,3 +56,34 @@
 	</section>
 </main>
 <%- include("includes/foot") %>
+
+<script type="module">
+	const imagePreview = document.getElementById("imagePreview");
+	const imagePreviewContainer = document.getElementById(
+		"imagePreviewContainer"
+	);
+
+	function previewImage(event) {
+		const file = event.target.files[0];
+		const reader = new FileReader();
+
+		reader.onload = function (e) {
+			imagePreview.src = e.target.result;
+			imagePreviewContainer.style.display = "flex";
+		};
+
+		if (file) {
+			reader.readAsDataURL(file);
+		}
+	}
+
+	function removeImage() {
+		imagePreview.src = "";
+		imagePreviewContainer.style.display = "none";
+	}
+
+	function openCamera() {
+		// TODO a voir si on redirige pas vers une page de capture si c'est plus simple
+		alert("Camera functionality is not implemented yet.");
+	}
+</script>
