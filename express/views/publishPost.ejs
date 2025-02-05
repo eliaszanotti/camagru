@@ -26,9 +26,9 @@
 						type="file"
 						id="imageFile"
 						name="imageFile"
+						class="hidden"
 						accept="image/*"
 						onchange="previewImage(event)"
-						style="display: none"
 						required
 					/>
 				</label>
@@ -40,9 +40,9 @@
 			>
 				<img
 					id="imagePreview"
+					class="h-48 aspect-square object-cover rounded-field"
 					src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg"
 					alt="Aperçu de l'image"
-					class="h-48 aspect-square object-cover rounded-field"
 				/>
 				<button type="button" class="btn btn-error" onclick="removeImage()">
 					Delete <%- include('icons/trash') %>
