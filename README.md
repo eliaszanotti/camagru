@@ -9,3 +9,9 @@ Ensuite on a une section avec un 3 photos et on doit classer selon nous si cest 
 on peut ensuite valider pour passer a 3 nouvelles photos ou annuler pour changer son vote.
 
 On a une page de connexion, de deconnexion, de creation de compte, de modification de mot de passe, de modification de profil, de recuperation de mot de passe.
+
+UPDATE:
+
+On a que deux photos au choix comme ca ca simplife le choix des photos (faut aussi changer le nom podium du coup)
+
+On a une pagination infinie et si on clique sur une photo pour voter alors ca grise la section et on peut juste appuier sur annuler pour changer son vote.
