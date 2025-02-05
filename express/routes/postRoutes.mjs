@@ -13,8 +13,8 @@ router.get("/get-dual", async (req, res) => {
 	}
 });
 
-router.get("/create", (req, res) => {
-	res.render("createPost");
+router.get("/publish", (req, res) => {
+	res.render("publishPost");
 });
 
 export default router;
