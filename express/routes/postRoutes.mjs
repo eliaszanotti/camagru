@@ -1,6 +1,7 @@
 import express from "express";
 import Post from "../models/Post.mjs";
 import { errors } from "../utils/errors.mjs";
+import { authMiddleware } from "../middleware/authMiddleware.mjs";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/get-dual", async (req, res) => {
 	}
 });
 
-router.get("/publish", (req, res) => {
+router.get("/publish", authMiddleware, (req, res) => {
 	res.render("publishPost");
 });
 
