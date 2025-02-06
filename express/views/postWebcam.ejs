@@ -20,6 +20,13 @@
 				alt="Aperçu de l'image"
 			/>
 		</div>
+		<button
+			id="confirmButton"
+			class="btn btn-success mt-4"
+			style="display: none"
+		>
+			Confirm Photo
+		</button>
 	</section>
 </main>
 <%- include("includes/footer") %>
@@ -33,6 +40,7 @@
 		const imagePreviewContainer = document.getElementById(
 			"imagePreviewContainer"
 		);
+		const confirmButton = document.getElementById("confirmButton");
 
 		function startWebcam() {
 			navigator.mediaDevices
@@ -40,7 +48,6 @@
 				.then(function (stream) {
 					video.srcObject = stream;
 					video.play();
-					takePictureButton.classList.remove("hidden");
 				})
 				.catch(function (err) {
 					console.error("Error accessing the camera: " + err);
@@ -55,9 +62,17 @@
 			const dataURL = canvas.toDataURL("image/png");
 			imagePreview.src = dataURL;
 			imagePreviewContainer.style.display = "flex";
+			confirmButton.style.display = "flex";
 		}
 
 		takePictureButton.addEventListener("click", takePicture);
+		confirmButton.addEventListener("click", function () {
+			const dataURL = canvas.toDataURL("image/png");
+			window.location.href = `/post/publish?image=${encodeURIComponent(
+				dataURL
+			)}`;
+		});
+
 		startWebcam();
 	});
 </script>
