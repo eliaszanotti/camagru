@@ -9,32 +9,32 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/register", (req, res) => {
-	res.render("register");
+	res.render("authRegister");
 });
 
 router.post("/register", async (req, res) => {
 	const { username, email, password } = req.body;
 
 	if (!emailValidation(email)) {
-		return res.render("register", errors.EMAIL_FORMAT);
+		return res.render("authRegister", errors.EMAIL_FORMAT);
 	}
 
 	if (!usernameValidation(username)) {
-		return res.render("register", errors.USERNAME_FORMAT);
+		return res.render("authRegister", errors.USERNAME_FORMAT);
 	}
 
 	if (!passwordValidation(password)) {
-		return res.render("register", errors.PASSWORD_FORMAT);
+		return res.render("authRegister", errors.PASSWORD_FORMAT);
 	}
 
 	const existingEmail = await User.findOne({ email });
 	if (existingEmail) {
-		return res.render("register", errors.EMAIL_IN_USE);
+		return res.render("authRegister", errors.EMAIL_IN_USE);
 	}
 
 	const existingUsername = await User.findOne({ username });
 	if (existingUsername) {
-		return res.render("register", errors.USERNAME_IN_USE);
+		return res.render("authRegister", errors.USERNAME_IN_USE);
 	}
 
 	const newUser = new User({
@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
-		res.status(500).render("register", errors.SAVING_USER);
+		res.status(500).render("authRegister", errors.SAVING_USER);
 	}
 });
 

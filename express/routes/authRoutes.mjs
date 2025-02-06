@@ -20,7 +20,7 @@ router.use(changePasswordRoute);
 router.use(deleteAccountRoute);
 
 router.get("/check-email", (req, res) => {
-	res.render("checkEmail");
+	res.render("authCheckEmail");
 });
 
 router.get("/logout", (req, res) => {
@@ -29,7 +29,7 @@ router.get("/logout", (req, res) => {
 });
 
 router.get("/check-email-password", (req, res) => {
-	res.render("checkEmailPassword");
+	res.render("authCheckEmailPassword");
 });
 
 router.get("/verify-email/:token", async (req, res) => {

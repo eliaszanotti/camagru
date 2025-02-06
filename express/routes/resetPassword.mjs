@@ -14,7 +14,7 @@ router.get("/reset-password/:token", async (req, res) => {
 	if (user.resetPasswordExpires < Date.now()) {
 		return res.status(404).send("Token expired.");
 	}
-	res.render("resetPassword", { token });
+	res.render("authResetPassword", { token });
 });
 
 router.post("/reset-password/:token", async (req, res) => {
@@ -32,7 +32,7 @@ router.post("/reset-password/:token", async (req, res) => {
 		}
 
 		if (!passwordValidation(password)) {
-			return res.render("resetPassword", errors.PASSWORD_FORMAT);
+			return res.render("authResetPassword", errors.PASSWORD_FORMAT);
 		}
 
 		user.password = password;
@@ -42,7 +42,7 @@ router.post("/reset-password/:token", async (req, res) => {
 
 		res.redirect("/auth/login");
 	} catch (error) {
-		res.status(500).render("resetPassword", errors.SAVING_USER);
+		res.status(500).render("authResetPassword", errors.SAVING_USER);
 	}
 });
 

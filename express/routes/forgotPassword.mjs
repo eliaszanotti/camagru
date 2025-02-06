@@ -8,7 +8,7 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/forgot-password", (req, res) => {
-	res.render("forgotPassword");
+	res.render("authForgotPassword");
 });
 
 router.post("/forgot-password", async (req, res) => {
@@ -16,7 +16,7 @@ router.post("/forgot-password", async (req, res) => {
 
 	const user = await User.findOne({ email });
 	if (!user) {
-		return res.status(404).render("forgotPassword", errors.USER_NOT_FOUND);
+		return res.status(404).render("authForgotPassword", errors.USER_NOT_FOUND);
 	}
 
 	const resetToken = crypto.randomBytes(32).toString("hex");
@@ -29,7 +29,7 @@ router.post("/forgot-password", async (req, res) => {
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email-password");
 	} catch (error) {
-		res.status(500).render("forgotPassword", errors.SAVING_USER);
+		res.status(500).render("authForgotPassword", errors.SAVING_USER);
 	}
 });
 

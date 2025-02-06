@@ -11,29 +11,29 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/change-email", authMiddleware, (req, res) => {
-	res.render("changeEmail");
+	res.render("authChangeEmail");
 });
 
 router.post("/change-email", authMiddleware, async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!emailValidation(email)) {
-		return res.render("changeEmail", errors.EMAIL_FORMAT);
+		return res.render("authChangeEmail", errors.EMAIL_FORMAT);
 	}
 
 	const existingUser = await User.findOne({ email });
 	if (existingUser) {
-		return res.render("changeEmail", errors.EMAIL_IN_USE);
+		return res.render("authChangeEmail", errors.EMAIL_IN_USE);
 	}
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("changeEmail", errors.USER_NOT_FOUND);
+		return res.render("authChangeEmail", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("changeEmail", errors.INVALID_PASSWORD);
+		return res.render("authChangeEmail", errors.INVALID_PASSWORD);
 	}
 
 	user.isEmailVerified = false;
@@ -47,7 +47,7 @@ router.post("/change-email", authMiddleware, async (req, res) => {
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
 	} catch (error) {
-		return res.render("changeEmail", errors.SAVING_USER);
+		return res.render("authChangeEmail", errors.SAVING_USER);
 	}
 });
 

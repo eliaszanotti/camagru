@@ -8,29 +8,29 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/change-username", authMiddleware, (req, res) => {
-	res.render("changeUsername");
+	res.render("authChangeUsername");
 });
 
 router.post("/change-username", authMiddleware, async (req, res) => {
 	const { username, password } = req.body;
 
 	if (!usernameValidation(username)) {
-		return res.render("changeUsername", errors.USERNAME_FORMAT);
+		return res.render("authChangeUsername", errors.USERNAME_FORMAT);
 	}
 
 	const existingUser = await User.findOne({ username });
 	if (existingUser) {
-		return res.render("changeUsername", errors.USERNAME_IN_USE);
+		return res.render("authChangeUsername", errors.USERNAME_IN_USE);
 	}
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("changeUsername", errors.USER_NOT_FOUND);
+		return res.render("authChangeUsername", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("changeUsername", errors.INVALID_PASSWORD);
+		return res.render("authChangeUsername", errors.INVALID_PASSWORD);
 	}
 
 	user.username = username;
@@ -38,7 +38,7 @@ router.post("/change-username", authMiddleware, async (req, res) => {
 		await user.save();
 		res.redirect("/profil");
 	} catch (error) {
-		return res.render("changeUsername", errors.SAVING_USER);
+		return res.render("authChangeUsername", errors.SAVING_USER);
 	}
 });
 

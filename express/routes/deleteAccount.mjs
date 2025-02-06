@@ -7,7 +7,7 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/delete-account", authMiddleware, (req, res) => {
-	res.render("deleteAccount");
+	res.render("authDeleteAccount");
 });
 
 router.post("/delete-account", authMiddleware, async (req, res) => {
@@ -15,12 +15,12 @@ router.post("/delete-account", authMiddleware, async (req, res) => {
 
 	const user = await User.findById(req.user.id);
 	if (!user) {
-		return res.render("deleteAccount", errors.USER_NOT_FOUND);
+		return res.render("authDeleteAccount", errors.USER_NOT_FOUND);
 	}
 
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
-		return res.render("deleteAccount", errors.INVALID_PASSWORD);
+		return res.render("authDeleteAccount", errors.INVALID_PASSWORD);
 	}
 
 	await User.findByIdAndDelete(req.user.id);
