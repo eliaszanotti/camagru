@@ -4,6 +4,24 @@
 		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
 	>
 		<h1>Webcam</h1>
+		<video id="video" class="w-full h-auto" autoplay></video>
+		<button id="startButton" class="btn btn-primary mt-4">Start Webcam</button>
 	</section>
 </main>
 <%- include("includes/footer") %>
+
+<script>
+	const video = document.getElementById("video");
+	const startButton = document.getElementById("startButton");
+
+	startButton.addEventListener("click", function() {
+		navigator.mediaDevices.getUserMedia({ video: true })
+			.then(function(stream) {
+				video.srcObject = stream;
+				video.play();
+			})
+			.catch(function(err) {
+				console.error("Error accessing the camera: " + err);
+			});
+	});
+</script>

@@ -5131,6 +5131,9 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
   .breadcrumbs {
     max-width: 100%;
     overflow-x: auto;
@@ -5896,6 +5899,9 @@
   }
   .h-48 {
     height: calc(var(--spacing) * 48);
+  }
+  .h-auto {
+    height: auto;
   }
   .h-full {
     height: 100%;
