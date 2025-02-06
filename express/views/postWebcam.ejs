@@ -6,6 +6,11 @@
 		<h1>Webcam</h1>
 		<video id="video" class="w-full h-auto" autoplay></video>
 		<button id="startButton" class="btn btn-primary mt-4">Start Webcam</button>
+		<button id="takePictureButton" class="btn btn-secondary mt-4" style="display: none;">Take Picture</button>
+		<canvas id="canvas" style="display: none;"></canvas>
+		<div id="imagePreviewContainer" class="hidden flex-col justify-center items-center gap-4">
+			<img id="imagePreview" class="h-48 aspect-square object-cover rounded-field" src="" alt="Aperçu de l'image" />
+		</div>
 	</section>
 </main>
 <%- include("includes/footer") %>
@@ -13,15 +18,30 @@
 <script>
 	const video = document.getElementById("video");
 	const startButton = document.getElementById("startButton");
+	const takePictureButton = document.getElementById("takePictureButton");
+	const canvas = document.getElementById("canvas");
+	const imagePreview = document.getElementById("imagePreview");
+	const imagePreviewContainer = document.getElementById("imagePreviewContainer");
 
 	startButton.addEventListener("click", function() {
 		navigator.mediaDevices.getUserMedia({ video: true })
 			.then(function(stream) {
 				video.srcObject = stream;
 				video.play();
+				takePictureButton.style.display = "block";
 			})
 			.catch(function(err) {
 				console.error("Error accessing the camera: " + err);
 			});
+	});
+
+	takePictureButton.addEventListener("click", function() {
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		const context = canvas.getContext("2d");
+		context.drawImage(video, 0, 0, canvas.width, canvas.height);
+		const dataURL = canvas.toDataURL("image/png");
+		imagePreview.src = dataURL;
+		imagePreviewContainer.style.display = "flex";
 	});
 </script>
