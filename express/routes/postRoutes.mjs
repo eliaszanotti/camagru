@@ -15,7 +15,11 @@ router.get("/get-dual", async (req, res) => {
 });
 
 router.get("/publish", authMiddleware, (req, res) => {
-	res.render("publishPost");
+	res.render("postPublish");
+});
+
+router.get("/webcam", authMiddleware, (req, res) => {
+	res.render("postWebcam");
 });
 
 export default router;
