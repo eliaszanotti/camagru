@@ -85,4 +85,15 @@
 		// TODO a voir si on redirige pas vers une page de capture si c'est plus simple
 		alert("Camera functionality is not implemented yet.");
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const imagePreview = document.getElementById("imagePreview");
+		const capturedImage = sessionStorage.getItem("capturedImage");
+		console.log(capturedImage);
+
+		if (capturedImage) {
+			imagePreview.src = capturedImage;
+			imagePreviewContainer.style.display = "flex";
+		}
+	});
 </script>

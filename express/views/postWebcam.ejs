@@ -42,6 +42,8 @@
 		);
 		const confirmButton = document.getElementById("confirmButton");
 
+		let imageData = null;
+
 		function startWebcam() {
 			navigator.mediaDevices
 				.getUserMedia({ video: true })
@@ -59,18 +61,17 @@
 			canvas.height = video.videoHeight;
 			const context = canvas.getContext("2d");
 			context.drawImage(video, 0, 0, canvas.width, canvas.height);
-			const dataURL = canvas.toDataURL("image/png");
-			imagePreview.src = dataURL;
+			imageData = canvas.toDataURL("image/png");
+			imagePreview.src = imageData;
 			imagePreviewContainer.style.display = "flex";
 			confirmButton.style.display = "flex";
 		}
 
 		takePictureButton.addEventListener("click", takePicture);
 		confirmButton.addEventListener("click", function () {
-			const dataURL = canvas.toDataURL("image/png");
-			window.location.href = `/post/publish?image=${encodeURIComponent(
-				dataURL
-			)}`;
+			sessionStorage.removeItem("capturedImage");
+			sessionStorage.setItem("capturedImage", imageData);
+			window.location.href = "/post/publish";
 		});
 
 		startWebcam();
