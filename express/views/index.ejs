@@ -22,17 +22,20 @@
 	}
 
 	function createDualPost(posts) {
-		const postHTML = `
-			<div class="grid grid-cols-2 bg-base-100 p-10 rounded-box">
-				${createSinglePostHtml(posts[0])}
-				${createSinglePostHtml(posts[1])}
-			</div>
-		`;
-		return postHTML;
+		let postsHTML = "";
+		for (const post of posts) {
+			postsHTML += `
+				<div class="grid grid-cols-2 bg-base-100 p-10 rounded-box">
+					${createSinglePostHtml(post[0])}
+					${createSinglePostHtml(post[1])}
+				</div>
+			`;
+		}
+		return postsHTML;
 	}
 
-	function fetchPosts() {
-		fetch("/post/get-dual")
+	function fetchPosts(count) {
+		fetch(`/post/get-dual?count=${count}`)
 			.then((response) => response.json())
 			.then((data) => {
 				const posts = document.getElementById("posts");
@@ -43,11 +46,11 @@
 			});
 	}
 
-	document.addEventListener("DOMContentLoaded", fetchPosts);
+	document.addEventListener("DOMContentLoaded", fetchPosts(5));
 
 	window.addEventListener("scroll", () => {
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			fetchPosts();
+			fetchPosts(3);
 		}
 	});
 </script>
