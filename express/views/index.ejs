@@ -1,38 +1,53 @@
 <%- include('includes/head', { title: 'Home' }) %>
-<main class="grid place-items-center min-h-screen bg-base-200 py-10">
+<main class="flex flex-col items-center min-h-screen bg-base-200 py-10">
 	<section
-		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
-	>
-		<div id="posts" class="grid grid-cols-2 gap-4"></div>
-	</section>
+		id="posts"
+		class="grid gap-10 max-w-xl w-full rounded-box p-10"
+	></section>
 </main>
-<%- include('includes/foot') %>
 
 <script>
-	fetch("/post/get-dual")
-		.then((response) => response.json())
-		.then((data) => {
-			const posts = document.getElementById("posts");
-			if (data.length > 0) {
-				posts.innerHTML = data
-					.map(
-						(post) => `
-					<div class="post">
-						<img src="${
-							post.imageUrl
-						}" alt="Post Image" class="h-48 aspect-square object-cover rounded-field" />
-						<p>Posté par utilisateur ID: ${post.userId}</p>
-						<p>Votes: ${post.votes}</p>
-						<p>Créé le: ${new Date(post.createdAt).toLocaleString()}</p>
-					</div>
-				`
-					)
-					.join("");
-			} else {
-				posts.innerHTML = "<p>Aucun post disponible.</p>";
-			}
-		})
-		.catch((error) => {
-			console.error("Error fetching posts:", error);
-		});
+	function createSinglePostHtml(post) {
+		const postHTML = `
+			<div class="post">
+				<img src="${
+					post.imageUrl
+				}" alt="Post Image" class="h-48 aspect-square object-cover rounded-field" />
+				<p>Posté par utilisateur ID: ${post.userId}</p>
+				<p>Votes: ${post.votes}</p>
+				<p>Créé le: ${new Date(post.createdAt).toLocaleString()}</p>
+			</div>
+		`;
+		return postHTML;
+	}
+
+	function createDualPost(posts) {
+		const postHTML = `
+			<div class="grid grid-cols-2 bg-base-100 p-10 rounded-box">
+				${createSinglePostHtml(posts[0])}
+				${createSinglePostHtml(posts[1])}
+			</div>
+		`;
+		return postHTML;
+	}
+
+	function fetchPosts() {
+		fetch("/post/get-dual")
+			.then((response) => response.json())
+			.then((data) => {
+				const posts = document.getElementById("posts");
+				posts.innerHTML += createDualPost(data);
+			})
+			.catch((error) => {
+				console.error("Error fetching posts:", error);
+			});
+	}
+
+	document.addEventListener("DOMContentLoaded", fetchPosts);
+
+	window.addEventListener("scroll", () => {
+		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+			fetchPosts();
+		}
+	});
 </script>
