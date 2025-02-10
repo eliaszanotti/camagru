@@ -10,6 +10,7 @@
 			class="flex flex-col gap-4"
 			enctype="multipart/form-data"
 		>
+			<input type="hidden" name="imageData" id="imageData" />
 			<div class="grid grid-cols-2 gap-4">
 				<a
 					href="/post/webcam"
@@ -86,11 +87,12 @@
 	document.addEventListener("DOMContentLoaded", function () {
 		const imagePreview = document.getElementById("imagePreview");
 		const capturedImage = sessionStorage.getItem("capturedImage");
-		console.log(capturedImage);
+		const imageDataInput = document.getElementById("imageData");
 
 		if (capturedImage) {
 			imagePreview.src = capturedImage;
 			imagePreviewContainer.style.display = "flex";
+			imageDataInput.value = capturedImage;
 		}
 	});
 </script>

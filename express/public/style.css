@@ -3608,6 +3608,13 @@
     overflow-x: auto;
     border-radius: var(--radius-box);
   }
+  .stats\! {
+    position: relative !important;
+    display: inline-grid !important;
+    grid-auto-flow: column !important;
+    overflow-x: auto !important;
+    border-radius: var(--radius-box) !important;
+  }
   .drawer {
     position: relative;
     display: grid;

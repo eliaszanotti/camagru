@@ -1,4 +1,6 @@
 node_modules/
-mongo/
 .pnpm-store/
 .env
+
+mongo/
+express/uploads/
