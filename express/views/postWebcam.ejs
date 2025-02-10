@@ -32,48 +32,48 @@
 <%- include("includes/footer") %>
 
 <script>
+	const video = document.getElementById("video");
+	const takePictureButton = document.getElementById("takePictureButton");
+	const canvas = document.getElementById("canvas");
+	const imagePreview = document.getElementById("imagePreview");
+	const imagePreviewContainer = document.getElementById(
+		"imagePreviewContainer"
+	);
+	const confirmButton = document.getElementById("confirmButton");
+
+	let imageData = null;
+
+	function startWebcam() {
+		navigator.mediaDevices
+			.getUserMedia({ video: true })
+			.then(function (stream) {
+				video.srcObject = stream;
+				video.play();
+			})
+			.catch(function (err) {
+				console.error("Error accessing the camera: " + err);
+			});
+	}
+
+	function takePicture() {
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		const context = canvas.getContext("2d");
+		context.drawImage(video, 0, 0, canvas.width, canvas.height);
+		imageData = canvas.toDataURL("image/png");
+		imagePreview.src = imageData;
+		imagePreviewContainer.style.display = "flex";
+		confirmButton.style.display = "flex";
+	}
+
+	takePictureButton.addEventListener("click", takePicture);
+	confirmButton.addEventListener("click", function () {
+		sessionStorage.removeItem("capturedImage");
+		sessionStorage.setItem("capturedImage", imageData);
+		window.location.href = "/post/publish";
+	});
+
 	document.addEventListener("DOMContentLoaded", function () {
-		const video = document.getElementById("video");
-		const takePictureButton = document.getElementById("takePictureButton");
-		const canvas = document.getElementById("canvas");
-		const imagePreview = document.getElementById("imagePreview");
-		const imagePreviewContainer = document.getElementById(
-			"imagePreviewContainer"
-		);
-		const confirmButton = document.getElementById("confirmButton");
-
-		let imageData = null;
-
-		function startWebcam() {
-			navigator.mediaDevices
-				.getUserMedia({ video: true })
-				.then(function (stream) {
-					video.srcObject = stream;
-					video.play();
-				})
-				.catch(function (err) {
-					console.error("Error accessing the camera: " + err);
-				});
-		}
-
-		function takePicture() {
-			canvas.width = video.videoWidth;
-			canvas.height = video.videoHeight;
-			const context = canvas.getContext("2d");
-			context.drawImage(video, 0, 0, canvas.width, canvas.height);
-			imageData = canvas.toDataURL("image/png");
-			imagePreview.src = imageData;
-			imagePreviewContainer.style.display = "flex";
-			confirmButton.style.display = "flex";
-		}
-
-		takePictureButton.addEventListener("click", takePicture);
-		confirmButton.addEventListener("click", function () {
-			sessionStorage.removeItem("capturedImage");
-			sessionStorage.setItem("capturedImage", imageData);
-			window.location.href = "/post/publish";
-		});
-
 		startWebcam();
 	});
 </script>

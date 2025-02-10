@@ -10,7 +10,6 @@
 			class="flex flex-col gap-4"
 			enctype="multipart/form-data"
 		>
-			<input type="hidden" name="imageData" id="imageData" />
 			<div class="grid grid-cols-2 gap-4">
 				<a
 					href="/post/webcam"
@@ -22,14 +21,14 @@
 					class="btn btn-neutral h-48 flex flex-col items-center justify-center gap-4"
 				>
 					Import an image <%- include('icons/addImage') %>
+					<!-- TODO required -->
 					<input
 						type="file"
 						id="imageFile"
 						name="imageFile"
 						class="hidden"
 						accept="image/*"
-						onchange="previewImage(event)"
-						required
+						onchange="importImage(event)"
 					/>
 				</label>
 			</div>
@@ -44,13 +43,19 @@
 					src=""
 					alt="Aperçu de l'image"
 				/>
-				<button type="button" class="btn btn-error" onclick="removeImage()">
+				<button type="button" class="btn btn-error" onclick="deleteImage()">
 					Delete <%- include('icons/trash') %>
 				</button>
 			</div>
 
 			<div class="flex justify-end">
-				<button type="submit" class="btn btn-primary">Publish</button>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					onclick="handlePublish(event)"
+				>
+					Publish
+				</button>
 			</div>
 		</form>
 	</section>
@@ -58,12 +63,13 @@
 <%- include("includes/foot") %>
 
 <script>
+	const imageFileInput = document.getElementById("imageFile");
 	const imagePreview = document.getElementById("imagePreview");
 	const imagePreviewContainer = document.getElementById(
 		"imagePreviewContainer"
 	);
 
-	function previewImage(event) {
+	function importImage(event) {
 		const file = event.target.files[0];
 		const reader = new FileReader();
 
@@ -78,21 +84,49 @@
 		}
 	}
 
-	function removeImage() {
+	function deleteImage() {
+		imageFileInput.value = "";
 		imagePreview.src = "";
 		imagePreviewContainer.style.display = "none";
 		sessionStorage.removeItem("capturedImage");
 	}
 
+	function dataUrlToFile(dataUrl, filename) {
+		const arr = dataUrl.split(",");
+		const mime = arr[0].match(/:(.*)/)[1];
+		const bstr = atob(arr[1]);
+		let n = bstr.length;
+		const u8arr = new Uint8Array(n);
+		while (n--) {
+			u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new File([u8arr], filename, { type: mime });
+	}
+
+	function handlePublish(event) {
+		event.preventDefault();
+		const formData = new FormData();
+		formData.append("imageFile", dataUrlToFile(imagePreview.src, "image.jpg"));
+
+		fetch("/post/publish", {
+			method: "POST",
+			body: formData,
+		}).then((response) => {
+			response.json().then((data) => {
+				console.log(data);
+			});
+		});
+	}
+
 	document.addEventListener("DOMContentLoaded", function () {
-		const imagePreview = document.getElementById("imagePreview");
 		const capturedImage = sessionStorage.getItem("capturedImage");
-		const imageDataInput = document.getElementById("imageData");
+		console.log(capturedImage);
 
 		if (capturedImage) {
 			imagePreview.src = capturedImage;
+
+			imagePreview.src = sessionStorage.getItem("capturedImage");
 			imagePreviewContainer.style.display = "flex";
-			imageDataInput.value = capturedImage;
 		}
 	});
 </script>
