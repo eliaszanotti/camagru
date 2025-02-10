@@ -1,5 +1,5 @@
 <%- include('includes/head', { title: 'Home' }) %>
-<main class="flex flex-col items-center min-h-screen bg-base-200 py-10">
+<main class="flex flex-col items-center min-h-screen py-10">
 	<section
 		id="posts"
 		class="grid gap-10 max-w-xl w-full rounded-box p-10"
@@ -9,11 +9,11 @@
 <script>
 	function createSinglePostHtml(post) {
 		const postHTML = `
-			<div class="post">
+			<div class="flex flex-col gap-4">
 				<img src="${
 					post.imageUrl
 				}" alt="Post Image" class="h-48 aspect-square object-cover rounded-field" />
-				<p>Posté par utilisateur ID: ${post.userId}</p>
+				<p>Par: ${post.userId}</p>
 				<p>Votes: ${post.votes}</p>
 				<p>Créé le: ${new Date(post.createdAt).toLocaleString()}</p>
 			</div>
@@ -25,7 +25,7 @@
 		let postsHTML = "";
 		for (const post of posts) {
 			postsHTML += `
-				<div class="grid grid-cols-2 bg-base-100 p-10 rounded-box">
+				<div class="grid grid-cols-2 bg-base-200 border border-base-300 p-10 gap-10 rounded-box">
 					${createSinglePostHtml(post[0])}
 					${createSinglePostHtml(post[1])}
 				</div>
