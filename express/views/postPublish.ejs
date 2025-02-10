@@ -69,6 +69,7 @@
 		reader.onload = function (e) {
 			imagePreview.src = e.target.result;
 			imagePreviewContainer.style.display = "flex";
+			sessionStorage.setItem("capturedImage", e.target.result);
 		};
 
 		if (file) {
@@ -79,11 +80,7 @@
 	function removeImage() {
 		imagePreview.src = "";
 		imagePreviewContainer.style.display = "none";
-	}
-
-	function openCamera() {
-		// TODO a voir si on redirige pas vers une page de capture si c'est plus simple
-		alert("Camera functionality is not implemented yet.");
+		sessionStorage.removeItem("capturedImage");
 	}
 
 	document.addEventListener("DOMContentLoaded", function () {
