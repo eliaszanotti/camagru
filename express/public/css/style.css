@@ -7304,17 +7304,11 @@
   .bg-base-300 {
     background-color: var(--color-base-300);
   }
-  .bg-black\/50 {
-    background-color: color-mix(in oklab, var(--color-black) 50%, transparent);
-  }
   .bg-gray-500 {
     background-color: var(--color-gray-500);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
-  }
-  .bg-red-500\/30 {
-    background-color: color-mix(in oklab, var(--color-red-500) 30%, transparent);
   }
   .bg-red-500\/50 {
     background-color: color-mix(in oklab, var(--color-red-500) 50%, transparent);
@@ -8202,9 +8196,6 @@
   .text-success {
     color: var(--color-success);
   }
-  .text-white {
-    color: var(--color-white);
-  }
   .tooltip-accent {
     --tt-bg: var(--color-accent);
     > .tooltip-content, &[data-tip]:before {
@@ -8417,9 +8408,6 @@
   .opacity-0 {
     opacity: 0%;
   }
-  .opacity-50 {
-    opacity: 50%;
-  }
   .swap-active {
     .swap-off {
       opacity: 0%;
@@ -8573,10 +8561,6 @@
   }
   .transition-normal {
     transition-behavior: normal;
-  }
-  .duration-200 {
-    --tw-duration: 200ms;
-    transition-duration: 200ms;
   }
   .duration-300 {
     --tw-duration: 300ms;
@@ -9333,34 +9317,6 @@
   }
   .transform-view {
     transform-box: view-box;
-  }
-  .group-hover\:flex {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        display: flex;
-      }
-    }
-  }
-  .hover\:flex {
-    &:hover {
-      @media (hover: hover) {
-        display: flex;
-      }
-    }
-  }
-  .hover\:bg-red-500 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-red-500);
-      }
-    }
-  }
-  .hover\:bg-success\/50 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in oklab, var(--color-success) 50%, transparent);
-      }
-    }
   }
   .hover\:opacity-100 {
     &:hover {

@@ -23,4 +23,5 @@ export const errors = {
 	GETTING_POSTS: { id: "global", message: "Error getting posts" },
 	PUBLISHING_POST: { id: "global", message: "Error publishing post" },
 	IMAGE_REQUIRED: { id: "global", message: "Image is required" },
+	VOTING: { id: "global", message: "Error voting this post" },
 };

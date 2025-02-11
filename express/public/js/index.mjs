@@ -5,33 +5,53 @@ function likeSvgIcon() {
 	return voteButtonHtml;
 }
 
+function votePost(postId) {
+	fetch(`/post/vote`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ postId: postId }),
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			console.log(data);
+		})
+		.catch((error) => {
+			console.error("Error voting for post:", error);
+			window.location.href = "/login";
+		});
+}
+
 function createSinglePostHtml(post) {
 	const singlePostHtml = `
-			<div class="flex flex-col gap-10">
-				<div class="flex gap-2 items-center justify-between">
-					<h1 class="font-bold">${post.user.username}</h1>
-					<p class="text-sm text-gray-500">${new Date(post.createdAt).toLocaleDateString(
-						"fr-FR",
-						{
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-							hour: "numeric",
-							minute: "numeric",
-							hour12: false,
-						}
-					)}</p>
-				</div>
-				<div class="relative rounded-field overflow-hidden">
-					<img src="${
-						post.imageUrl
-					}" alt="Post Image" class="w-full aspect-square object-cover select-none" />
-					<div class="absolute inset-0 opacity-0 hover:opacity-100 bg-success/50 flex items-center justify-center transition-opacity duration-300">
-						${likeSvgIcon()}
-					</div>
+		<div class="flex flex-col gap-10">
+			<div class="flex gap-2 items-center justify-between">
+				<h1 class="font-bold">${post.user.username}</h1>
+				<p class="text-sm text-gray-500">${new Date(post.createdAt).toLocaleDateString(
+					"fr-FR",
+					{
+						year: "numeric",
+						month: "long",
+						day: "numeric",
+						hour: "numeric",
+						minute: "numeric",
+						hour12: false,
+					}
+				)}</p>
+			</div>
+			<div class="relative rounded-field overflow-hidden">
+				<img src="${
+					post.imageUrl
+				}" alt="Post Image" class="w-full aspect-square object-cover select-none" />
+				<div class="absolute inset-0 opacity-0 hover:opacity-100 bg-success/50 flex items-center justify-center transition-opacity duration-300" onclick="votePost('${
+					post._id
+				}')">
+					${likeSvgIcon()}
 				</div>
 			</div>
-		`;
+		</div>
+	`;
 	return singlePostHtml;
 }
 
