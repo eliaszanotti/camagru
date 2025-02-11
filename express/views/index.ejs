@@ -42,18 +42,26 @@
 		}
 	}
 
+	function calculateProgressWidth(posts) {
+		const totalVotes = posts[0].votes + posts[1].votes;
+		if (totalVotes === 0) return 0;
+		return (posts[0].votes / totalVotes) * 100;
+	}
+
 	function createDualPost(data) {
 		let postsHTML = "";
 		for (const posts of data) {
 			postsHTML += `
-				<div class="grid grid-cols-2 bg-base-200 border border-base-300 p-10 gap-10 rounded-box">
+				<div class="grid grid-cols-2 bg-base-200 border border-base-300 p-10 gap-10">
 					${createSinglePostHtml(posts[0])}
 					${createSinglePostHtml(posts[1])}
 					<div class="col-span-full flex justify-between items-center gap-10">
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 0)}">${
 				posts[0].votes
 			}</p>
-						<progress class="progress w-2/5" max="100" value="${posts[0].votes}"></progress>
+						<progress class="progress w-2/5" max="100" value="${calculateProgressWidth(
+							posts
+						)}"></progress>
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 1)}">${
 				posts[1].votes
 			}</p>
@@ -69,7 +77,7 @@
 			.then((response) => response.json())
 			.then((data) => {
 				const posts = document.getElementById("posts");
-				osts.innerHTML += createDualPost(data);
+				posts.innerHTML += createDualPost(data);
 			})
 			.catch((error) => {
 				console.error("Error fetching posts:", error);
