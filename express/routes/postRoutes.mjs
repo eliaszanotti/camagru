@@ -2,8 +2,10 @@ import express from "express";
 import Post from "../models/Post.mjs";
 import { errors } from "../utils/errors.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
+import postPublishRoute from "./postPublish.mjs";
 
 const router = express.Router();
+router.use(postPublishRoute);
 
 router.get("/get-dual", async (req, res) => {
 	try {
@@ -23,7 +25,6 @@ router.get("/get-dual", async (req, res) => {
 			]);
 			posts.push(post);
 		}
-		res.status(500).json(errors.GETTING_POSTS);
 		res.status(200).json(posts);
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
