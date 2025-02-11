@@ -1,3 +1,10 @@
+function likeSvgIcon() {
+	const voteButtonHtml = `
+		<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" stroke="none"/><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.57"/></svg>
+	`;
+	return voteButtonHtml;
+}
+
 function createSinglePostHtml(post) {
 	const singlePostHtml = `
 			<div class="flex flex-col gap-10">
@@ -15,22 +22,33 @@ function createSinglePostHtml(post) {
 						}
 					)}</p>
 				</div>
-				<img src="${
-					post.imageUrl
-				}" alt="Post Image" class="w-full aspect-square object-cover rounded-field" />
+				<div class="relative rounded-field overflow-hidden">
+					<img src="${
+						post.imageUrl
+					}" alt="Post Image" class="w-full aspect-square object-cover select-none" />
+					<div class="absolute inset-0 opacity-0 hover:opacity-100 bg-success/50 flex items-center justify-center transition-opacity duration-300">
+						${likeSvgIcon()}
+					</div>
+				</div>
 			</div>
 		`;
 	return singlePostHtml;
 }
 
-function createVoteScoreHtml(posts, index) {
+function getVoteScoreHtml(posts, index) {
+	let classColor = "";
 	if (posts[0].votes > posts[1].votes) {
-		return index === 0 ? "text-success" : "text-error";
+		classColor = index === 0 ? "text-success" : "text-error";
 	} else if (posts[0].votes < posts[1].votes) {
-		return index === 0 ? "text-error" : "text-success";
+		classColor = index === 0 ? "text-error" : "text-success";
 	} else {
-		return "text-gray-500";
+		classColor = "text-gray-500";
 	}
+
+	const textHtml = `
+		<p class="font-bold text-xl select-none ${classColor}">${posts[index].votes}</p>
+	`;
+	return textHtml;
 }
 
 function calculateProgressWidth(posts, index) {
@@ -67,13 +85,9 @@ function createDualPost(data) {
 				${createSinglePostHtml(posts[0])}
 				${createSinglePostHtml(posts[1])}
 				<div class="col-span-full flex justify-between items-center gap-10">
-					<p class="font-bold text-xl ${createVoteScoreHtml(posts, 0)}">${
-			posts[0].votes
-		}</p>
+					${getVoteScoreHtml(posts, 0)}
 					${createProgressBarHtml(posts)}
-					<p class="font-bold text-xl ${createVoteScoreHtml(posts, 1)}">${
-			posts[1].votes
-		}</p>
+					${getVoteScoreHtml(posts, 1)}
 				</div>
 			</div>
 		`;
