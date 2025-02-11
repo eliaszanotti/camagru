@@ -42,10 +42,14 @@
 		}
 	}
 
-	function calculateProgressWidth(posts) {
+	function calculateProgressWidth(posts, index) {
 		const totalVotes = posts[0].votes + posts[1].votes;
 		if (totalVotes === 0) return 0;
-		return (posts[0].votes / totalVotes) * 100;
+		if (index === 0) {
+			return (posts[0].votes / totalVotes) * 100;
+		} else {
+			return (posts[1].votes / totalVotes) * 100;
+		}
 	}
 
 	function createDualPost(data) {
@@ -59,9 +63,16 @@
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 0)}">${
 				posts[0].votes
 			}</p>
-						<progress class="progress w-2/5" max="100" value="${calculateProgressWidth(
-							posts
-						)}"></progress>
+						<div class="grid grid-cols-2 w-2/5 bg-base-300 rounded-full overflow-hidden">
+							<div class="flex justify-self-end h-4 bg-gray-500" style="width: ${calculateProgressWidth(
+								posts,
+								0
+							)}%"></div>
+							<div class="h-4 bg-gray-500" style="width: ${calculateProgressWidth(
+								posts,
+								1
+							)}%"></div>
+						</div>
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 1)}">${
 				posts[1].votes
 			}</p>
