@@ -7,12 +7,12 @@ import { errors } from "../utils/errors.mjs";
 const router = express.Router();
 
 router.get("/login", (req, res) => {
-	const next = req.query.next || "/profil";
+	const next = req.query.next || "/";
 	res.render("authLogin", { next });
 });
 
 router.post("/login", async (req, res) => {
-	const { username, password, next = "/profil" } = req.body;
+	const { username, password, next = "/" } = req.body;
 
 	const user = await User.findOne({ $or: [{ username }, { email: username }] });
 	if (!user) {
