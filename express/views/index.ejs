@@ -8,7 +8,7 @@
 
 <script>
 	function createSinglePostHtml(post) {
-		const postHTML = `
+		const singlePostHtml = `
 			<div class="flex flex-col gap-10">
 				<div class="flex gap-2 items-center justify-between">
 					<h1 class="font-bold">${post.user.username}</h1>
@@ -29,7 +29,7 @@
 				}" alt="Post Image" class="w-full aspect-square object-cover rounded-field" />
 			</div>
 		`;
-		return postHTML;
+		return singlePostHtml;
 	}
 
 	function createVoteScoreHtml(posts, index) {
@@ -52,6 +52,22 @@
 		}
 	}
 
+	function createProgressBarHtml(posts) {
+		const progressBarHtml = `
+			<div class="grid grid-cols-2 w-2/5 bg-base-300 rounded-full overflow-hidden">
+				<div class="flex justify-self-end h-4 bg-gray-500" style="width: ${calculateProgressWidth(
+					posts,
+					0
+				)}%"></div>
+				<div class="h-4 bg-gray-500" style="width: ${calculateProgressWidth(
+					posts,
+					1
+				)}%"></div>
+			</div>
+		`;
+		return progressBarHtml;
+	}
+
 	function createDualPost(data) {
 		let postsHTML = "";
 		for (const posts of data) {
@@ -63,16 +79,7 @@
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 0)}">${
 				posts[0].votes
 			}</p>
-						<div class="grid grid-cols-2 w-2/5 bg-base-300 rounded-full overflow-hidden">
-							<div class="flex justify-self-end h-4 bg-gray-500" style="width: ${calculateProgressWidth(
-								posts,
-								0
-							)}%"></div>
-							<div class="h-4 bg-gray-500" style="width: ${calculateProgressWidth(
-								posts,
-								1
-							)}%"></div>
-						</div>
+						${createProgressBarHtml(posts)}
 						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 1)}">${
 				posts[1].votes
 			}</p>
