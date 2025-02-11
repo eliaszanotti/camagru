@@ -2,32 +2,62 @@
 <main class="flex flex-col items-center min-h-screen py-10">
 	<section
 		id="posts"
-		class="grid gap-10 max-w-xl w-full rounded-box p-10"
+		class="grid gap-10 max-w-3xl w-full rounded-box p-10"
 	></section>
 </main>
 
 <script>
 	function createSinglePostHtml(post) {
 		const postHTML = `
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-10">
+				<div class="flex gap-2 items-center justify-between">
+					<h1 class="font-bold">${post.user.username}</h1>
+					<p class="text-sm text-gray-500">${new Date(post.createdAt).toLocaleDateString(
+						"fr-FR",
+						{
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+							hour: "numeric",
+							minute: "numeric",
+							hour12: false,
+						}
+					)}</p>
+				</div>
 				<img src="${
 					post.imageUrl
-				}" alt="Post Image" class="h-48 aspect-square object-cover rounded-field" />
-				<p>Par: ${post.userId}</p>
-				<p>Votes: ${post.votes}</p>
-				<p>Créé le: ${new Date(post.createdAt).toLocaleString()}</p>
+				}" alt="Post Image" class="w-full aspect-square object-cover rounded-field" />
 			</div>
 		`;
 		return postHTML;
 	}
 
-	function createDualPost(posts) {
+	function createVoteScoreHtml(posts, index) {
+		if (posts[0].votes > posts[1].votes) {
+			return index === 0 ? "text-success" : "text-error";
+		} else if (posts[0].votes < posts[1].votes) {
+			return index === 0 ? "text-error" : "text-success";
+		} else {
+			return "text-gray-500";
+		}
+	}
+
+	function createDualPost(data) {
 		let postsHTML = "";
-		for (const post of posts) {
+		for (const posts of data) {
 			postsHTML += `
 				<div class="grid grid-cols-2 bg-base-200 border border-base-300 p-10 gap-10 rounded-box">
-					${createSinglePostHtml(post[0])}
-					${createSinglePostHtml(post[1])}
+					${createSinglePostHtml(posts[0])}
+					${createSinglePostHtml(posts[1])}
+					<div class="col-span-full flex justify-between items-center gap-10">
+						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 0)}">${
+				posts[0].votes
+			}</p>
+						<progress class="progress w-2/5" max="100" value="${posts[0].votes}"></progress>
+						<p class="font-bold text-xl ${createVoteScoreHtml(posts, 1)}">${
+				posts[1].votes
+			}</p>
+					</div>
 				</div>
 			`;
 		}
@@ -39,7 +69,7 @@
 			.then((response) => response.json())
 			.then((data) => {
 				const posts = document.getElementById("posts");
-				posts.innerHTML += createDualPost(data);
+				osts.innerHTML += createDualPost(data);
 			})
 			.catch((error) => {
 				console.error("Error fetching posts:", error);
