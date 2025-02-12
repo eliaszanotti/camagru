@@ -29,9 +29,9 @@
 	});
 
 	document.getElementById("posts").addEventListener("click", function (event) {
-		if (event.target.closest(".event-vote-post")) {
+		if (event.target.closest("[selector-post-vote]")) {
 			const postId = event.target
-				.closest(".event-vote-post")
+				.closest("[selector-post-vote]")
 				.getAttribute("data-post-id");
 
 			fetch(`/post/vote`, {
