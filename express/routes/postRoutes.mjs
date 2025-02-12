@@ -34,15 +34,15 @@ router.get("/webcam", authMiddleware, (req, res) => {
 });
 
 router.post("/vote", authMiddleware, async (req, res) => {
-	console.log(req.body);
 	const { postId } = req.body;
 	console.log(postId);
 	const userId = req.user.id;
+	console.log(userId);
 
 	try {
 		const vote = new Vote({ userId, postId });
 		await vote.save();
-		res.status(200).json({ message: "Vote saved" });
+		res.status(200).json({ success: true });
 	} catch (error) {
 		res.status(500).json(errors.VOTING);
 	}

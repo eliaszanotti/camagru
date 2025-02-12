@@ -27,4 +27,35 @@
 			getDualPosts(3);
 		}
 	});
+
+	document.getElementById("posts").addEventListener("click", function (event) {
+		if (event.target.closest(".event-vote-post")) {
+			const postId = event.target
+				.closest(".event-vote-post")
+				.getAttribute("data-post-id");
+
+			fetch(`/post/vote`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-Requested-With": "XMLHttpRequest",
+				},
+				body: JSON.stringify({ postId: postId }),
+			})
+				.then((response) => {
+					if (response.status === 401) {
+						window.location.href =
+							"/auth/login?next=" + encodeURIComponent(window.location.href);
+						return;
+					}
+					return response.json();
+				})
+				.then((data) => {
+					if (data.success) {
+						alert("Vote enregistré !");
+					}
+				})
+				.catch((error) => console.error("Error:", error));
+		}
+	});
 </script>
