@@ -2,9 +2,9 @@
 <% 
 	let classColor = "";
 
-	if (posts[0].votes > posts[1].votes) {
+	if (posts[0].voteCount > posts[1].voteCount) {
 		classColor = index === 0 ? "text-success" : "text-error";
-	} else if (posts[0].votes < posts[1].votes) {
+	} else if (posts[0].voteCount < posts[1].voteCount) {
 		classColor = index === 0 ? "text-error" : "text-success";
 	} else {
 		classColor = "text-gray-500";
@@ -12,5 +12,5 @@
 %>
 
 <p class="font-bold text-xl select-none <%= classColor %>">
-	<%= posts[index].votes %>
+	<%= posts[index].voteCount %>
 </p>

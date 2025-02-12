@@ -22,7 +22,26 @@ router.get("/get-dual", async (req, res) => {
 				},
 			},
 			{ $unwind: "$user" },
+			{
+				$lookup: {
+					from: "votes",
+					localField: "_id",
+					foreignField: "postId",
+					as: "votes",
+				},
+			},
+			{
+				$addFields: {
+					voteCount: { $size: "$votes" },
+				},
+			},
+			{
+				$project: {
+					votes: 0,
+				},
+			},
 		]);
+		console.log(posts);
 		res.render("postDualSection", { posts });
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
@@ -35,9 +54,7 @@ router.get("/webcam", authMiddleware, (req, res) => {
 
 router.post("/vote", authMiddleware, async (req, res) => {
 	const { postId } = req.body;
-	console.log(postId);
 	const userId = req.user.id;
-	console.log(userId);
 
 	try {
 		const vote = new Vote({ userId, postId });
