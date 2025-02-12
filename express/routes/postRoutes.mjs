@@ -11,23 +11,19 @@ router.use(postPublishRoute);
 
 router.get("/get-dual", async (req, res) => {
 	try {
-		const posts = [];
-		for (let i = 0; i < req.query.count; i++) {
-			const post = await Post.aggregate([
-				{ $sample: { size: 2 } },
-				{
-					$lookup: {
-						from: "users",
-						localField: "userId",
-						foreignField: "_id",
-						as: "user",
-					},
+		const posts = await Post.aggregate([
+			{ $sample: { size: 2 } },
+			{
+				$lookup: {
+					from: "users",
+					localField: "userId",
+					foreignField: "_id",
+					as: "user",
 				},
-				{ $unwind: "$user" },
-			]);
-			posts.push(post);
-		}
-		res.status(200).json(posts);
+			},
+			{ $unwind: "$user" },
+		]);
+		res.render("postDualSection", { posts });
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
 	}

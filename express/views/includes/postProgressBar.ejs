@@ -1,0 +1,25 @@
+<!-- prettier-ignore-->
+<% 
+	function calculateProgressWidth(posts, index) {
+		const totalVotes = posts[0].votes + posts[1].votes;
+		if (totalVotes === 0) return 0;
+
+		if (index === 0) {
+			return (posts[0].votes / totalVotes) * 100;
+		} else {
+			return (posts[1].votes / totalVotes) * 100;
+		}
+	}
+%>
+
+<div class="grid grid-cols-2 w-2/5 bg-base-300 rounded-full overflow-hidden">
+	<div
+		class="flex justify-self-end h-4 bg-gray-500"
+		style="width: <%= calculateProgressWidth(posts, 0) %>%"
+	></div>
+
+	<div
+		class="h-4 bg-gray-500"
+		style="width: <%= calculateProgressWidth(posts, 1) %>%"
+	></div>
+</div>

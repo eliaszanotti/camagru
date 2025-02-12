@@ -6,13 +6,25 @@
 	></section>
 </main>
 
-<script src="/js/index.mjs"></script>
 <script>
-	document.addEventListener("DOMContentLoaded", fetchPosts(5));
+	function getDualPosts(count = 1) {
+		for (let i = 0; i < count; i++) {
+			fetch(`/post/get-dual`)
+				.then((response) => response.text())
+				.then((data) => {
+					posts.innerHTML += data;
+				})
+				.catch((error) => {
+					console.error("Error fetching posts:", error);
+				});
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", getDualPosts(5));
 
 	window.addEventListener("scroll", () => {
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			fetchPosts(3);
+			getDualPosts(3);
 		}
 	});
 </script>
