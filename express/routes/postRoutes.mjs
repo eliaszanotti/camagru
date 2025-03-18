@@ -26,7 +26,7 @@ router.get("/random", async (req, res) => {
 			postId: posts[0]._id,
 		});
 		console.log(lastComment);
-		res.render("includes/postSingle", {
+		res.render("includes/postCard", {
 			post: posts[0],
 			user: user,
 			lastComment: lastComment,

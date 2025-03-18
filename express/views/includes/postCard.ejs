@@ -8,7 +8,7 @@
 		<p class="text-sm text-gray-500">
 			<!-- prettier-ignore -->
 			<%=
-				new Date(post.createdAt).toLocaleDateString("fr-FR", {
+				new Date(post.createdAt).toLocaleDateString("en-US", {
 					year: "numeric",
 					month: "long",
 					day: "numeric",
@@ -50,12 +50,12 @@
 		</div>
 		<% if (lastComment && lastComment.length > 0) { %>
 		<p class="w-full text-sm text-gray-500">
-			Dernier commentaire -
+			Last comment -
 			<span class="text-base-content"><%= user.username %></span>
 			le
 			<span class="text-base-content">
 				<!-- prettier-ignore -->
-				<%= new Date(post.createdAt).toLocaleDateString("fr-FR", {
+				<%= new Date(post.createdAt).toLocaleDateString("en-US", {
 					year: "numeric",
 					month: "long",
 					day: "numeric",
@@ -67,9 +67,7 @@
 		</p>
 		<p class="w-full text-sm text-gray-500"><%= lastComment.content %></p>
 		<% } else { %>
-		<p class="w-full text-sm text-gray-500">
-			Il n'y a pas de commentaires pour ce post
-		</p>
+		<p class="w-full text-sm text-gray-500">No comments for this post</p>
 		<% } %>
 	</div>
 </div>
