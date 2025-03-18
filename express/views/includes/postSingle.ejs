@@ -1,5 +1,7 @@
 <div
-	class="flex flex-col gap-10 bg-base-200 border border-base-300 p-10 rounded-box"
+	class="flex flex-col bg-base-200 border border-base-300 gap-4 p-4 rounded-box"
+	selector-post-single
+	data-post-id="<%= post._id %>"
 >
 	<div class="flex gap-2 items-center justify-between">
 		<h1 class="font-bold"><%= user.username %></h1>
@@ -30,5 +32,37 @@
 		>
 			<%- include("../icons/like.ejs") %>
 		</div>
+	</div>
+
+	<div class="flex flex-col gap-2">
+		<div class="flex">
+			<button class="btn btn-square btn-ghost">
+				<%- include("../icons/like.ejs") %>
+			</button>
+			<button class="btn btn-square btn-ghost">
+				<%- include("../icons/messageCircle.ejs") %>
+			</button>
+		</div>
+		<p class="w-full text-sm text-gray-500">
+			Dernier commentaire -
+			<span class="text-base-content"><%= user.username %></span>
+			le
+			<span class="text-base-content">
+				<!-- prettier-ignore -->
+				<%= new Date(post.createdAt).toLocaleDateString("fr-FR", {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+					hour: "numeric",
+					minute: "numeric",
+					hour12: false,
+				}) %>
+			</span>
+		</p>
+		<p class="w-full text-sm text-gray-500">
+			<!-- TODO afficher les commentaires -->
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+			quos.
+		</p>
 	</div>
 </div>
