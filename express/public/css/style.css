@@ -5602,6 +5602,12 @@
     align-items: center;
     flex-shrink: 0;
   }
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
   .line-clamp-none {
     overflow: visible;
     display: block;
@@ -5915,9 +5921,6 @@
   }
   .h-48 {
     height: calc(var(--spacing) * 48);
-  }
-  .h-\[60vh\] {
-    height: 60vh;
   }
   .h-\[80vh\] {
     height: 80vh;
@@ -6486,9 +6489,6 @@
   }
   .grid-cols-\[auto_1fr\] {
     grid-template-columns: auto 1fr;
-  }
-  .grid-cols-\[auto_1fr_auto\] {
-    grid-template-columns: auto 1fr auto;
   }
   .grid-cols-none {
     grid-template-columns: none;

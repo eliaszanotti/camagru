@@ -49,26 +49,26 @@
 				<%- include("../icons/messageCircle.ejs") %>
 			</a>
 		</div>
-		<% if (lastComment && lastComment.length > 0) { %>
-		<p class="w-full text-sm text-gray-500">
-			Last comment -
-			<span class="text-base-content"><%= user.username %></span>
-			le
-			<span class="text-base-content">
-				<!-- prettier-ignore -->
-				<%= new Date(post.createdAt).toLocaleDateString("en-US", {
-					year: "numeric",
-					month: "long",
-					day: "numeric",
-					hour: "numeric",
-					minute: "numeric",
-					hour12: false,
-				}) %>
-			</span>
-		</p>
-		<p class="w-full text-sm text-gray-500"><%= lastComment.content %></p>
-		<% } else { %>
-		<p class="w-full text-sm text-gray-500">No comments for this post</p>
+		<% if (lastComment) { %>
+		<div class="flex flex-col gap-2">
+			<div class="flex gap-2">
+				<p class="text-sm font-bold">
+					<%= lastComment.userId.username %>
+				</p>
+				<p class="text-sm text-gray-500">
+					<!-- prettier-ignore -->
+					<%= new Date(lastComment.createdAt).toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "long",
+						day: "numeric",
+						hour: "numeric",
+						minute: "numeric",
+						hour12: false,
+					}) %>
+				</p>
+			</div>
+			<p class="line-clamp-1"><%= lastComment.content %></p>
+		</div>
 		<% } %>
 	</div>
 </div>

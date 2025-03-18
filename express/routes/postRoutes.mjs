@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(express.json());
 router.use(postPublishRoute);
 
-router.get("/id/:id", async (req, res) => {
+router.get("/id/:id", authMiddleware, async (req, res) => {
 	const post = await Post.findById(req.params.id);
 	const user = await User.findById(post.userId);
 	const comments = await Comment.find({ postId: post._id })
@@ -46,7 +46,8 @@ router.get("/random", async (req, res) => {
 			return res.status(404).json(errors.NO_POSTS);
 		}
 		const user = await User.findById(posts[0].userId);
-		const lastComment = await Comment.find({ postId: posts[0]._id })
+		const lastComments = await Comment.find({ postId: posts[0]._id })
+			.populate("userId")
 			.sort({ createdAt: -1 })
 			.limit(1);
 		let isLiked = false;
@@ -59,7 +60,7 @@ router.get("/random", async (req, res) => {
 		res.render("includes/postCard", {
 			post: posts[0],
 			user: user,
-			lastComment: lastComment,
+			lastComment: lastComments[0],
 			isLiked: isLiked,
 		});
 	} catch (error) {
