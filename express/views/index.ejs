@@ -2,14 +2,14 @@
 <main class="flex flex-col items-center min-h-screen py-10">
 	<section
 		id="posts"
-		class="grid gap-10 max-w-3xl w-full rounded-box p-10"
+		class="grid grid-cols-3 max-w-6xl w-full rounded-box gap-6 p-6"
 	></section>
 </main>
 
 <script>
-	function getDualPosts(count = 1) {
+	function getRandomPost(count = 1) {
 		for (let i = 0; i < count; i++) {
-			fetch(`/post/get-dual`)
+			fetch(`/post/random`)
 				.then((response) => response.text())
 				.then((data) => {
 					posts.innerHTML += data;
@@ -20,72 +20,11 @@
 		}
 	}
 
-	document.addEventListener("DOMContentLoaded", getDualPosts(5));
+	document.addEventListener("DOMContentLoaded", getRandomPost(6));
 
 	window.addEventListener("scroll", () => {
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			getDualPosts(3);
+			getRandomPost(3);
 		}
 	});
-
-	function updatePostScore(postContainer) {
-		const postId1 = postContainer.getAttribute("data-post-1");
-		const postId2 = postContainer.getAttribute("data-post-2");
-
-		const bottomScoreBar = postContainer.querySelector(
-			"[selector-post-bottom-score-bar]"
-		);
-
-		fetch(`/post/get-bottom-score-bar`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-Requested-With": "XMLHttpRequest",
-			},
-			body: JSON.stringify({ postId1: postId1, postId2: postId2 }),
-		})
-			.then((response) => response.text())
-			.then((data) => {
-				console.log("TODO bottom score bar", data);
-				bottomScoreBar.innerHTML = data;
-			})
-			.catch((error) => console.error("Error:", error));
-	}
-
-	document
-		.getElementById("posts")
-		.addEventListener("click", function (event) {
-			if (event.target.closest("[selector-post-vote]")) {
-				const postId = event.target
-					.closest("[selector-post-vote]")
-					.getAttribute("data-post-id");
-
-				fetch(`/post/vote`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-Requested-With": "XMLHttpRequest",
-					},
-					body: JSON.stringify({ postId: postId }),
-				})
-					.then((response) => {
-						if (response.status === 401) {
-							window.location.href =
-								"/auth/login?next=" +
-								encodeURIComponent(window.location.href);
-							return;
-						}
-						return response.json();
-					})
-					.then((data) => {
-						if (data.success) {
-							const postDual = event.target.closest(
-								"[selector-post-dual]"
-							);
-							updatePostScore(postDual);
-						}
-					})
-					.catch((error) => console.error("Error:", error));
-			}
-		});
 </script>

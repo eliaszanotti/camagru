@@ -1,5 +1,6 @@
 import express from "express";
 import Post from "../models/Post.mjs";
+import User from "../models/User.mjs";
 import Vote from "../models/Vote.mjs";
 import { errors } from "../utils/errors.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
@@ -9,61 +10,14 @@ const router = express.Router();
 router.use(express.json());
 router.use(postPublishRoute);
 
-router.get("/get-dual", async (req, res) => {
+router.get("/random", async (req, res) => {
 	try {
-		const posts = await Post.aggregate([
-			{ $sample: { size: 2 } },
-			{
-				$lookup: {
-					from: "users",
-					localField: "userId",
-					foreignField: "_id",
-					as: "user",
-				},
-			},
-			{ $unwind: "$user" },
-			{
-				$lookup: {
-					from: "votes",
-					localField: "_id",
-					foreignField: "postId",
-					as: "votes",
-				},
-			},
-			{
-				$addFields: {
-					voteCount: { $size: "$votes" },
-				},
-			},
-			{
-				$project: {
-					votes: 0,
-				},
-			},
-		]);
-		// TODO
-		// console.log(posts);
-		res.render("postDualSection", { posts });
-	} catch (error) {
-		res.status(500).json(errors.GETTING_POSTS);
-	}
-});
-
-router.post("/get-bottom-score-bar", async (req, res) => {
-	const { postId1, postId2 } = req.body;
-
-	try {
-		const posts = await Post.find({
-			_id: { $in: [postId1, postId2] },
-		});
-		const postIds = posts.map((post) => post._id);
-		const votes = await Vote.find({ postId: { $in: postIds } }).exec();
-		posts.forEach((post) => {
-			post.voteCount = votes.filter(
-				(vote) => vote.postId.toString() === post._id.toString()
-			).length;
-		});
-		res.render("includes/postBottomScoreBar", { posts });
+		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);
+		if (posts.length === 0) {
+			return res.status(404).json(errors.NO_POSTS);
+		}
+		const user = await User.findById(posts[0].userId);
+		res.render("includes/postSingle", { post: posts[0], user: user });
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
 	}
