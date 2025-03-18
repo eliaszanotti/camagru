@@ -1,6 +1,7 @@
 import express from "express";
 import Post from "../models/Post.mjs";
 import User from "../models/User.mjs";
+import Comment from "../models/Comment.mjs";
 import Vote from "../models/Vote.mjs";
 import { errors } from "../utils/errors.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
@@ -17,7 +18,15 @@ router.get("/random", async (req, res) => {
 			return res.status(404).json(errors.NO_POSTS);
 		}
 		const user = await User.findById(posts[0].userId);
-		res.render("includes/postSingle", { post: posts[0], user: user });
+		const lastComment = await Comment.find({ postId: posts[0]._id })
+			.sort({ createdAt: -1 })
+			.limit(1);
+		console.log(lastComment);
+		res.render("includes/postSingle", {
+			post: posts[0],
+			user: user,
+			lastComment: lastComment,
+		});
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
 	}

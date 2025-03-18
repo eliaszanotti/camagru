@@ -6,6 +6,8 @@ const postSchema = new mongoose.Schema({
 		ref: "User",
 		required: true,
 	},
+	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+	votes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vote" }],
 	imageUrl: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now },
 });

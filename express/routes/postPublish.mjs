@@ -41,15 +41,15 @@ router.post(
 				userId: userId,
 				imageUrl: imageUrl,
 				createdAt: new Date(),
-				votes: 0,
 			});
 
 			await newPost.save();
 
 			// TODO redirect to a page
-			res
-				.status(201)
-				.json({ message: "Post created successfully", post: newPost });
+			res.status(201).json({
+				message: "Post created successfully",
+				post: newPost,
+			});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json(errors.PUBLISHING_POST);
