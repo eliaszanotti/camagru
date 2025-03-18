@@ -28,34 +28,64 @@
 		}
 	});
 
-	document.getElementById("posts").addEventListener("click", function (event) {
-		if (event.target.closest("[selector-post-vote]")) {
-			const postId = event.target
-				.closest("[selector-post-vote]")
-				.getAttribute("data-post-id");
+	function updatePostScore(postContainer) {
+		const postId1 = postContainer.getAttribute("data-post-1");
+		const postId2 = postContainer.getAttribute("data-post-2");
 
-			fetch(`/post/vote`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Requested-With": "XMLHttpRequest",
-				},
-				body: JSON.stringify({ postId: postId }),
+		const bottomScoreBar = postContainer.querySelector(
+			"[selector-post-bottom-score-bar]"
+		);
+
+		fetch(`/post/get-bottom-score-bar`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-Requested-With": "XMLHttpRequest",
+			},
+			body: JSON.stringify({ postId1: postId1, postId2: postId2 }),
+		})
+			.then((response) => response.text())
+			.then((data) => {
+				console.log("TODO bottom score bar", data);
+				bottomScoreBar.innerHTML = data;
 			})
-				.then((response) => {
-					if (response.status === 401) {
-						window.location.href =
-							"/auth/login?next=" + encodeURIComponent(window.location.href);
-						return;
-					}
-					return response.json();
+			.catch((error) => console.error("Error:", error));
+	}
+
+	document
+		.getElementById("posts")
+		.addEventListener("click", function (event) {
+			if (event.target.closest("[selector-post-vote]")) {
+				const postId = event.target
+					.closest("[selector-post-vote]")
+					.getAttribute("data-post-id");
+
+				fetch(`/post/vote`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-Requested-With": "XMLHttpRequest",
+					},
+					body: JSON.stringify({ postId: postId }),
 				})
-				.then((data) => {
-					if (data.success) {
-						alert("Vote enregistré !");
-					}
-				})
-				.catch((error) => console.error("Error:", error));
-		}
-	});
+					.then((response) => {
+						if (response.status === 401) {
+							window.location.href =
+								"/auth/login?next=" +
+								encodeURIComponent(window.location.href);
+							return;
+						}
+						return response.json();
+					})
+					.then((data) => {
+						if (data.success) {
+							const postDual = event.target.closest(
+								"[selector-post-dual]"
+							);
+							updatePostScore(postDual);
+						}
+					})
+					.catch((error) => console.error("Error:", error));
+			}
+		});
 </script>

@@ -41,8 +41,29 @@ router.get("/get-dual", async (req, res) => {
 				},
 			},
 		]);
-		console.log(posts);
+		// TODO
+		// console.log(posts);
 		res.render("postDualSection", { posts });
+	} catch (error) {
+		res.status(500).json(errors.GETTING_POSTS);
+	}
+});
+
+router.post("/get-bottom-score-bar", async (req, res) => {
+	const { postId1, postId2 } = req.body;
+
+	try {
+		const posts = await Post.find({
+			_id: { $in: [postId1, postId2] },
+		});
+		const postIds = posts.map((post) => post._id);
+		const votes = await Vote.find({ postId: { $in: postIds } }).exec();
+		posts.forEach((post) => {
+			post.voteCount = votes.filter(
+				(vote) => vote.postId.toString() === post._id.toString()
+			).length;
+		});
+		res.render("includes/postBottomScoreBar", { posts });
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
 	}
@@ -61,6 +82,7 @@ router.post("/vote", authMiddleware, async (req, res) => {
 		await vote.save();
 		res.status(200).json({ success: true });
 	} catch (error) {
+		// TODO ici prend lerreur du Vote.save dans Vote.mjs
 		res.status(500).json(errors.VOTING);
 	}
 });
