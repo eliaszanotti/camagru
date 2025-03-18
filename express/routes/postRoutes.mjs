@@ -17,12 +17,17 @@ router.get("/id/:id", async (req, res) => {
 	const comments = await Comment.find({ postId: post._id })
 		.populate("userId")
 		.sort({ createdAt: -1 });
-
-	console.log(comments);
-	res.render("postSingle", { post, user, comments });
+	let isLiked = false;
+	if (req?.user) {
+		isLiked = await Vote.findOne({
+			userId: req.user.id,
+			postId: post._id,
+		});
+	}
+	res.render("postSingle", { post, user, comments, isLiked });
 });
 
-router.post("/comment/:id", async (req, res) => {
+router.post("/comment/:id", authMiddleware, async (req, res) => {
 	const { content } = req.body;
 	const post = await Post.findById(req.params.id);
 	const comment = new Comment({
@@ -44,11 +49,13 @@ router.get("/random", async (req, res) => {
 		const lastComment = await Comment.find({ postId: posts[0]._id })
 			.sort({ createdAt: -1 })
 			.limit(1);
-		const isLiked = await Vote.findOne({
-			userId: req.user.id,
-			postId: posts[0]._id,
-		});
-		console.log(lastComment);
+		let isLiked = false;
+		if (req?.user) {
+			isLiked = await Vote.findOne({
+				userId: req.user.id,
+				postId: posts[0]._id,
+			});
+		}
 		res.render("includes/postCard", {
 			post: posts[0],
 			user: user,
