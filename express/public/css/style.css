@@ -7316,6 +7316,18 @@
   .bg-gray-500 {
     background-color: var(--color-gray-500);
   }
+  .bg-primary\/50 {
+    background-color: color-mix(in oklab, var(--color-primary) 50%, transparent);
+  }
+  .bg-primary\/70 {
+    background-color: color-mix(in oklab, var(--color-primary) 70%, transparent);
+  }
+  .bg-primary\/80 {
+    background-color: color-mix(in oklab, var(--color-primary) 80%, transparent);
+  }
+  .bg-primary\/90 {
+    background-color: color-mix(in oklab, var(--color-primary) 90%, transparent);
+  }
   .bg-red-500 {
     background-color: var(--color-red-500);
   }
@@ -7515,6 +7527,9 @@
   }
   .fill-none {
     fill: none;
+  }
+  .fill-primary {
+    fill: var(--color-primary);
   }
   .stroke-none {
     stroke: none;
