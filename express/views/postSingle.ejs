@@ -1,0 +1,55 @@
+<%- include("includes/head", { title: "Post" }) %>
+<main class="grid place-items-center min-h-screen p-6">
+	<section
+		class="grid grid-cols-2 max-w-6xl w-full bg-base-200 border border-base-300 rounded-box gap-6 p-6"
+	>
+		<div class="flex flex-col gap-4">
+			<div class="flex gap-2 items-center justify-between">
+				<h1 class="font-bold"><%= user.username %></h1>
+				<p class="text-sm text-gray-500">
+					<!-- prettier-ignore -->
+					<%=
+						new Date(post.createdAt).toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+							hour: "numeric",
+							minute: "numeric",
+							hour12: false,
+						})
+					%>
+				</p>
+			</div>
+			<div class="rounded-field overflow-hidden">
+				<img
+					src="<%= post.imageUrl %>"
+					alt="Post Image"
+					class="w-full aspect-square object-cover select-none"
+				/>
+			</div>
+		</div>
+		<div class="grid grid-rows-[1fr_auto] max-h-screen overflow-y-auto">
+			<div class="flex flex-col gap-2"></div>
+
+			<form
+				action="/comment"
+				method="post"
+				class="grid grid-cols-[1fr_auto] gap-2"
+			>
+				<input
+					class="input border-none w-full focus:outline-none"
+					type="text"
+					name="content"
+					placeholder="Write a comment..."
+				/>
+				<button
+					class="btn btn-block btn-ghost btn-primary focus:outline-none"
+					type="submit"
+				>
+					Post
+				</button>
+			</form>
+		</div>
+	</section>
+</main>
+<%- include("includes/footer") %>

@@ -11,6 +11,13 @@ const router = express.Router();
 router.use(express.json());
 router.use(postPublishRoute);
 
+router.get("/id/:id", async (req, res) => {
+	const post = await Post.findById(req.params.id);
+	const user = await User.findById(post.userId);
+	const comments = await Comment.find({ postId: post._id });
+	res.render("postSingle", { post, user, comments });
+});
+
 router.get("/random", async (req, res) => {
 	try {
 		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);

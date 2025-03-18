@@ -4,6 +4,7 @@
 	data-post-id="<%= post._id %>"
 >
 	<div class="flex gap-2 items-center justify-between">
+		<!-- TODO mettre dans des include les truc quon partage avec postSingle -->
 		<h1 class="font-bold"><%= user.username %></h1>
 		<p class="text-sm text-gray-500">
 			<!-- prettier-ignore -->
@@ -44,9 +45,9 @@
 					<%- include("../icons/heart.ejs") %>
 				<% } %>
 			</button>
-			<button class="btn btn-square btn-ghost">
+			<a href="/post/id/<%= post._id %>" class="btn btn-square btn-ghost">
 				<%- include("../icons/messageCircle.ejs") %>
-			</button>
+			</a>
 		</div>
 		<% if (lastComment && lastComment.length > 0) { %>
 		<p class="w-full text-sm text-gray-500">
