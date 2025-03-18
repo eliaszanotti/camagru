@@ -21,11 +21,16 @@ router.get("/random", async (req, res) => {
 		const lastComment = await Comment.find({ postId: posts[0]._id })
 			.sort({ createdAt: -1 })
 			.limit(1);
+		const isLiked = await Vote.findOne({
+			userId: req.user.id,
+			postId: posts[0]._id,
+		});
 		console.log(lastComment);
 		res.render("includes/postSingle", {
 			post: posts[0],
 			user: user,
 			lastComment: lastComment,
+			isLiked: isLiked,
 		});
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);

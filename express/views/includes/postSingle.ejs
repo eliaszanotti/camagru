@@ -38,12 +38,17 @@
 		<div class="flex">
 			<button class="btn btn-square btn-ghost">
 				<!-- prettier-ignore -->
-				<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary"}) %>
+				<% if (isLiked) { %>
+					<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
+				<% } else { %>
+					<%- include("../icons/heart.ejs") %>
+				<% } %>
 			</button>
 			<button class="btn btn-square btn-ghost">
 				<%- include("../icons/messageCircle.ejs") %>
 			</button>
 		</div>
+		<% if (lastComment && lastComment.length > 0) { %>
 		<p class="w-full text-sm text-gray-500">
 			Dernier commentaire -
 			<span class="text-base-content"><%= user.username %></span>
@@ -60,10 +65,11 @@
 				}) %>
 			</span>
 		</p>
+		<p class="w-full text-sm text-gray-500"><%= lastComment.content %></p>
+		<% } else { %>
 		<p class="w-full text-sm text-gray-500">
-			<!-- TODO afficher les commentaires -->
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-			quos.
+			Il n'y a pas de commentaires pour ce post
 		</p>
+		<% } %>
 	</div>
 </div>
