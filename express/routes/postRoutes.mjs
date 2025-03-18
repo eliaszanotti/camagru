@@ -14,8 +14,24 @@ router.use(postPublishRoute);
 router.get("/id/:id", async (req, res) => {
 	const post = await Post.findById(req.params.id);
 	const user = await User.findById(post.userId);
-	const comments = await Comment.find({ postId: post._id });
+	const comments = await Comment.find({ postId: post._id })
+		.populate("userId")
+		.sort({ createdAt: -1 });
+
+	console.log(comments);
 	res.render("postSingle", { post, user, comments });
+});
+
+router.post("/comment/:id", async (req, res) => {
+	const { content } = req.body;
+	const post = await Post.findById(req.params.id);
+	const comment = new Comment({
+		content,
+		postId: post._id,
+		userId: req.user.id,
+	});
+	await comment.save();
+	res.redirect(`/post/id/${post._id}`);
 });
 
 router.get("/random", async (req, res) => {

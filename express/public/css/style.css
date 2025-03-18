@@ -5901,6 +5901,9 @@
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
+  .h-10 {
+    height: calc(var(--spacing) * 10);
+  }
   .h-14 {
     height: calc(var(--spacing) * 14);
   }
@@ -5913,8 +5916,14 @@
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
+  .h-\[60vh\] {
+    height: 60vh;
+  }
   .h-auto {
     height: auto;
+  }
+  .h-fit {
+    height: fit-content;
   }
   .h-full {
     height: 100%;
@@ -6050,6 +6059,9 @@
   }
   .w-8 {
     width: calc(var(--spacing) * 8);
+  }
+  .w-10 {
+    width: calc(var(--spacing) * 10);
   }
   .w-fit {
     width: fit-content;
@@ -6469,6 +6481,9 @@
   .grid-cols-\[1fr_auto\] {
     grid-template-columns: 1fr auto;
   }
+  .grid-cols-\[auto_1fr\] {
+    grid-template-columns: auto 1fr;
+  }
   .grid-cols-none {
     grid-template-columns: none;
   }
@@ -6850,6 +6865,9 @@
   }
   .rounded-field {
     border-radius: var(--radius-field);
+  }
+  .rounded-full {
+    border-radius: calc(infinity * 1px);
   }
   .rounded-selector {
     border-radius: var(--radius-selector);
@@ -7304,8 +7322,14 @@
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
+  .bg-base-100 {
+    background-color: var(--color-base-100);
+  }
   .bg-base-200 {
     background-color: var(--color-base-200);
+  }
+  .bg-primary {
+    background-color: var(--color-primary);
   }
   .bg-primary\/80 {
     background-color: color-mix(in oklab, var(--color-primary) 80%, transparent);
@@ -7880,6 +7904,10 @@
     --tw-leading: 1;
     line-height: 1;
   }
+  .font-black {
+    --tw-font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-black);
+  }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
@@ -8197,9 +8225,6 @@
   }
   .text-gray-500 {
     color: var(--color-gray-500);
-  }
-  .text-primary {
-    color: var(--color-primary);
   }
   .tooltip-accent {
     --tt-bg: var(--color-accent);
@@ -9328,12 +9353,6 @@
       @media (hover: hover) {
         opacity: 100%;
       }
-    }
-  }
-  .focus\:border-none {
-    &:focus {
-      --tw-border-style: none;
-      border-style: none;
     }
   }
   .focus\:outline-none {

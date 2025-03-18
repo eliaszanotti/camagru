@@ -1,9 +1,9 @@
 <%- include("includes/head", { title: "Post" }) %>
 <main class="grid place-items-center min-h-screen p-6">
 	<section
-		class="grid grid-cols-2 max-w-6xl w-full bg-base-200 border border-base-300 rounded-box gap-6 p-6"
+		class="grid grid-cols-2 max-w-6xl w-full bg-base-200 border border-base-300 rounded-box gap-6 p-6 h-[60vh]"
 	>
-		<div class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4 h-full">
 			<div class="flex gap-2 items-center justify-between">
 				<h1 class="font-bold"><%= user.username %></h1>
 				<p class="text-sm text-gray-500">
@@ -20,19 +20,51 @@
 					%>
 				</p>
 			</div>
-			<div class="rounded-field overflow-hidden">
-				<img
-					src="<%= post.imageUrl %>"
-					alt="Post Image"
-					class="w-full aspect-square object-cover select-none"
-				/>
+			<div
+				class="rounded-field w-full h-full bg-cover bg-center"
+				style="background-image: url('<%= post.imageUrl %>')"
+			>
+				<!-- <img
+						class="w-fit h-fit object-cover object-center select-none rounded-field"
+						src="<%= post.imageUrl %>"
+						alt="Post Image"
+					/> -->
 			</div>
 		</div>
-		<div class="grid grid-rows-[1fr_auto] max-h-screen overflow-y-auto">
-			<div class="flex flex-col gap-2"></div>
+		<div class="grid grid-rows-[1fr_auto] overflow-y-auto gap-6">
+			<div class="flex flex-col gap-10 overflow-y-auto">
+				<% for (comment of comments) { %>
+				<div class="grid grid-cols-[auto_1fr] gap-4">
+					<p
+						class="w-10 h-10 rounded-full bg-primary grid place-items-center font-black select-none"
+					>
+						<%= comment.userId.username.charAt(0).toUpperCase() %>
+					</p>
+					<div class="flex flex-col gap-2">
+						<div class="flex gap-2">
+							<p class="text-sm font-bold">
+								<%= comment.userId.username %>
+							</p>
+							<p class="text-sm text-gray-500">
+								<!-- prettier-ignore -->
+								<%= new Date(comment.createdAt).toLocaleDateString("en-US", {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+								hour: "numeric",
+								minute: "numeric",
+								hour12: false,
+							}) %>
+							</p>
+						</div>
+						<p class="break-all"><%= comment.content %></p>
+					</div>
+				</div>
+				<% } %>
+			</div>
 
 			<form
-				action="/comment"
+				action="/post/comment/<%= post._id %>"
 				method="post"
 				class="grid grid-cols-[1fr_auto] gap-2"
 			>
