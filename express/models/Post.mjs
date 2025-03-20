@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
 		required: true,
 	},
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-	votes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vote" }],
+	likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Likes" }],
 	imageUrl: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now },
 });

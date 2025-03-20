@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const voteSchema = new mongoose.Schema({
+const likeSchema = new mongoose.Schema({
 	userId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
@@ -13,13 +13,13 @@ const voteSchema = new mongoose.Schema({
 	},
 });
 
-voteSchema.pre("save", async function (next) {
+likeSchema.pre("save", async function (next) {
 	try {
-		const existingVote = await Vote.findOne({
+		const existingLike = await Like.findOne({
 			userId: this.userId,
 			postId: this.postId,
 		});
-		if (existingVote) {
+		if (existingLike) {
 			// TODO ici renvoie un erreur du json centralisé d'erreur
 			const error = new Error("You have already voted for this post");
 			error.statusCode = 400;
@@ -31,5 +31,5 @@ voteSchema.pre("save", async function (next) {
 	}
 });
 
-const Vote = mongoose.model("Vote", voteSchema);
-export default Vote;
+const Like = mongoose.model("Like", likeSchema);
+export default Like;

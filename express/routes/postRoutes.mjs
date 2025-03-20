@@ -2,7 +2,7 @@ import express from "express";
 import Post from "../models/Post.mjs";
 import User from "../models/User.mjs";
 import Comment from "../models/Comment.mjs";
-import Vote from "../models/Vote.mjs";
+import Like from "../models/Like.mjs";
 import { errors } from "../utils/errors.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import postPublishRoute from "./postPublish.mjs";
@@ -19,7 +19,7 @@ router.get("/id/:id", authMiddleware, async (req, res) => {
 		.sort({ createdAt: -1 });
 	let isLiked = false;
 	if (req?.user) {
-		isLiked = await Vote.findOne({
+		isLiked = await Like.findOne({
 			userId: req.user.id,
 			postId: post._id,
 		});
@@ -43,13 +43,13 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 	}
 });
 
-router.post("/vote/:id", authMiddleware, async (req, res) => {
+router.post("/like/:id", authMiddleware, async (req, res) => {
 	try {
-		const vote = new Vote({ userId: req.user.id, postId: req.params.id });
-		await vote.save();
+		const like = new Like({ userId: req.user.id, postId: req.params.id });
+		await like.save();
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
-		// TODO ici prend lerreur du Vote.save dans Vote.mjs
+		// TODO ici prend lerreur du Like.save dans Like.mjs
 		res.status(500).json(errors.VOTING);
 	}
 });
@@ -67,7 +67,7 @@ router.get("/random", async (req, res) => {
 			.limit(1);
 		let isLiked = false;
 		if (req?.user) {
-			isLiked = await Vote.findOne({
+			isLiked = await Like.findOne({
 				userId: req.user.id,
 				postId: posts[0]._id,
 			});
