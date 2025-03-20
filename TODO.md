@@ -11,3 +11,5 @@ DRY les fieldsets dans changePassword.ejs, changeUsername.ejs et resetPassword.e
 Dans publish au lieu de faire un truc comme on a en reactif dynamic quand on a upload le fichier ou pris depuis la camera, on redirige vers une page preview qui affiche le post et apres seulement on publie
 
 Mettre en place le like
+
+Attention ca doit etre par date de creation et pas aleatoire

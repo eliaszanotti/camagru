@@ -55,6 +55,34 @@ router.post("/like/:id", authMiddleware, async (req, res) => {
 	}
 });
 
+router.get("/card/:id", async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		const user = await User.findById(post.userId);
+		const lastComments = await Comment.find({ postId: post._id })
+			.populate("userId")
+			.sort({ createdAt: -1 })
+			.limit(1);
+		const likes = await Like.find({ postId: post._id });
+		let isLiked = false;
+		if (req?.user) {
+			isLiked = await Like.findOne({
+				userId: req.user.id,
+				postId: post._id,
+			});
+		}
+		res.render("includes/postCard", {
+			post,
+			user,
+			likes,
+			isLiked,
+			lastComment: lastComments[0],
+		});
+	} catch (error) {
+		res.status(500).json(errors.GETTING_POSTS);
+	}
+});
+
 router.get("/random", async (req, res) => {
 	try {
 		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);
