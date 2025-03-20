@@ -1,10 +1,11 @@
+<% if (post) { %>
 <div
 	class="flex flex-col bg-base-200 border border-base-300 gap-4 p-4 rounded-box"
 	data-post-id="<%= post._id %>"
 >
 	<div class="flex gap-2 items-center justify-between">
 		<!-- TODO mettre dans des include les truc quon partage avec postSingle -->
-		<h1 class="font-bold"><%= user.username %></h1>
+		<h1 class="font-bold"><%= post.userId.username %></h1>
 		<p class="text-sm text-gray-500">
 			<!-- prettier-ignore -->
 			<%=
@@ -36,16 +37,20 @@
 
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center gap-4">
-			<form action="/post/like/<%= post._id %>" method="post" class="flex items-center">
+			<form
+				action="/post/like/<%= post._id %>"
+				method="post"
+				class="flex items-center"
+			>
 				<button class="btn btn-square btn-ghost">
 					<!-- prettier-ignore -->
-					<% if (isLiked) { %>
+					<% if (post.likes) { %>
 						<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
 					<% } else { %>
 						<%- include("../icons/heart.ejs") %>
 					<% } %>
 				</button>
-				<p class="text-sm font-bold"><%= likes.length %></p>
+				<p class="text-sm font-bold"><%= post.likes.length %></p>
 			</form>
 			<div class="flex items-center">
 				<a
@@ -57,15 +62,15 @@
 				<p class="text-sm font-bold">TODO 15</p>
 			</div>
 		</div>
-		<% if (lastComment) { %>
+		<% if (post.comments.length > 0) { %>
 		<div class="flex flex-col gap-2">
 			<div class="flex gap-2">
 				<p class="text-sm font-bold">
-					<%= lastComment.userId.username %>
+					<%= post.comments[0].userId.username %>
 				</p>
 				<p class="text-sm text-gray-500">
 					<!-- prettier-ignore -->
-					<%= new Date(lastComment.createdAt).toLocaleDateString("en-US", {
+					<%= new Date(post.comments[0].createdAt).toLocaleDateString("en-US", {
 						year: "numeric",
 						month: "long",
 						day: "numeric",
@@ -75,8 +80,9 @@
 					}) %>
 				</p>
 			</div>
-			<p class="line-clamp-1"><%= lastComment.content %></p>
+			<p class="line-clamp-1"><%= post.comments[0].content %></p>
 		</div>
 		<% } %>
 	</div>
 </div>
+<% } %>

@@ -25,4 +25,5 @@ export const errors = {
 	IMAGE_REQUIRED: { id: "global", message: "Image is required" },
 	VOTING: { id: "global", message: "Error voting this post" },
 	NO_POSTS: { id: "global", message: "No posts found" },
+	INVALID_PAGE: { id: "global", message: "Invalid page" },
 };
