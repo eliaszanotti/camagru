@@ -66,6 +66,7 @@ router.get("/random", async (req, res) => {
 			.populate("userId")
 			.sort({ createdAt: -1 })
 			.limit(1);
+		const likes = await Like.find({ postId: posts[0]._id });
 		let isLiked = false;
 		if (req?.user) {
 			isLiked = await Like.findOne({
@@ -78,6 +79,7 @@ router.get("/random", async (req, res) => {
 			user: user,
 			lastComment: lastComments[0],
 			isLiked: isLiked,
+			likes: likes,
 		});
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
