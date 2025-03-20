@@ -17,6 +17,7 @@ router.get("/id/:id", authMiddleware, async (req, res) => {
 	const comments = await Comment.find({ postId: post._id })
 		.populate("userId")
 		.sort({ createdAt: -1 });
+	const likes = await Like.find({ postId: post._id });
 	let isLiked = false;
 	if (req?.user) {
 		isLiked = await Like.findOne({
@@ -24,7 +25,7 @@ router.get("/id/:id", authMiddleware, async (req, res) => {
 			postId: post._id,
 		});
 	}
-	res.render("postSingle", { post, user, comments, isLiked });
+	res.render("postSingle", { post, user, comments, likes, isLiked });
 });
 
 router.post("/comment/:id", authMiddleware, async (req, res) => {
