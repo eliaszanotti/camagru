@@ -29,14 +29,29 @@ router.get("/id/:id", authMiddleware, async (req, res) => {
 
 router.post("/comment/:id", authMiddleware, async (req, res) => {
 	const { content } = req.body;
-	const post = await Post.findById(req.params.id);
-	const comment = new Comment({
-		content,
-		postId: post._id,
-		userId: req.user.id,
-	});
-	await comment.save();
-	res.redirect(`/post/id/${post._id}`);
+	try {
+		const comment = new Comment({
+			content,
+			postId: req.params.id,
+			userId: req.user.id,
+		});
+		await comment.save();
+		res.redirect(`/post/id/${req.params.id}`);
+	} catch (error) {
+		// TODO ici prend lerreur du Comment.save dans Comment.mjs
+		res.status(500).json(errors.VOTING);
+	}
+});
+
+router.post("/vote/:id", authMiddleware, async (req, res) => {
+	try {
+		const vote = new Vote({ userId: req.user.id, postId: req.params.id });
+		await vote.save();
+		res.redirect(`/post/id/${req.params.id}`);
+	} catch (error) {
+		// TODO ici prend lerreur du Vote.save dans Vote.mjs
+		res.status(500).json(errors.VOTING);
+	}
 });
 
 router.get("/random", async (req, res) => {
@@ -70,20 +85,6 @@ router.get("/random", async (req, res) => {
 
 router.get("/webcam", authMiddleware, (req, res) => {
 	res.render("postWebcam");
-});
-
-router.post("/vote", authMiddleware, async (req, res) => {
-	const { postId } = req.body;
-	const userId = req.user.id;
-
-	try {
-		const vote = new Vote({ userId, postId });
-		await vote.save();
-		res.status(200).json({ success: true });
-	} catch (error) {
-		// TODO ici prend lerreur du Vote.save dans Vote.mjs
-		res.status(500).json(errors.VOTING);
-	}
 });
 
 export default router;
