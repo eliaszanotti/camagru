@@ -38,7 +38,11 @@
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center gap-4">
 			<form
-				action="/post/like/<%= post._id %>"
+				<% if (post.isLiked) { %>
+					action="/post/unlike/<%= post._id %>"
+				<% } else { %>
+					action="/post/like/<%= post._id %>"
+				<% } %>
 				method="post"
 				class="flex items-center"
 			>

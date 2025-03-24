@@ -23,7 +23,8 @@ export const errors = {
 	GETTING_POSTS: { id: "global", message: "Error getting posts" },
 	PUBLISHING_POST: { id: "global", message: "Error publishing post" },
 	IMAGE_REQUIRED: { id: "global", message: "Image is required" },
-	VOTING: { id: "global", message: "Error voting this post" },
+	LIKING: { id: "global", message: "Error liking this post" },
+	UNLIKING: { id: "global", message: "Error unliking this post" },
 	NO_POSTS: { id: "global", message: "No posts found" },
 	INVALID_PAGE: { id: "global", message: "Invalid page" },
 };

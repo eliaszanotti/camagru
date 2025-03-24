@@ -51,7 +51,16 @@ router.post("/like/:id", authMiddleware, async (req, res) => {
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
 		// TODO ici prend lerreur du Like.save dans Like.mjs
-		res.status(500).json(errors.VOTING);
+		res.status(500).json(errors.LIKING);
+	}
+});
+
+router.post("/unlike/:id", authMiddleware, async (req, res) => {
+	try {
+		await Like.deleteOne({ userId: req.user.id, postId: req.params.id });
+		res.redirect(`/post/id/${req.params.id}`);
+	} catch (error) {
+		res.status(500).json(errors.UNLIKING);
 	}
 });
 
