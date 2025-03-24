@@ -115,28 +115,25 @@ router.get("/page/:page/:index", async (req, res) => {
 router.get("/random", async (req, res) => {
 	try {
 		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);
-		if (posts.length === 0) {
-			return res.status(404).json(errors.NO_POSTS);
-		}
-		const user = await User.findById(posts[0].userId);
-		const lastComments = await Comment.find({ postId: posts[0]._id })
-			.populate("userId")
-			.sort({ createdAt: -1 })
-			.limit(1);
-		const likes = await Like.find({ postId: posts[0]._id });
-		let isLiked = false;
-		if (req?.user) {
-			isLiked = await Like.findOne({
-				userId: req.user.id,
-				postId: posts[0]._id,
-			});
-		}
+		await Promise.all(
+			posts.map(async (post) => {
+				post.user = await User.findById(post.userId);
+				post.lastComment = await Comment.findOne({
+					postId: post._id,
+				})
+					.populate("userId")
+					.sort({ createdAt: -1 });
+				post.likes = await Like.find({ postId: post._id });
+				if (req?.user) {
+					post.isLiked = await Like.findOne({
+						userId: req.user.id,
+						postId: post._id,
+					});
+				}
+			})
+		);
 		res.render("includes/postCard", {
 			post: posts[0],
-			user: user,
-			lastComment: lastComments[0],
-			isLiked: isLiked,
-			likes: likes,
 		});
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);

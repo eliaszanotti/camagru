@@ -5,7 +5,7 @@
 >
 	<div class="flex gap-2 items-center justify-between">
 		<!-- TODO mettre dans des include les truc quon partage avec postSingle -->
-		<h1 class="font-bold"><%= post.userId.username %></h1>
+		<h1 class="font-bold"><%= post.user.username %></h1>
 		<p class="text-sm text-gray-500">
 			<!-- prettier-ignore -->
 			<%=
@@ -44,7 +44,7 @@
 			>
 				<button class="btn btn-square btn-ghost">
 					<!-- prettier-ignore -->
-					<% if (post.likes) { %>
+					<% if (post.isLiked) { %>
 						<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
 					<% } else { %>
 						<%- include("../icons/heart.ejs") %>
@@ -62,15 +62,15 @@
 				<p class="text-sm font-bold">TODO 15</p>
 			</div>
 		</div>
-		<% if (post.comments.length > 0) { %>
+		<% if (post.lastComment) { %>
 		<div class="flex flex-col gap-2">
 			<div class="flex gap-2">
 				<p class="text-sm font-bold">
-					<%= post.comments[0].userId.username %>
+					<%= post.lastComment.userId.username %>
 				</p>
 				<p class="text-sm text-gray-500">
 					<!-- prettier-ignore -->
-					<%= new Date(post.comments[0].createdAt).toLocaleDateString("en-US", {
+					<%= new Date(post.lastComment.createdAt).toLocaleDateString("en-US", {
 						year: "numeric",
 						month: "long",
 						day: "numeric",
@@ -80,7 +80,7 @@
 					}) %>
 				</p>
 			</div>
-			<p class="line-clamp-1"><%= post.comments[0].content %></p>
+			<p class="line-clamp-1"><%= post.lastComment.content %></p>
 		</div>
 		<% } %>
 	</div>
