@@ -32,7 +32,7 @@
 					/> -->
 			</div>
 			<form
-				action="/post/like/<%= post._id %>"
+				action="/post/<%= post.isLiked ? "unlike" : "like" %>/<%= post._id %>"
 				method="post"
 				class="flex gap-2 items-center"
 			>
