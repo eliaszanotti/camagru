@@ -7,9 +7,11 @@
 </main>
 
 <script>
-	function getRandomPost(count = 1) {
+	let currentPost = 0;
+
+	function getRecentPost(count = 1) {
 		for (let i = 0; i < count; i++) {
-			fetch(`/post/random`)
+			fetch(`/post/recent/${currentPost}`)
 				.then((response) => response.text())
 				.then((data) => {
 					posts.innerHTML += data;
@@ -17,14 +19,15 @@
 				.catch((error) => {
 					console.error("Error fetching posts:", error);
 				});
+			currentPost++;
 		}
 	}
 
-	document.addEventListener("DOMContentLoaded", getRandomPost(6));
+	document.addEventListener("DOMContentLoaded", getRecentPost(6));
 
 	window.addEventListener("scroll", () => {
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			getRandomPost(3);
+			getRecentPost(3);
 		}
 	});
 </script>

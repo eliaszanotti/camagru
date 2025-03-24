@@ -92,12 +92,16 @@ router.get("/card/:id", async (req, res) => {
 	}
 });
 
-router.get("/random", async (req, res) => {
+router.get("/recent/:number", async (req, res) => {
 	try {
-		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);
+		const posts = await Post.find({})
+			.populate("userId")
+			.sort({ createdAt: -1 })
+			.skip(req.params.number)
+			.limit(1);
+		console.log(posts);
 		await Promise.all(
 			posts.map(async (post) => {
-				post.user = await User.findById(post.userId);
 				post.comments = await Comment.find({ postId: post._id })
 					.populate("userId")
 					.sort({ createdAt: -1 });
