@@ -89,11 +89,10 @@ router.get("/random", async (req, res) => {
 		await Promise.all(
 			posts.map(async (post) => {
 				post.user = await User.findById(post.userId);
-				post.lastComment = await Comment.findOne({
-					postId: post._id,
-				})
+				post.comments = await Comment.find({ postId: post._id })
 					.populate("userId")
 					.sort({ createdAt: -1 });
+				post.lastComment = post.comments[0];
 				post.likes = await Like.find({ postId: post._id });
 				if (req?.user) {
 					post.isLiked = await Like.findOne({
