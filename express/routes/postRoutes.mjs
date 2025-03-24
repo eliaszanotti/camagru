@@ -83,35 +83,6 @@ router.get("/card/:id", async (req, res) => {
 	}
 });
 
-router.get("/page/:page/:index", async (req, res) => {
-	const page = req.params.page;
-	const totalPosts = await Post.countDocuments();
-	if (page < 0 || page >= Math.ceil(totalPosts / 6)) {
-		return res.status(400).json(errors.INVALID_PAGE);
-	}
-	const posts = await Post.find({})
-		.populate("userId")
-		.sort({ createdAt: -1 })
-		.skip(page * 6 + req.params.index)
-		.limit(1);
-	console.log("posts", posts[0]);
-	if (posts.length === 0) {
-		return res.render("includes/postCard", { post: null });
-	}
-	await Promise.all(
-		posts.map(async (post) => {
-			post.comments = await Comment.find({ postId: post._id }).populate(
-				"userId"
-			);
-			post.likes = await Like.find({ postId: post._id }).populate(
-				"userId"
-			);
-		})
-	);
-	console.log("posts", posts[0]);
-	res.render("includes/postCard", { post: posts[0] });
-});
-
 router.get("/random", async (req, res) => {
 	try {
 		const posts = await Post.aggregate([{ $sample: { size: 1 } }]);
