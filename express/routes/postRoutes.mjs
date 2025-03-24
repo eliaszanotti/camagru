@@ -40,7 +40,7 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
 		// TODO ici prend lerreur du Comment.save dans Comment.mjs
-		res.status(500).json(errors.VOTING);
+		res.status(500).json(errors.COMMENTING);
 	}
 });
 
