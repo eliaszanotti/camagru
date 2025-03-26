@@ -58,7 +58,7 @@ router.post(
 );
 
 router.get("/webcam", authMiddleware, (req, res) => {
-	res.render("postWebcam");
+	res.render("galleryWebcam");
 });
 
 router.get("/", authMiddleware, async (req, res) => {
