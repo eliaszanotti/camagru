@@ -32,35 +32,6 @@
 					/>
 				</label>
 			</div>
-
-			<div
-				id="imagePreviewContainer"
-				class="hidden flex-col justify-center items-center gap-4"
-			>
-				<img
-					id="imagePreview"
-					class="h-48 aspect-square object-cover rounded-field"
-					src=""
-					alt="Aperçu de l'image"
-				/>
-				<button
-					type="button"
-					class="btn btn-error"
-					onclick="deleteImage()"
-				>
-					Delete <%- include('icons/trash') %>
-				</button>
-			</div>
-
-			<div class="flex justify-end">
-				<button
-					type="submit"
-					class="btn btn-primary"
-					onclick="handlePublish(event)"
-				>
-					Publish
-				</button>
-			</div>
 		</form>
 	</section>
 </main>
@@ -88,43 +59,43 @@
 		}
 	}
 
-	function deleteImage() {
-		imageFileInput.value = "";
-		imagePreview.src = "";
-		imagePreviewContainer.style.display = "none";
-		sessionStorage.removeItem("capturedImage");
-	}
+	// function deleteImage() {
+	// 	imageFileInput.value = "";
+	// 	imagePreview.src = "";
+	// 	imagePreviewContainer.style.display = "none";
+	// 	sessionStorage.removeItem("capturedImage");
+	// }
 
-	function dataUrlToFile(dataUrl, filename) {
-		const arr = dataUrl.split(",");
-		const mime = arr[0].match(/:(.*)/)[1];
-		const bstr = atob(arr[1]);
-		let n = bstr.length;
-		const u8arr = new Uint8Array(n);
-		while (n--) {
-			u8arr[n] = bstr.charCodeAt(n);
-		}
-		return new File([u8arr], filename, { type: mime });
-	}
+	// function dataUrlToFile(dataUrl, filename) {
+	// 	const arr = dataUrl.split(",");
+	// 	const mime = arr[0].match(/:(.*)/)[1];
+	// 	const bstr = atob(arr[1]);
+	// 	let n = bstr.length;
+	// 	const u8arr = new Uint8Array(n);
+	// 	while (n--) {
+	// 		u8arr[n] = bstr.charCodeAt(n);
+	// 	}
+	// 	return new File([u8arr], filename, { type: mime });
+	// }
 
-	function handlePublish(event) {
-		// TODO fix this with simple publishing
-		event.preventDefault();
-		const formData = new FormData();
-		formData.append(
-			"imageFile",
-			dataUrlToFile(imagePreview.src, "image.jpg")
-		);
+	// function handlePublish(event) {
+	// 	// TODO fix this with simple publishing
+	// 	event.preventDefault();
+	// 	const formData = new FormData();
+	// 	formData.append(
+	// 		"imageFile",
+	// 		dataUrlToFile(imagePreview.src, "image.jpg")
+	// 	);
 
-		fetch("/gallery/add", {
-			method: "POST",
-			body: formData,
-		}).then((response) => {
-			response.json().then((data) => {
-				console.log(data);
-			});
-		});
-	}
+	// 	fetch("/gallery/add", {
+	// 		method: "POST",
+	// 		body: formData,
+	// 	}).then((response) => {
+	// 		response.json().then((data) => {
+	// 			console.log(data);
+	// 		});
+	// 	});
+	// }
 
 	document.addEventListener("DOMContentLoaded", function () {
 		const capturedImage = sessionStorage.getItem("capturedImage");
