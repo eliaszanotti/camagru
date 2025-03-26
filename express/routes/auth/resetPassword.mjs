@@ -1,7 +1,7 @@
 import express from "express";
-import User from "../models/User.mjs";
-import { passwordValidation } from "../utils/validations.mjs";
-import { errors } from "../utils/errors.mjs";
+import User from "../../models/User.mjs";
+import { passwordValidation } from "../../utils/validations.mjs";
+import { errors } from "../../utils/errors.mjs";
 
 const router = express.Router();
 

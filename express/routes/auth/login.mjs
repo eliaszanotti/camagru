@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/User.mjs";
-import { errors } from "../utils/errors.mjs";
+import User from "../../models/User.mjs";
+import { errors } from "../../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -14,7 +14,9 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
 	const { username, password, next = "/" } = req.body;
 
-	const user = await User.findOne({ $or: [{ username }, { email: username }] });
+	const user = await User.findOne({
+		$or: [{ username }, { email: username }],
+	});
 	if (!user) {
 		return res.status(401).render("authLogin", errors.INVALID_CREDENTIALS);
 	}

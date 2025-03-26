@@ -1,9 +1,9 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import User from "../models/User.mjs";
-import { passwordValidation } from "../utils/validations.mjs";
-import { authMiddleware } from "../middleware/authMiddleware.mjs";
-import { errors } from "../utils/errors.mjs";
+import User from "../../models/User.mjs";
+import { passwordValidation } from "../../utils/validations.mjs";
+import { authMiddleware } from "../../middleware/authMiddleware.mjs";
+import { errors } from "../../utils/errors.mjs";
 
 const router = express.Router();
 

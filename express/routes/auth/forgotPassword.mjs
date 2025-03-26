@@ -1,9 +1,9 @@
 import express from "express";
-import User from "../models/User.mjs";
+import User from "../../models/User.mjs";
 import crypto from "crypto";
-import transporter from "../utils/emailTransporter.mjs";
-import { resetPasswordMailOptions } from "../utils/mailOptions.mjs";
-import { errors } from "../utils/errors.mjs";
+import transporter from "../../utils/emailTransporter.mjs";
+import { resetPasswordMailOptions } from "../../utils/mailOptions.mjs";
+import { errors } from "../../utils/errors.mjs";
 
 const router = express.Router();
 
@@ -16,7 +16,9 @@ router.post("/forgot-password", async (req, res) => {
 
 	const user = await User.findOne({ email });
 	if (!user) {
-		return res.status(404).render("authForgotPassword", errors.USER_NOT_FOUND);
+		return res
+			.status(404)
+			.render("authForgotPassword", errors.USER_NOT_FOUND);
 	}
 
 	const resetToken = crypto.randomBytes(32).toString("hex");

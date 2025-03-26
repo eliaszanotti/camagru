@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../models/User.mjs";
+import User from "../../models/User.mjs";
 import registerRoute from "./register.mjs";
 import forgotPasswordRoute from "./forgotPassword.mjs";
 import loginRoute from "./login.mjs";

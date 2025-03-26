@@ -1,5 +1,5 @@
 import express from "express";
-import authRoutes from "./authRoutes.mjs";
+import authRoutes from "./auth/index.mjs";
 import postRoutes from "./post/index.mjs";
 import { authMiddleware } from "../middleware/authMiddleware.mjs";
 import User from "../models/User.mjs";
