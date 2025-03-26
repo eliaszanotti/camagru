@@ -9,9 +9,9 @@
 <script>
 	let currentPost = 0;
 
-	function getRecentPost(count = 1) {
+	async function getRecentPost(count = 1) {
 		for (let i = 0; i < count; i++) {
-			fetch(`/post/recent/${currentPost}`)
+			await fetch(`/post/recent/${currentPost}`)
 				.then((response) => response.text())
 				.then((data) => {
 					posts.innerHTML += data;
@@ -23,11 +23,13 @@
 		}
 	}
 
-	document.addEventListener("DOMContentLoaded", getRecentPost(6));
+	document.addEventListener("DOMContentLoaded", async () => {
+		await getRecentPost(6);
+	});
 
-	window.addEventListener("scroll", () => {
+	window.addEventListener("scroll", async () => {
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			getRecentPost(3);
+			await getRecentPost(3);
 		}
 	});
 </script>
