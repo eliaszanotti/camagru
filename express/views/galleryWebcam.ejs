@@ -1,12 +1,12 @@
 <%- include("includes/head", { title: "Webcam capture" }) %>
 <main class="grid place-items-center min-h-screen py-10">
 	<section
-		class="grid max-h-[80vh] max-w-6xl bg-base-200 border border-base-300 rounded-box p-6 gap-6"
+		class="grid max-w-6xl bg-base-200 border border-base-300 rounded-box p-6 gap-6"
 	>
-		<video id="video" class="h-full rounded-field" autoplay></video>
+		<video id="video" class="max-h-[40vh] rounded-field" autoplay></video>
 		<div class="flex justify-end">
 			<button id="takePictureButton" class="btn btn-primary">
-				<%- include("icons/capture") %> Take Picture
+				Take picture
 			</button>
 		</div>
 		<!-- <canvas id="canvas" class="hidden"></canvas> -->

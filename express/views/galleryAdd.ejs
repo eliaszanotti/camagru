@@ -17,20 +17,21 @@
 				>
 					Open live camera <%- include('icons/addFace') %>
 				</a>
-				<label
+				<a
+					href="/gallery/import"
 					class="btn btn-neutral h-48 flex flex-col items-center justify-center gap-4"
 				>
-					Import an image <%- include('icons/addImage') %>
+					Import an image <%- include('icons/photoPlus') %>
 					<!-- TODO required -->
-					<input
+					<!-- <input
 						type="file"
 						id="imageFile"
 						name="imageFile"
 						class="hidden"
 						accept="image/*"
 						onchange="importImage(event)"
-					/>
-				</label>
+					/> -->
+				</a>
 			</div>
 		</form>
 	</section>

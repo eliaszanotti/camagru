@@ -61,6 +61,10 @@ router.get("/webcam", authMiddleware, (req, res) => {
 	res.render("galleryWebcam");
 });
 
+router.get("/import", authMiddleware, (req, res) => {
+	res.render("galleryImport");
+});
+
 router.get("/", authMiddleware, async (req, res) => {
 	try {
 		const posts = await Post.find({ userId: req.user.id })
