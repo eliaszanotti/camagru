@@ -93,8 +93,4 @@ router.get("/recent/:number", async (req, res) => {
 	}
 });
 
-router.get("/webcam", authMiddleware, (req, res) => {
-	res.render("postWebcam");
-});
-
 export default router;

@@ -19,7 +19,7 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.get("/add", authMiddleware, (req, res) => {
-	res.render("postPublish");
+	res.render("galleryAdd");
 });
 
 router.post(
@@ -56,6 +56,10 @@ router.post(
 		}
 	}
 );
+
+router.get("/webcam", authMiddleware, (req, res) => {
+	res.render("postWebcam");
+});
 
 router.get("/", authMiddleware, async (req, res) => {
 	try {
