@@ -1,10 +1,10 @@
 import express from "express";
-import Post from "../models/Post.mjs";
-import User from "../models/User.mjs";
-import Comment from "../models/Comment.mjs";
-import Like from "../models/Like.mjs";
-import { errors } from "../utils/errors.mjs";
-import { authMiddleware } from "../middleware/authMiddleware.mjs";
+import Post from "../../models/Post.mjs";
+import User from "../../models/User.mjs";
+import Comment from "../../models/Comment.mjs";
+import Like from "../../models/Like.mjs";
+import { errors } from "../../utils/errors.mjs";
+import { authMiddleware } from "../../middleware/authMiddleware.mjs";
 import postPublishRoute from "./postPublish.mjs";
 
 const router = express.Router();
