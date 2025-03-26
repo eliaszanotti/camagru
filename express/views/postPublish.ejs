@@ -5,7 +5,7 @@
 	>
 		<h1 class="text-4xl">Publish a new post</h1>
 		<form
-			action="/post/publish"
+			action="/gallery/add"
 			method="post"
 			class="flex flex-col gap-4"
 			enctype="multipart/form-data"
@@ -43,7 +43,11 @@
 					src=""
 					alt="Aperçu de l'image"
 				/>
-				<button type="button" class="btn btn-error" onclick="deleteImage()">
+				<button
+					type="button"
+					class="btn btn-error"
+					onclick="deleteImage()"
+				>
 					Delete <%- include('icons/trash') %>
 				</button>
 			</div>
@@ -107,9 +111,12 @@
 		// TODO fix this with simple publishing
 		event.preventDefault();
 		const formData = new FormData();
-		formData.append("imageFile", dataUrlToFile(imagePreview.src, "image.jpg"));
+		formData.append(
+			"imageFile",
+			dataUrlToFile(imagePreview.src, "image.jpg")
+		);
 
-		fetch("/post/publish", {
+		fetch("/gallery/add", {
 			method: "POST",
 			body: formData,
 		}).then((response) => {

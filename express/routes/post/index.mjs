@@ -5,11 +5,9 @@ import Comment from "../../models/Comment.mjs";
 import Like from "../../models/Like.mjs";
 import { errors } from "../../utils/errors.mjs";
 import { authMiddleware } from "../../middleware/authMiddleware.mjs";
-import postPublishRoute from "./postPublish.mjs";
 
 const router = express.Router();
 router.use(express.json());
-router.use(postPublishRoute);
 
 router.get("/id/:id", authMiddleware, async (req, res) => {
 	const post = await Post.findById(req.params.id);
