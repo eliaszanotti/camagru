@@ -5901,9 +5901,6 @@
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
-  .h-5 {
-    height: calc(var(--spacing) * 5);
-  }
   .h-6 {
     height: calc(var(--spacing) * 6);
   }
@@ -5939,12 +5936,6 @@
   }
   .max-h-\[40vh\] {
     max-height: 40vh;
-  }
-  .max-h-\[80vh\] {
-    max-height: 80vh;
-  }
-  .max-h-full {
-    max-height: 100%;
   }
   .max-h-none {
     max-height: none;
@@ -6068,9 +6059,6 @@
   }
   .w-4\/5 {
     width: calc(4/5 * 100%);
-  }
-  .w-5 {
-    width: calc(var(--spacing) * 5);
   }
   .w-6 {
     width: calc(var(--spacing) * 6);

@@ -9,12 +9,20 @@
 			src=""
 			alt="Image"
 		/>
-		<div class="grid grid-cols-[1fr_auto] gap-6">
-			<input type="file" class="file-input file-input-primary w-full" />
-			<button class="btn btn-primary">
-				Import
-			</button>
-		</div>
+		<form
+			action="/gallery/upload"
+			method="post"
+			enctype="multipart/form-data"
+			class="grid grid-cols-[1fr_auto] gap-6"
+		>
+			<input
+				type="file"
+				name="imageFile"
+				class="file-input file-input-primary w-full"
+				required
+			/>
+			<button type="submit" class="btn btn-primary">Import</button>
+		</form>
 	</section>
 </main>
 <%- include("includes/footer") %>

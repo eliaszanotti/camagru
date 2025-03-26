@@ -23,7 +23,7 @@ router.get("/add", authMiddleware, (req, res) => {
 });
 
 router.post(
-	"/add",
+	"/upload",
 	authMiddleware,
 	upload.single("imageFile"),
 	async (req, res) => {
@@ -44,12 +44,7 @@ router.post(
 			});
 
 			await newPost.save();
-
-			// TODO redirect to a page
-			res.status(201).json({
-				message: "Post created successfully",
-				post: newPost,
-			});
+			res.redirect("/gallery");
 		} catch (error) {
 			console.error(error);
 			res.status(500).json(errors.PUBLISHING_POST);
