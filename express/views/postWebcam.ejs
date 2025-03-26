@@ -1,32 +1,36 @@
 <%- include("includes/head", { title: "Webcam capture" }) %>
 <main class="grid place-items-center min-h-screen py-10">
 	<section
-		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
+		class="grid max-h-[80vh] max-w-6xl bg-base-200 border border-base-300 rounded-box p-6 gap-6"
 	>
-		<h1>Webcam</h1>
-		<video id="video" class="w-full h-auto" autoplay></video>
-		<button id="takePictureButton" class="btn btn-primary mt-4">
-			Take Picture
-		</button>
-		<canvas id="canvas" class="hidden"></canvas>
-		<div
-			id="imagePreviewContainer"
-			class="hidden flex-col justify-center items-center gap-4"
-		>
-			<img
-				id="imagePreview"
-				class="h-48 aspect-square object-cover rounded-field"
-				src=""
-				alt="Aperçu de l'image"
-			/>
+		<video id="video" class="h-full rounded-field" autoplay></video>
+		<div class="flex justify-end">
+			<button id="takePictureButton" class="btn btn-primary">
+				<%- include("icons/capture") %> Take Picture
+			</button>
 		</div>
-		<button
-			id="confirmButton"
-			class="btn btn-success mt-4"
-			style="display: none"
-		>
-			Confirm Photo
-		</button>
+		<!-- <canvas id="canvas" class="hidden"></canvas> -->
+		<!-- </div> -->
+		<!-- <div class="flex flex-col gap-4">
+			<div
+				id="imagePreviewContainer"
+				class="hidden flex-col justify-center items-center gap-4"
+			>
+				<img
+					id="imagePreview"
+					class="h-48 aspect-square object-cover rounded-field"
+					src=""
+					alt="Aperçu de l'image"
+				/>
+			</div>
+			<button
+				id="confirmButton"
+				class="btn btn-success mt-4"
+				style="display: none"
+			>
+				Confirm Photo
+			</button>
+		</div> -->
 	</section>
 </main>
 <%- include("includes/footer") %>
@@ -34,12 +38,12 @@
 <script>
 	const video = document.getElementById("video");
 	const takePictureButton = document.getElementById("takePictureButton");
-	const canvas = document.getElementById("canvas");
+	// const canvas = document.getElementById("canvas");
 	const imagePreview = document.getElementById("imagePreview");
-	const imagePreviewContainer = document.getElementById(
-		"imagePreviewContainer"
-	);
-	const confirmButton = document.getElementById("confirmButton");
+	// const imagePreviewContainer = document.getElementById(
+	// "imagePreviewContainer"
+	// );
+	// const confirmButton = document.getElementById("confirmButton");
 
 	let imageData = null;
 
@@ -67,11 +71,11 @@
 	}
 
 	takePictureButton.addEventListener("click", takePicture);
-	confirmButton.addEventListener("click", function () {
-		sessionStorage.removeItem("capturedImage");
-		sessionStorage.setItem("capturedImage", imageData);
-		window.location.href = "/post/publish";
-	});
+	// confirmButton.addEventListener("click", function () {
+	// 	sessionStorage.removeItem("capturedImage");
+	// 	sessionStorage.setItem("capturedImage", imageData);
+	// 	window.location.href = "/post/publish";
+	// });
 
 	document.addEventListener("DOMContentLoaded", function () {
 		startWebcam();

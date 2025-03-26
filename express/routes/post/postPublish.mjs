@@ -57,4 +57,17 @@ router.post(
 	}
 );
 
+router.get("/gallery", authMiddleware, async (req, res) => {
+	try {
+		const posts = await Post.find({ userId: req.user.id })
+			.populate("userId")
+			.sort({ createdAt: -1 });
+		res.render("publishGallery", {
+			posts: posts,
+		});
+	} catch (error) {
+		res.status(500).json(errors.GETTING_POSTS);
+	}
+});
+
 export default router;

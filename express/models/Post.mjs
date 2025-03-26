@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema({
 	likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Like" }],
 	imageUrl: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now },
+	isPublished: { type: Boolean, default: false },
 });
 
 const Post = mongoose.model("Post", postSchema);
