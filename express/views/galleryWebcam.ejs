@@ -4,33 +4,12 @@
 		class="grid max-w-6xl bg-base-200 border border-base-300 rounded-box p-6 gap-6"
 	>
 		<video id="video" class="max-h-[40vh] rounded-field" autoplay></video>
+		<canvas id="canvas" class="hidden"></canvas>
 		<div class="flex justify-end">
 			<button id="takePictureButton" class="btn btn-primary">
 				Take picture
 			</button>
 		</div>
-		<!-- <canvas id="canvas" class="hidden"></canvas> -->
-		<!-- </div> -->
-		<!-- <div class="flex flex-col gap-4">
-			<div
-				id="imagePreviewContainer"
-				class="hidden flex-col justify-center items-center gap-4"
-			>
-				<img
-					id="imagePreview"
-					class="h-48 aspect-square object-cover rounded-field"
-					src=""
-					alt="Aperçu de l'image"
-				/>
-			</div>
-			<button
-				id="confirmButton"
-				class="btn btn-success mt-4"
-				style="display: none"
-			>
-				Confirm Photo
-			</button>
-		</div> -->
 	</section>
 </main>
 <%- include("includes/footer") %>
@@ -38,14 +17,7 @@
 <script>
 	const video = document.getElementById("video");
 	const takePictureButton = document.getElementById("takePictureButton");
-	// const canvas = document.getElementById("canvas");
-	const imagePreview = document.getElementById("imagePreview");
-	// const imagePreviewContainer = document.getElementById(
-	// "imagePreviewContainer"
-	// );
-	// const confirmButton = document.getElementById("confirmButton");
-
-	let imageData = null;
+	const canvas = document.getElementById("canvas");
 
 	function startWebcam() {
 		navigator.mediaDevices
@@ -64,18 +36,42 @@
 		canvas.height = video.videoHeight;
 		const context = canvas.getContext("2d");
 		context.drawImage(video, 0, 0, canvas.width, canvas.height);
-		imageData = canvas.toDataURL("image/png");
-		imagePreview.src = imageData;
-		imagePreviewContainer.style.display = "flex";
-		confirmButton.style.display = "flex";
+		const imageData = canvas.toDataURL("image/png");
+
+		fetch(imageData)
+			.then((res) => res.blob())
+			.then((blob) => {
+				const file = new File(
+					[blob],
+					`webcam-image-${Date.now()}.png`,
+					{ type: "image/png" }
+				);
+
+				const formData = new FormData();
+				formData.append("imageFile", file);
+
+				fetch("/gallery/upload", {
+					method: "POST",
+					headers: {
+						Authorization:
+							"Bearer " + localStorage.getItem("token"),
+					},
+					body: formData,
+				})
+					.then((response) => {
+						if (response.ok) {
+							alert("Image uploaded successfully!");
+						} else {
+							alert("Failed to upload image.");
+						}
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+			});
 	}
 
 	takePictureButton.addEventListener("click", takePicture);
-	// confirmButton.addEventListener("click", function () {
-	// 	sessionStorage.removeItem("capturedImage");
-	// 	sessionStorage.setItem("capturedImage", imageData);
-	// 	window.location.href = "/gallery/add";
-	// });
 
 	document.addEventListener("DOMContentLoaded", function () {
 		startWebcam();
