@@ -4,109 +4,20 @@
 		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
 	>
 		<h1 class="text-4xl">Publish a new post</h1>
-		<form
-			action="/gallery/add"
-			method="post"
-			class="flex flex-col gap-4"
-			enctype="multipart/form-data"
-		>
-			<div class="grid grid-cols-2 gap-4">
-				<a
-					href="/gallery/webcam"
-					class="btn btn-primary h-48 flex flex-col items-center justify-center gap-4"
-				>
-					Open live camera <%- include('icons/addFace') %>
-				</a>
-				<a
-					href="/gallery/import"
-					class="btn btn-neutral h-48 flex flex-col items-center justify-center gap-4"
-				>
-					Import an image <%- include('icons/photoPlus') %>
-					<!-- TODO required -->
-					<!-- <input
-						type="file"
-						id="imageFile"
-						name="imageFile"
-						class="hidden"
-						accept="image/*"
-						onchange="importImage(event)"
-					/> -->
-				</a>
-			</div>
-		</form>
+		<div class="grid grid-cols-2 gap-4">
+			<a
+				href="/gallery/webcam"
+				class="btn btn-primary h-48 flex flex-col items-center justify-center gap-4"
+			>
+				Open live camera <%- include('icons/addFace') %>
+			</a>
+			<a
+				href="/gallery/import"
+				class="btn btn-neutral h-48 flex flex-col items-center justify-center gap-4"
+			>
+				Import an image <%- include('icons/photoPlus') %>
+			</a>
+		</div>
 	</section>
 </main>
 <%- include("includes/foot") %>
-
-<script>
-	const imageFileInput = document.getElementById("imageFile");
-	const imagePreview = document.getElementById("imagePreview");
-	const imagePreviewContainer = document.getElementById(
-		"imagePreviewContainer"
-	);
-
-	function importImage(event) {
-		const file = event.target.files[0];
-		const reader = new FileReader();
-
-		reader.onload = function (e) {
-			imagePreview.src = e.target.result;
-			imagePreviewContainer.style.display = "flex";
-			sessionStorage.setItem("capturedImage", e.target.result);
-		};
-
-		if (file) {
-			reader.readAsDataURL(file);
-		}
-	}
-
-	// function deleteImage() {
-	// 	imageFileInput.value = "";
-	// 	imagePreview.src = "";
-	// 	imagePreviewContainer.style.display = "none";
-	// 	sessionStorage.removeItem("capturedImage");
-	// }
-
-	// function dataUrlToFile(dataUrl, filename) {
-	// 	const arr = dataUrl.split(",");
-	// 	const mime = arr[0].match(/:(.*)/)[1];
-	// 	const bstr = atob(arr[1]);
-	// 	let n = bstr.length;
-	// 	const u8arr = new Uint8Array(n);
-	// 	while (n--) {
-	// 		u8arr[n] = bstr.charCodeAt(n);
-	// 	}
-	// 	return new File([u8arr], filename, { type: mime });
-	// }
-
-	// function handlePublish(event) {
-	// 	// TODO fix this with simple publishing
-	// 	event.preventDefault();
-	// 	const formData = new FormData();
-	// 	formData.append(
-	// 		"imageFile",
-	// 		dataUrlToFile(imagePreview.src, "image.jpg")
-	// 	);
-
-	// 	fetch("/gallery/add", {
-	// 		method: "POST",
-	// 		body: formData,
-	// 	}).then((response) => {
-	// 		response.json().then((data) => {
-	// 			console.log(data);
-	// 		});
-	// 	});
-	// }
-
-	document.addEventListener("DOMContentLoaded", function () {
-		const capturedImage = sessionStorage.getItem("capturedImage");
-		console.log(capturedImage);
-
-		if (capturedImage) {
-			imagePreview.src = capturedImage;
-
-			imagePreview.src = sessionStorage.getItem("capturedImage");
-			imagePreviewContainer.style.display = "flex";
-		}
-	});
-</script>
