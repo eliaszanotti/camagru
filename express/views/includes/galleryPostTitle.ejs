@@ -1,0 +1,9 @@
+<div class="flex gap-2 items-center justify-between">
+	<!-- prettier-ignore -->
+	<%- include("dateLabel", { date: post.createdAt }) %>
+	<% if (post.isPublished) { %>
+	<badge class="badge badge-sm badge-success">PUBLISHED</badge>
+	<% } else { %>
+	<badge class="badge badge-sm badge-warning">NOT PUBLISHED</badge>
+	<% } %>
+</div>

@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import Post from "../../models/Post.mjs";
+import User from "../../models/User.mjs";
 import { errors } from "../../utils/errors.mjs";
 import { authMiddleware } from "../../middleware/authMiddleware.mjs";
 
@@ -58,6 +59,12 @@ router.get("/webcam", authMiddleware, (req, res) => {
 
 router.get("/import", authMiddleware, (req, res) => {
 	res.render("galleryImport");
+});
+
+router.get("/edit/:postId", authMiddleware, async (req, res) => {
+	const post = await Post.findById(req.params.postId);
+	const user = await User.findById(post.userId);
+	res.render("galleryEdit", { post, user });
 });
 
 router.get("/", authMiddleware, async (req, res) => {

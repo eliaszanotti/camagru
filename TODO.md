@@ -15,3 +15,7 @@ by email. This preference must be set as true by default but can be deactivated 
 user’s preferences.
 
 attention commentaire vide provoque une erreur
+
+fais une pagination tu te cassera moins la tete avec la lenteur des fetch
+
+voir daisyui pour mettre des chat bubbles dans les commentaires
