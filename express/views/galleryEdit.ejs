@@ -20,7 +20,14 @@
 				</div>
 				<div class="grid grid-cols-5 gap-6 overflow-y-auto">
 					<% for (i = 1; i < 36; i++) { %>
-					<img src="/emoji/emoji<%= i %>.png" alt="Emoji" />
+					<form
+						action="/gallery/add-emoji/<%= post._id %>/<%= i %>"
+						method="post"
+					>
+						<button class="opacity-100 hover:opacity-80">
+							<img src="/emoji/emoji<%= i %>.png" alt="Emoji" />
+						</button>
+					</form>
 					<% } %>
 				</div>
 			</div>
