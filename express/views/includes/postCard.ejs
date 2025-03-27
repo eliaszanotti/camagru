@@ -20,38 +20,24 @@
 			%>
 		</p>
 	</div>
-	<div class="relative rounded-field overflow-hidden">
-		<img
-			src="<%= post.imageUrl %>"
-			alt="Post Image"
-			class="w-full aspect-square object-cover select-none"
-		/>
-		<!-- TODO voir si le selector sert vraiment -->
-		<div
-			class="absolute inset-0 opacity-0 hover:opacity-100 bg-primary/80 flex items-center justify-center transition-opacity duration-300"
-			data-post-id="<%= post._id %>"
-		>
-			<%- include("../icons/heartFilled.ejs", { svgClass: "" }) %>
-		</div>
-	</div>
-
+	<img
+		src="<%= post.imageUrl %>"
+		alt="Post Image"
+		class="rounded-field w-full aspect-square object-cover select-none"
+	/>
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center gap-4">
-			<form
-				action="/post/<%= post.isLiked ? "unlike" : "like" %>/<%= post._id %>"
-				method="post"
-				class="flex items-center"
-			>
-				<button class="btn btn-square btn-ghost">
-					<!-- prettier-ignore -->
-					<% if (post.isLiked) { %>
-						<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
-					<% } else { %>
-						<%- include("../icons/heart.ejs") %>
-					<% } %>
-				</button>
-				<p class="text-sm font-bold"><%= post.likes.length %></p>
-			</form>
+			<form action="/post/<%= post.isLiked ? "unlike" : "like" %>/<%=
+			post._id %>" method="post" class="flex items-center" >
+			<button class="btn btn-square btn-ghost">
+				<!-- prettier-ignore -->
+				<% if (post.isLiked) { %>
+					<%- include("../icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
+				<% } else { %>
+					<%- include("../icons/heart.ejs") %>
+				<% } %>
+			</button>
+			<p class="text-sm font-bold"><%= post.likes.length %></p>
 			<div class="flex items-center">
 				<a
 					href="/post/id/<%= post._id %>"
