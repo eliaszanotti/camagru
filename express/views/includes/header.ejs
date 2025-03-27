@@ -3,12 +3,13 @@
 		<a href="/" class="text-2xl">Podium</a>
 		<div class="flex items-center justify-center">
 			<% if (isLoggedIn) { %>
-			<a href="/gallery/add" class="btn btn-primary">
-				Add <%- include('../icons/plus') %>
+			<a href="/gallery/add" class="btn btn-primary btn-square">
+				<%- include('../icons/plus') %>
 			</a>
 			<% } %>
 		</div>
 		<div class="flex items-center gap-2 justify-end">
+			<a href="/" class="btn btn-primary btn-ghost">Home</a>
 			<% if (isLoggedIn) { %>
 			<a href="/gallery" class="btn btn-primary btn-ghost">Gallery</a>
 			<a href="/stats" class="btn btn-primary btn-ghost">Stats</a>
