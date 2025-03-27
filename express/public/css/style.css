@@ -3676,9 +3676,6 @@
       inset: auto auto var(--tt-tail) 50%;
     }
   }
-  .inset-0 {
-    inset: calc(var(--spacing) * 0);
-  }
   .chat-end {
     place-items: end;
     grid-template-columns: 1fr auto;
@@ -6749,9 +6746,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .overflow-hidden {
-    overflow: hidden;
-  }
   .overflow-y-auto {
     overflow-y: auto;
   }
@@ -7333,9 +7327,6 @@
   }
   .bg-primary {
     background-color: var(--color-primary);
-  }
-  .bg-primary\/80 {
-    background-color: color-mix(in oklab, var(--color-primary) 80%, transparent);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -8438,9 +8429,6 @@
   .scheme-only-light {
     color-scheme: only light;
   }
-  .opacity-0 {
-    opacity: 0%;
-  }
   .swap-active {
     .swap-off {
       opacity: 0%;
@@ -8594,10 +8582,6 @@
   }
   .transition-normal {
     transition-behavior: normal;
-  }
-  .duration-300 {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
   }
   .ease-in {
     --tw-ease: var(--ease-in);
@@ -9351,13 +9335,6 @@
   .transform-view {
     transform-box: view-box;
   }
-  .hover\:opacity-100 {
-    &:hover {
-      @media (hover: hover) {
-        opacity: 100%;
-      }
-    }
-  }
   .focus\:outline-none {
     &:focus {
       --tw-outline-style: none;
@@ -9721,13 +9698,13 @@ video {
       --color-neutral: oklch(27% 0.033 256.848);
       --color-neutral-content: oklch(98% 0.002 247.839);
       --color-info: oklch(71% 0.143 215.221);
-      --color-info-content: oklch(98% 0.002 247.839);
-      --color-success: oklch(79% 0.209 151.711);
-      --color-success-content: oklch(98% 0.002 247.839);
-      --color-warning: oklch(70.77% 0.1907 50.74);
-      --color-warning-content: oklch(98% 0.002 247.839);
-      --color-error: oklch(64% 0.246 16.439);
-      --color-error-content: oklch(98% 0.002 247.839);
+      --color-info-content: var(--color-base-200);
+      --color-success: oklch(77.75% 0.1595 166.57);
+      --color-success-content: var(--color-base-200);
+      --color-warning: oklch(88.03% 0.1348 86.06);
+      --color-warning-content: var(--color-base-200);
+      --color-error: oklch(64.76% 0.2042 11.07);
+      --color-error-content: var(--color-base-200);
       --radius-selector: 2rem;
       --radius-field: 0.5rem;
       --radius-box: 1rem;
@@ -9755,13 +9732,13 @@ video {
     --color-neutral: oklch(27% 0.033 256.848);
     --color-neutral-content: oklch(98% 0.002 247.839);
     --color-info: oklch(71% 0.143 215.221);
-    --color-info-content: oklch(98% 0.002 247.839);
-    --color-success: oklch(79% 0.209 151.711);
-    --color-success-content: oklch(98% 0.002 247.839);
-    --color-warning: oklch(70.77% 0.1907 50.74);
-    --color-warning-content: oklch(98% 0.002 247.839);
-    --color-error: oklch(64% 0.246 16.439);
-    --color-error-content: oklch(98% 0.002 247.839);
+    --color-info-content: var(--color-base-200);
+    --color-success: oklch(77.75% 0.1595 166.57);
+    --color-success-content: var(--color-base-200);
+    --color-warning: oklch(88.03% 0.1348 86.06);
+    --color-warning-content: var(--color-base-200);
+    --color-error: oklch(64.76% 0.2042 11.07);
+    --color-error-content: var(--color-base-200);
     --radius-selector: 2rem;
     --radius-field: 0.5rem;
     --radius-box: 1rem;
@@ -9833,12 +9810,12 @@ video {
       --tw-backdrop-opacity: initial;
       --tw-backdrop-saturate: initial;
       --tw-backdrop-sepia: initial;
-      --tw-duration: initial;
       --tw-ease: initial;
       --tw-contain-size: initial;
       --tw-contain-layout: initial;
       --tw-contain-paint: initial;
       --tw-contain-style: initial;
+      --tw-duration: initial;
     }
   }
 }
@@ -10125,10 +10102,6 @@ video {
   syntax: "*";
   inherits: false;
 }
-@property --tw-duration {
-  syntax: "*";
-  inherits: false;
-}
 @property --tw-ease {
   syntax: "*";
   inherits: false;
@@ -10146,6 +10119,10 @@ video {
   inherits: false;
 }
 @property --tw-contain-style {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-duration {
   syntax: "*";
   inherits: false;
 }

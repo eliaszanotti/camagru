@@ -13,3 +13,5 @@ Dans publish au lieu de faire un truc comme on a en reactif dynamic quand on a u
 When an image receives a new comment, the author of the image should be notified
 by email. This preference must be set as true by default but can be deactivated in
 user’s preferences.
+
+attention commentaire vide provoque une erreur
