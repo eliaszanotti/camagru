@@ -6,17 +6,29 @@
 		<div class="flex flex-col gap-4 h-full">
 			<%- include("includes/galleryLabelTitle", { post }) %>
 			<div class="flex flex-col justify-center gap-4 h-full">
-				<%- include("includes/postImage", { imageUrl: post.imageUrl }) %>
+				<%- include("includes/postImage", { imageUrl: post.imageUrl })
+				%>
 			</div>
 		</div>
 		<div class="grid grid-rows-[1fr_auto] overflow-y-auto gap-6">
 			<div class="flex flex-col gap-10 overflow-y-auto">
-				<h2 class="font-bold">Add Emoji</h2>
+				<div class="flex flex-col gap-2">
+					<h2 class="text-lg font-bold">Add Emoji</h2>
+					<p class="text-sm">
+						Click on an emoji to add it to your post
+					</p>
+				</div>
+				<div class="grid grid-cols-5 gap-6 overflow-y-auto">
+					<% for (i = 1; i < 36; i++) { %>
+					<img src="/emoji/emoji<%= i %>.png" alt="Emoji" />
+					<% } %>
+				</div>
 			</div>
-			<div class="flex justify-end">
+			<div class="flex justify-end gap-2">
+				<button class="btn btn-ghost text-error">Delete</button>
 				<% if (post.isPublished) { %>
 				<form action="/post/unpublish/<%= post._id %>" method="post">
-					<button class="btn btn-ghost">Unpublish</button>
+					<button class="btn btn-primary">Unpublish</button>
 				</form>
 				<% } else { %>
 				<form action="/post/publish/<%= post._id %>" method="post">
