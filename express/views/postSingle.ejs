@@ -4,32 +4,10 @@
 		class="grid grid-cols-2 max-w-6xl w-full bg-base-200 border border-base-300 rounded-box gap-6 p-6 h-[80vh]"
 	>
 		<div class="flex flex-col gap-4 h-full">
-			<div class="flex gap-2 items-center justify-between">
-				<h1 class="font-bold"><%= user.username %></h1>
-				<p class="text-sm text-gray-500">
-					<!-- prettier-ignore -->
-					<%=
-						new Date(post.createdAt).toLocaleDateString("en-US", {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-							hour: "numeric",
-							minute: "numeric",
-							hour12: false,
-						})
-					%>
-				</p>
-			</div>
-			<div
-				class="rounded-field w-full h-full bg-cover bg-center"
-				style="background-image: url('<%= post.imageUrl %>')"
-			>
-				<!-- TODO mettre limage en img et pas en background -->
-				<!-- <img
-						class="w-fit h-fit object-cover object-center select-none rounded-field"
-						src="<%= post.imageUrl %>"
-						alt="Post Image"
-					/> -->
+			<!-- prettier-ignore -->
+			<%- include("includes/postLabelTitle", { post }) %>
+			<div class="flex flex-col justify-center gap-4 h-full">
+				<%- include("includes/postImage", { imageUrl: post.imageUrl }) %>
 			</div>
 			<form
 				action="/post/<%= post.isLiked ? "unlike" : "like" %>/<%= post._id %>"
@@ -38,18 +16,18 @@
 			>
 				<button class="btn btn-square btn-ghost">
 					<!-- prettier-ignore -->
-					<% if (isLiked) { %>
+					<% if (post.isLiked) { %>
 						<%- include("icons/heartFilled.ejs", { svgClass: "fill-primary" }) %>
 					<% } else { %>
 						<%- include("icons/heart.ejs") %>
 					<% } %>
 				</button>
-				<p class="text-sm font-bold"><%= likes.length %></p>
+				<p class="text-sm font-bold"><%= post.likes.length %></p>
 			</form>
 		</div>
 		<div class="grid grid-rows-[1fr_auto] overflow-y-auto gap-6">
 			<div class="flex flex-col gap-10 overflow-y-auto">
-				<% for (comment of comments) { %>
+				<% for (comment of post.comments) { %>
 				<div class="grid grid-cols-[auto_1fr] gap-4">
 					<p
 						class="w-10 h-10 rounded-full bg-primary grid place-items-center font-black select-none"
@@ -61,17 +39,7 @@
 							<p class="text-sm font-bold">
 								<%= comment.userId.username %>
 							</p>
-							<p class="text-sm text-gray-500">
-								<!-- prettier-ignore -->
-								<%= new Date(comment.createdAt).toLocaleDateString("en-US", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-								hour: "numeric",
-								minute: "numeric",
-								hour12: false,
-							}) %>
-							</p>
+							<%- include("includes/dateLabel", { date: comment.createdAt }) %>
 						</div>
 						<p class="break-all"><%= comment.content %></p>
 					</div>

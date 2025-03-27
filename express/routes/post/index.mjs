@@ -10,20 +10,23 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/id/:id", authMiddleware, async (req, res) => {
-	const post = await Post.findById(req.params.id);
-	const user = await User.findById(post.userId);
-	const comments = await Comment.find({ postId: post._id })
-		.populate("userId")
-		.sort({ createdAt: -1 });
-	const likes = await Like.find({ postId: post._id });
-	let isLiked = false;
-	if (req?.user) {
-		isLiked = await Like.findOne({
-			userId: req.user.id,
-			postId: post._id,
-		});
+	try {
+		const post = await Post.findById(req.params.id).populate("userId");
+		post.comments = await Comment.find({ postId: post._id })
+			.populate("userId")
+			.sort({ createdAt: -1 });
+		post.lastComment = post.comments[0];
+		post.likes = await Like.find({ postId: post._id });
+		if (req?.user) {
+			post.isLiked = await Like.findOne({
+				userId: req.user.id,
+				postId: post._id,
+			});
+		}
+		res.render("postSingle", { post });
+	} catch (error) {
+		res.status(500).json(errors.GETTING_POSTS);
 	}
-	res.render("postSingle", { post, user, comments, likes, isLiked });
 });
 
 router.post("/comment/:id", authMiddleware, async (req, res) => {
