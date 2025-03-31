@@ -119,6 +119,18 @@ router.post("/add-emoji/:postId/:emojiId", authMiddleware, async (req, res) => {
 			.composite([{ input: emoji, top: y, left: x }])
 			.toFile(newImagePath);
 
+		if (post.imageUrl !== post.originalImageUrl) {
+			try {
+				const oldImagePath = path.join(
+					__dirname,
+					"../../" + post.imageUrl
+				);
+				await fs.unlink(oldImagePath);
+			} catch (error) {
+				console.error("Error deleting old emoji image:", error);
+			}
+		}
+
 		post.imageUrl = `/uploads/${path.basename(newImagePath)}`;
 		await post.save();
 		res.redirect("/gallery/edit/" + postId);
