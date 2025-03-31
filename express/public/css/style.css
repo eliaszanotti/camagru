@@ -9836,7 +9836,7 @@ video {
       --color-success-content: var(--color-base-200);
       --color-warning: oklch(88.03% 0.1348 86.06);
       --color-warning-content: var(--color-base-200);
-      --color-error: oklch(64.76% 0.2042 11.07);
+      --color-error: oklch(0.61 0.2313 22.61);
       --color-error-content: var(--color-base-200);
       --radius-selector: 2rem;
       --radius-field: 0.5rem;
@@ -9870,7 +9870,7 @@ video {
     --color-success-content: var(--color-base-200);
     --color-warning: oklch(88.03% 0.1348 86.06);
     --color-warning-content: var(--color-base-200);
-    --color-error: oklch(64.76% 0.2042 11.07);
+    --color-error: oklch(0.61 0.2313 22.61);
     --color-error-content: var(--color-base-200);
     --radius-selector: 2rem;
     --radius-field: 0.5rem;

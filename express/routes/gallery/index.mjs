@@ -147,4 +147,20 @@ router.get("/", authMiddleware, async (req, res) => {
 	}
 });
 
+router.post("/clear-image/:postId", authMiddleware, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.postId);
+		if (!post) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		post.imageUrl = post.originalImageUrl;
+		await post.save();
+		res.redirect("/gallery/edit/" + req.params.postId);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(errors.PUBLISHING_POST);
+	}
+});
+
 export default router;
