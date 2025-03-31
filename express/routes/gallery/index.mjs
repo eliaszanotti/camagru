@@ -96,12 +96,11 @@ router.post("/add-emoji/:postId/:emojiId", authMiddleware, async (req, res) => {
 		);
 
 		const image = sharp(originalImagePath);
-		const emoji = await sharp(emojiPath).resize(100, 100).toBuffer();
+		const emoji = await sharp(emojiPath).resize(300, 300).toBuffer();
 
-		const { width, height } = await image.metadata();
-
-		const x = Math.floor(width / 2 - 50);
-		const y = Math.floor(height / 2 - 50);
+		const { height } = await image.metadata();
+		const x = 50;
+		const y = height - 300 - 50;
 
 		const newImagePath = path.join(
 			__dirname,
