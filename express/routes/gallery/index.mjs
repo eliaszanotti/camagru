@@ -63,7 +63,7 @@ router.post(
 
 			const newPost = new Post({
 				userId: userId,
-				originaImageUrl: processedImageUrl,
+				originalImageUrl: processedImageUrl,
 				imageUrl: processedImageUrl,
 				createdAt: new Date(),
 			});
@@ -86,13 +86,16 @@ router.post("/add-emoji/:postId/:emojiId", authMiddleware, async (req, res) => {
 			return res.status(404).json({ message: "Post not found" });
 		}
 
-		const imagePath = path.join(__dirname, "../../" + post.imageUrl);
+		const originalImagePath = path.join(
+			__dirname,
+			"../../" + post.originalImageUrl
+		);
 		const emojiPath = path.join(
 			__dirname,
 			"../../public/emoji/emoji" + emojiId + ".png"
 		);
 
-		const image = sharp(imagePath);
+		const image = sharp(originalImagePath);
 		const emoji = await sharp(emojiPath).resize(100, 100).toBuffer();
 
 		const { width, height } = await image.metadata();
