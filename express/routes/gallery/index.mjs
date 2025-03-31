@@ -40,11 +40,31 @@ router.post(
 				return res.status(400).json(errors.IMAGE_REQUIRED);
 			}
 
-			const imageUrl = `/uploads/${imageFile.filename}`;
+			const originaImagePath = path.join(
+				__dirname,
+				"../../" + imageFile.path
+			);
+			const processedImagePath = path.join(
+				__dirname,
+				"../../uploads",
+				`processed-${Date.now()}-${Math.round(Math.random() * 1e9)}.png`
+			);
+
+			await sharp(originaImagePath)
+				.resize(1500, 1500, {
+					fit: "cover",
+					position: "center",
+				})
+				.toFile(processedImagePath);
+
+			const processedImageUrl = `/uploads/${path.basename(
+				processedImagePath
+			)}`;
 
 			const newPost = new Post({
 				userId: userId,
-				imageUrl: imageUrl,
+				originaImageUrl: processedImageUrl,
+				imageUrl: processedImageUrl,
 				createdAt: new Date(),
 			});
 
@@ -87,8 +107,8 @@ router.post("/add-emoji/:postId/:emojiId", authMiddleware, async (req, res) => {
 		);
 
 		await image
-			.composite([{ input: emoji, top: y, left: x }]) // Ajouter l'emoji à l'image
-			.toFile(newImagePath); // Enregistrer la nouvelle image
+			.composite([{ input: emoji, top: y, left: x }])
+			.toFile(newImagePath);
 
 		post.imageUrl = `/uploads/${path.basename(newImagePath)}`;
 		await post.save();
