@@ -1,6 +1,5 @@
 import express from "express";
 import Post from "../../models/Post.mjs";
-import User from "../../models/User.mjs";
 import Comment from "../../models/Comment.mjs";
 import Like from "../../models/Like.mjs";
 import { errors } from "../../utils/errors.mjs";
@@ -31,6 +30,11 @@ router.get("/id/:id", authMiddleware, async (req, res) => {
 
 router.post("/comment/:id", authMiddleware, async (req, res) => {
 	const { content } = req.body;
+
+	if (!content || content.trim() === "") {
+		return res.redirect(`/post/id/${req.params.id}`);
+	}
+
 	try {
 		const comment = new Comment({
 			content,
@@ -40,7 +44,7 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 		await comment.save();
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
-		// TODO ici prend lerreur du Comment.save dans Comment.mjs
+		// TODO ici prend l'erreur du Comment.save dans Comment.mjs
 		res.status(500).json(errors.COMMENTING);
 	}
 });
