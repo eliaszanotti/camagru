@@ -96,4 +96,44 @@ router.get("/recent/:number", async (req, res) => {
 	}
 });
 
+router.post("/publish/:id", authMiddleware, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		if (!post) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		if (post.userId.toString() !== req.user.id) {
+			return res.status(403).json({ message: "Not authorized" });
+		}
+
+		post.isPublished = true;
+		await post.save();
+		res.redirect("/gallery/edit/" + post._id);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(errors.PUBLISHING_POST);
+	}
+});
+
+router.post("/unpublish/:id", authMiddleware, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		if (!post) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		if (post.userId.toString() !== req.user.id) {
+			return res.status(403).json({ message: "Not authorized" });
+		}
+
+		post.isPublished = false;
+		await post.save();
+		res.redirect("/gallery/edit/" + post._id);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(errors.PUBLISHING_POST);
+	}
+});
+
 export default router;
