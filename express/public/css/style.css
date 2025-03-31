@@ -6163,6 +6163,9 @@
   .w-10 {
     width: calc(var(--spacing) * 10);
   }
+  .w-fit {
+    width: fit-content;
+  }
   .w-full {
     width: 100%;
   }
@@ -6589,6 +6592,9 @@
   }
   .grid-cols-\[auto_1fr\] {
     grid-template-columns: auto 1fr;
+  }
+  .grid-cols-\[auto_1fr_auto\] {
+    grid-template-columns: auto 1fr auto;
   }
   .grid-cols-none {
     grid-template-columns: none;

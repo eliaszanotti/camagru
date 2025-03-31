@@ -3,7 +3,9 @@
 	class="flex flex-col bg-base-200 border border-base-300 gap-4 p-4 rounded-box"
 	data-post-id="<%= post._id %>"
 >
-	<%- include("galleryLabelTitle", { post }) %>
+	<div class="grid grid-cols-[1fr_auto] items-center gap-2">
+		<%- include("galleryLabelTitle", { post }) %>
+	</div>
 	<a href="/gallery/edit/<%= post._id %>">
 		<%- include("postImage", { imageUrl: post.imageUrl }) %>
 	</a>
