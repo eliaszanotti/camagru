@@ -55,6 +55,7 @@
 					class="input border-none w-full focus:outline-none"
 					type="text"
 					name="content"
+					id="comment-input"
 					placeholder="Write a comment..."
 				/>
 				<button
@@ -68,3 +69,12 @@
 	</section>
 </main>
 <%- include("includes/footer") %>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const commentInput = document.getElementById("comment-input");
+		if (commentInput) {
+			commentInput.focus();
+		}
+	});
+</script>
