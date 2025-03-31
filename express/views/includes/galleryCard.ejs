@@ -3,9 +3,10 @@
 	class="flex flex-col bg-base-200 border border-base-300 gap-4 p-4 rounded-box"
 	data-post-id="<%= post._id %>"
 >
-	<!-- prettier-ignore -->
 	<%- include("galleryLabelTitle", { post }) %>
-	<%- include("postImage", { imageUrl: post.imageUrl }) %>
+	<a href="/gallery/edit/<%= post._id %>">
+		<%- include("postImage", { imageUrl: post.imageUrl }) %>
+	</a>
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center">
 			<a
