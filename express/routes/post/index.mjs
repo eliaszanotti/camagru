@@ -67,7 +67,7 @@ router.post("/unlike/:id", authMiddleware, async (req, res) => {
 
 router.get("/recent/:number", async (req, res) => {
 	try {
-		const posts = await Post.find({})
+		const posts = await Post.find({ isPublished: true })
 			.populate("userId")
 			.sort({ createdAt: -1 })
 			.skip(req.params.number)
