@@ -41,7 +41,7 @@ router.post(
 				return res.status(400).json(errors.IMAGE_REQUIRED);
 			}
 
-			const originaImagePath = path.join(
+			const originalImagePath = path.join(
 				__dirname,
 				"../../" + imageFile.path
 			);
@@ -51,12 +51,18 @@ router.post(
 				`processed-${Date.now()}-${Math.round(Math.random() * 1e9)}.png`
 			);
 
-			await sharp(originaImagePath)
+			await sharp(originalImagePath)
 				.resize(1500, 1500, {
 					fit: "cover",
 					position: "center",
 				})
 				.toFile(processedImagePath);
+
+			try {
+				await fs.unlink(originalImagePath);
+			} catch (error) {
+				console.error("Error deleting original image:", error);
+			}
 
 			const processedImageUrl = `/uploads/${path.basename(
 				processedImagePath
