@@ -10,10 +10,6 @@ When an image receives a new comment, the author of the image should be notified
 by email. This preference must be set as true by default but can be deactivated in
 user’s preferences.
 
-attention commentaire vide provoque une erreur
-
 fais une pagination tu te cassera moins la tete avec la lenteur des fetch
 
 voir daisyui pour mettre des chat bubbles dans les commentaires
-
-ajouter une fleche retour sur les pages de post et de gallery
