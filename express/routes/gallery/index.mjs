@@ -6,6 +6,7 @@ import { errors } from "../../utils/errors.mjs";
 import { authMiddleware } from "../../middleware/authMiddleware.mjs";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import fs from "fs/promises";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -157,6 +158,41 @@ router.post("/clear-image/:postId", authMiddleware, async (req, res) => {
 		post.imageUrl = post.originalImageUrl;
 		await post.save();
 		res.redirect("/gallery/edit/" + req.params.postId);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(errors.PUBLISHING_POST);
+	}
+});
+
+router.post("/delete/:postId", authMiddleware, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.postId);
+		if (!post) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		const originalImagePath = path.join(
+			__dirname,
+			"../../" + post.originalImageUrl
+		);
+		const imagePath = path.join(__dirname, "../../" + post.imageUrl);
+
+		try {
+			await fs.unlink(originalImagePath);
+		} catch (error) {
+			console.error("Error deleting original image:", error);
+		}
+
+		try {
+			if (post.imageUrl !== post.originalImageUrl) {
+				await fs.unlink(imagePath);
+			}
+		} catch (error) {
+			console.error("Error deleting modified image:", error);
+		}
+
+		await Post.deleteOne({ _id: post._id });
+		res.redirect("/gallery");
 	} catch (error) {
 		console.error(error);
 		res.status(500).json(errors.PUBLISHING_POST);
