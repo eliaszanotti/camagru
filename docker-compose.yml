@@ -15,3 +15,5 @@ services:
 networks:
     podium:
         driver: bridge
+    vps-server_caddy:
+        external: true
