@@ -11,21 +11,6 @@ services:
             - ./express:/usr/src/app
         env_file:
             - .env
-        depends_on:
-            - mongo
-
-    mongo:
-        image: mongo:latest
-        restart: always
-        networks:
-            - podium
-        ports:
-            - "27018:27017"
-        volumes:
-            - ./mongo:/data/db
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
 
 networks:
     podium:

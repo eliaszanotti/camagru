@@ -14,8 +14,8 @@ const mongoURI = process.env.MONGO_URI;
 
 mongoose
 	.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-	.then(() => console.log("Connecté à MongoDB"))
-	.catch((err) => console.error("Erreur de connexion à MongoDB:", err));
+	.then(() => console.log("Connected to MongoDB"))
+	.catch((err) => console.error("Error connecting to MongoDB:", err));
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
