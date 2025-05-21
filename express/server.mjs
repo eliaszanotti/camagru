@@ -4,6 +4,10 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import routes from "./routes/index.mjs";
 import { globalMiddleware } from "./middleware/globalMiddleware.mjs";
+import dotenv from "dotenv";
+
+dotenv.config();
+console.log(process.env.MONGO_URI);
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
