@@ -76,7 +76,6 @@ router.get("/recent/:number", async (req, res) => {
 			.sort({ createdAt: -1 })
 			.skip(req.params.number)
 			.limit(1);
-		console.log(posts);
 		await Promise.all(
 			posts.map(async (post) => {
 				post.comments = await Comment.find({ postId: post._id })
