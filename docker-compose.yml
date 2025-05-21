@@ -1,18 +1,11 @@
 services:
     express:
-        container_name: express-camagru
         build:
             context: ./express
         restart: always
-        networks:
-            - vps-server_caddy
         ports:
             - "3000:3000"
         volumes:
             - ./express:/usr/src/app
         env_file:
             - .env
-
-networks:
-    vps-server_caddy:
-        external: true
