@@ -13,14 +13,14 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 	try {
-		const page = parseInt(req.query.page, 10) || 0;
-		const skipCount = page * 6;
+		const postsPerPage = 9;
+		const page = parseInt(req.query.page - 1, 10) || 0;
+		const skipCount = page * postsPerPage;
 		const posts = await Post.find({ isPublished: true })
 			.populate("userId")
 			.sort({ createdAt: -1 })
 			.skip(skipCount)
-			.limit(6);
-		console.log(posts.map((post) => post._id));
+			.limit(postsPerPage);
 		await Promise.all(
 			posts.map(async (post) => {
 				post.comments = await Comment.find({ postId: post._id })
@@ -36,8 +36,14 @@ router.get("/", async (req, res) => {
 				}
 			})
 		);
+		const totalPages = Math.ceil(
+			(await Post.countDocuments({ isPublished: true })) / postsPerPage
+		);
 		res.render("index", {
 			posts: posts,
+			title: `Podium - ${page + 1}`,
+			totalPages: totalPages,
+			currentPage: page + 1,
 		});
 	} catch (error) {
 		res.status(500).json(errors.GETTING_POSTS);
