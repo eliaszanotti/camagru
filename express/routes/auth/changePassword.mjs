@@ -31,7 +31,7 @@ router.post("/change-password", authMiddleware, async (req, res) => {
 	user.password = newPassword;
 	try {
 		await user.save();
-		res.redirect("/profil");
+		res.redirect("/profile");
 	} catch (error) {
 		return res.render("authChangePassword", errors.SAVING_USER);
 	}

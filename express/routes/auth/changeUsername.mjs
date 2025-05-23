@@ -36,7 +36,7 @@ router.post("/change-username", authMiddleware, async (req, res) => {
 	user.username = username;
 	try {
 		await user.save();
-		res.redirect("/profil");
+		res.redirect("/profile");
 	} catch (error) {
 		return res.render("authChangeUsername", errors.SAVING_USER);
 	}

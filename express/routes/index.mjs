@@ -50,13 +50,13 @@ router.get("/", async (req, res) => {
 	}
 });
 
-router.get("/profil", authMiddleware, async (req, res) => {
+router.get("/profile", authMiddleware, async (req, res) => {
 	const userId = req.user.id;
 	const user = await User.findById(userId);
 	if (!user) {
 		return res.status(404).render("404", { title: "404" });
 	}
-	res.render("profil", { user });
+	res.render("profile", { user });
 });
 
 router.use("/auth", authRoutes);

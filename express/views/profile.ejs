@@ -1,9 +1,9 @@
-<%- include('includes/head', { title: 'Profil' }) %>
+<%- include('includes/head', { title: 'profile' }) %>
 <main class="grid place-items-center min-h-screen py-10">
 	<section
 		class="grid gap-10 max-w-xl w-full bg-base-200 border border-base-300 rounded-box p-10"
 	>
-		<h1 class="text-4xl">Profil</h1>
+		<h1 class="text-4xl">Profile</h1>
 		<p>Hello, <%= user.username %>!</p>
 
 		<% if (!user.isEmailVerified) { %>
@@ -24,7 +24,12 @@
 			<legend class="fieldset-legend">Email</legend>
 			<label class="input w-full">
 				<%- include('icons/email') %>
-				<input disabled type="email" name="email" value="<%= user.email %>" />
+				<input
+					disabled
+					type="email"
+					name="email"
+					value="<%= user.email %>"
+				/>
 			</label>
 			<a href="/auth/change-email" class="btn btn-primary btn-block">
 				<%- include('icons/edit') %>
@@ -54,8 +59,13 @@
 		</div>
 
 		<div class="flex justify-between items-center gap-4">
-			<p>Account creation date: <%= user.createdAt.toLocaleDateString() %></p>
-			<a href="/auth/delete-account" class="btn btn-error">Delete account</a>
+			<p>
+				Account creation date: <%= user.createdAt.toLocaleDateString()
+				%>
+			</p>
+			<a href="/auth/delete-account" class="btn btn-error"
+				>Delete account</a
+			>
 		</div>
 	</section>
 </main>
