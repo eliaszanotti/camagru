@@ -3,33 +3,8 @@
 	<section
 		id="posts"
 		class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 max-w-6xl w-full rounded-box gap-6 p-6"
-	></section>
+	>
+		<%for (const post of posts) { %> <%- include('includes/postCard', {
+		post: post }) %> <% } %>
+	</section>
 </main>
-
-<script>
-	let currentPost = 0;
-
-	async function getRecentPost(count = 1) {
-		for (let i = 0; i < count; i++) {
-			await fetch(`/post/recent/${currentPost}`)
-				.then((response) => response.text())
-				.then((data) => {
-					posts.innerHTML += data;
-				})
-				.catch((error) => {
-					console.error("Error fetching posts:", error);
-				});
-			currentPost++;
-		}
-	}
-
-	document.addEventListener("DOMContentLoaded", async () => {
-		await getRecentPost(6);
-	});
-
-	window.addEventListener("scroll", async () => {
-		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			await getRecentPost(3);
-		}
-	});
-</script>

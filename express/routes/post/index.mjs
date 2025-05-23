@@ -69,36 +69,6 @@ router.post("/unlike/:id", authMiddleware, async (req, res) => {
 	}
 });
 
-router.get("/recent/:number", async (req, res) => {
-	try {
-		const posts = await Post.find({ isPublished: true })
-			.populate("userId")
-			.sort({ createdAt: -1 })
-			.skip(req.params.number)
-			.limit(1);
-		await Promise.all(
-			posts.map(async (post) => {
-				post.comments = await Comment.find({ postId: post._id })
-					.populate("userId")
-					.sort({ createdAt: -1 });
-				post.lastComment = post.comments[0];
-				post.likes = await Like.find({ postId: post._id });
-				if (req?.user) {
-					post.isLiked = await Like.findOne({
-						userId: req.user.id,
-						postId: post._id,
-					});
-				}
-			})
-		);
-		res.render("includes/postCard", {
-			post: posts[0],
-		});
-	} catch (error) {
-		res.status(500).json(errors.GETTING_POSTS);
-	}
-});
-
 router.post("/publish/:id", authMiddleware, async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
