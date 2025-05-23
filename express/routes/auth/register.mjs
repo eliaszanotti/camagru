@@ -50,12 +50,16 @@ router.post("/register", async (req, res) => {
 
 	try {
 		await newUser.save();
+	} catch (saveError) {
+		return res.status(500).render("authRegister", errors.SAVING_USER);
+	}
 
+	try {
 		const mailOptions = verifyMailOptions(newUser);
 		await transporter.sendMail(mailOptions);
 		res.redirect("/auth/check-email");
-	} catch (error) {
-		res.status(500).render("authRegister", errors.SAVING_USER);
+	} catch (emailError) {
+		return res.status(500).render("authRegister", errors.EMAIL_SEND_FAILED);
 	}
 });
 
