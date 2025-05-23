@@ -8,7 +8,7 @@ Ensuite on a une section avec un 3 photos et on doit classer selon nous si cest 
 
 on peut ensuite valider pour passer a 3 nouvelles photos ou annuler pour changer son vote.
 
-On a une page de connexion, de deconnexion, de creation de compte, de modification de mot de passe, de modification de profil, de recuperation de mot de passe.
+On a une page de connexion, de deconnexion, de creation de compte, de modification de mot de passe, de modification de profile, de recuperation de mot de passe.
 
 UPDATE:
 
