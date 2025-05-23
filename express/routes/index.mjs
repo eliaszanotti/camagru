@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 	try {
-		const page = parseInt(req.params.page, 10) || 0;
+		const page = parseInt(req.query.page, 10) || 0;
 		const skipCount = page * 6;
 		const posts = await Post.find({ isPublished: true })
 			.populate("userId")
