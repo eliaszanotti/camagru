@@ -26,3 +26,17 @@ export const resetPasswordMailOptions = (user) => {
 		<p>This link will expire in 10 minutes.</p>`,
 	};
 };
+
+export const newCommentMailOptions = (user, post) => {
+	return {
+		from: process.env.GOOGLE_USER,
+		to: user.email,
+		subject: "New comment on your post",
+		html: `
+		<h1>Hi ${user.username},</h1>
+		<p>You have a new comment on your post! Check it out here: 
+			<a href="${process.env.SERVER_URL}/post/id/${post._id}">
+			View Post</a>
+		</p>`,
+	};
+};

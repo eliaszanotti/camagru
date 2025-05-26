@@ -2,8 +2,11 @@ import express from "express";
 import Post from "../../models/Post.mjs";
 import Comment from "../../models/Comment.mjs";
 import Like from "../../models/Like.mjs";
+import User from "../../models/User.mjs";
 import { errors } from "../../utils/errors.mjs";
 import { authMiddleware } from "../../middleware/authMiddleware.mjs";
+import transporter from "../../utils/emailTransporter.mjs";
+import { newCommentMailOptions } from "../../utils/mailOptions.mjs";
 
 const router = express.Router();
 router.use(express.json());
@@ -42,6 +45,20 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 			userId: req.user.id,
 		});
 		await comment.save();
+
+		const post = await Post.findById(req.params.id);
+		if (post) {
+			const postOwner = await User.findById(post.userId);
+			if (postOwner && postOwner.email) {
+				try {
+					const mailOptions = newCommentMailOptions(postOwner, post);
+					await transporter.sendMail(mailOptions);
+				} catch (emailError) {
+					return res.status(500).json(errors.EMAIL_SEND_FAILED);
+				}
+			}
+		}
+
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
 		// TODO ici prend l'erreur du Comment.save dans Comment.mjs
