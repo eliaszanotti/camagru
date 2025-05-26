@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { errors } from "../utils/errors.mjs";
 
 const likeSchema = new mongoose.Schema({
 	userId: {
@@ -20,8 +21,7 @@ likeSchema.pre("save", async function (next) {
 			postId: this.postId,
 		});
 		if (existingLike) {
-			// TODO ici renvoie un erreur du json centralisé d'erreur
-			const error = new Error("You have already voted for this post");
+			const error = new Error(errors.ALREADY_LIKED);
 			error.statusCode = 400;
 			return next(error);
 		}

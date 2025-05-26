@@ -29,4 +29,8 @@ export const errors = {
 	NO_POSTS: { id: "global", message: "No posts found" },
 	INVALID_PAGE: { id: "global", message: "Invalid page" },
 	EMAIL_SEND_FAILED: { id: "global", message: "Failed to send email." },
+	ALREADY_LIKED: {
+		id: "global",
+		message: "You have already liked this post",
+	},
 };

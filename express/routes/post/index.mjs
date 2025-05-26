@@ -61,7 +61,6 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
-		// TODO ici prend l'erreur du Comment.save dans Comment.mjs
 		res.status(500).json(errors.COMMENTING);
 	}
 });
@@ -72,7 +71,6 @@ router.post("/like/:id", authMiddleware, async (req, res) => {
 		await like.save();
 		res.redirect(`/post/id/${req.params.id}`);
 	} catch (error) {
-		// TODO ici prend lerreur du Like.save dans Like.mjs
 		res.status(500).json(errors.LIKING);
 	}
 });
