@@ -48,31 +48,7 @@
 				<% } %>
 			</fieldset>
 
-			<fieldset class="fieldset">
-				<legend class="fieldset-legend">Password</legend>
-				<label class="input validator w-full">
-					<%- include('icons/password') %>
-					<input
-						required
-						type="password"
-						name="password"
-						placeholder="Password"
-						minlength="8"
-						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
-					/>
-				</label>
-				<div class="validator-hint hidden">
-					<p>Must be more than 8 characters, including</p>
-					<p>At least one number</p>
-					<p>At least one lowercase letter</p>
-					<p>At least one uppercase letter</p>
-					<p>At least one special character</p>
-				</div>
-				<% if (typeof id !== 'undefined' && id === 'password') { %>
-				<p class="fieldset-label text-error"><%= message %></p>
-				<% } %>
-			</fieldset>
-
+			<%- include('includes/forms/passwordField', { name: 'password' }) %>
 			<% if (typeof id !== 'undefined' && id === 'global') { %>
 			<p class="text-error text-xs"><%= message %></p>
 			<% } %>
@@ -84,7 +60,9 @@
 				>
 					Already have an account?
 				</a>
-				<button type="submit" class="btn btn-primary">Create an account</button>
+				<button type="submit" class="btn btn-primary">
+					Create an account
+				</button>
 			</div>
 		</form>
 	</section>
