@@ -59,6 +59,27 @@ router.get("/profile", authMiddleware, async (req, res) => {
 	res.render("profile", { user });
 });
 
+router.get(
+	"/profile/toggle-notifications",
+	authMiddleware,
+	async (req, res) => {
+		try {
+			const userId = req.user.id;
+			const user = await User.findById(userId);
+
+			await User.findByIdAndUpdate(userId, {
+				emailNotifications: !user.emailNotifications,
+			});
+
+			res.redirect("/profile");
+		} catch (error) {
+			res.status(500).json({
+				message: "Error updating notifications",
+			});
+		}
+	}
+);
+
 router.use("/auth", authRoutes);
 router.use("/post", postRoutes);
 router.use("/gallery", galleryRoutes);

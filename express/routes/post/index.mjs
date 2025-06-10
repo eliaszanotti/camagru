@@ -49,7 +49,7 @@ router.post("/comment/:id", authMiddleware, async (req, res) => {
 		const post = await Post.findById(req.params.id);
 		if (post) {
 			const postOwner = await User.findById(post.userId);
-			if (postOwner && postOwner.email) {
+			if (postOwner && postOwner.email && postOwner.emailNotifications) {
 				try {
 					const mailOptions = newCommentMailOptions(postOwner, post);
 					await transporter.sendMail(mailOptions);

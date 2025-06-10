@@ -51,6 +51,23 @@
 			</a>
 		</fieldset>
 
+		<fieldset class="fieldset grid grid-cols-[1fr_auto] gap-2">
+			<legend class="fieldset-legend">Email notifications</legend>
+			<div class="flex items-center px-4 py-3">
+				<span class="text-sm"
+					>Receive notifications for new comments</span
+				>
+			</div>
+			<a href="/profile/toggle-notifications" class="flex items-center">
+				<!-- prettier-ignore -->
+				<input
+					type="checkbox"
+					class="toggle toggle-primary pointer-events-none"
+					<%= user.emailNotifications ? "checked" : "" %> readonly
+				/>
+			</a>
+		</fieldset>
+
 		<div class="flex justify-end">
 			<a href="/auth/change-password" class="btn btn-primary">
 				<%- include('icons/edit') %> Change password
