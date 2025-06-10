@@ -1319,20 +1319,41 @@
   .h-10 {
     height: calc(var(--spacing) * 10);
   }
+  .h-12 {
+    height: calc(var(--spacing) * 12);
+  }
   .h-20 {
     height: calc(var(--spacing) * 20);
   }
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
+  .h-96 {
+    height: calc(var(--spacing) * 96);
+  }
+  .h-200 {
+    height: calc(var(--spacing) * 200);
+  }
   .h-\[80vh\] {
     height: 80vh;
+  }
+  .h-\[150vh\] {
+    height: 150vh;
   }
   .h-full {
     height: 100%;
   }
+  .h-screen {
+    height: 100vh;
+  }
   .max-h-\[40vh\] {
     max-height: 40vh;
+  }
+  .max-h-\[80vh\] {
+    max-height: 80vh;
+  }
+  .max-h-screen {
+    max-height: 100vh;
   }
   .min-h-full {
     min-height: 100%;
@@ -1457,6 +1478,9 @@
   }
   .gap-10 {
     gap: calc(var(--spacing) * 10);
+  }
+  .overflow-auto {
+    overflow: auto;
   }
   .overflow-y-auto {
     overflow-y: auto;
