@@ -1,9 +1,12 @@
-FROM node:23-alpine
+FROM	node:23-alpine
 
 WORKDIR /usr/src/app
 
-RUN npm install -g pnpm
+COPY	package.json .
+RUN		npm install
+RUN		npm run build:css
+COPY	. .
 
-EXPOSE 3000
+EXPOSE	3000
 
-CMD ["sh", "entrypoint.sh"]
+CMD		["npm", "start"]
