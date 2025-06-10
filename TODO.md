@@ -12,6 +12,4 @@ Responsive
 
 Fix le pb de security qui permet d'edit un post qui n'est pas a nous
 
-Ajouter le button pour activer les notifications par mail
-
 Bloquer la page max dans laccueil

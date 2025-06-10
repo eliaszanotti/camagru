@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
 		);
 		res.render("index", {
 			posts: posts,
-			title: `Podium - ${page + 1}`,
+			title: `Camagru - ${page + 1}`,
 			totalPages: totalPages,
 			currentPage: page + 1,
 		});
