@@ -1,22 +1,50 @@
-<header class="h-20 grid place-items-center">
-	<div class="h-full w-4/5 grid grid-cols-3 items-center justify-between">
-		<a href="/" class="text-2xl">Camagru</a>
-		<div class="flex items-center justify-center">
-			<% if (isLoggedIn) { %>
-			<a href="/gallery/add" class="btn btn-primary btn-square">
-				<%- include('../icons/plus') %>
-			</a>
-			<% } %>
-		</div>
-		<div class="flex items-center gap-2 justify-end">
-			<% if (isLoggedIn) { %>
-			<a href="/gallery" class="btn btn-primary btn-ghost">Gallery</a>
-			<a href="/profile" class="btn btn-primary btn-ghost">Profile</a>
-			<a href="/auth/logout" class="btn btn-primary btn-ghost">Logout</a>
-			<% } else { %>
-			<a href="/auth/login" class="btn btn-primary btn-ghost">Login</a>
-			<a href="/auth/register" class="btn btn-primary">Register</a>
-			<% } %>
+<div class="drawer drawer-end">
+	<input id="navbar-drawer" type="checkbox" class="drawer-toggle" />
+	<div class="drawer-content flex flex-col">
+		<header class="navbar bg-base-100 w-full px-8">
+			<div class="navbar-start">
+				<a href="/" class="text-lg font-bold">Camagru</a>
+			</div>
+			<div class="navbar-center">
+				<% if (isLoggedIn) { %>
+				<a href="/gallery/add" class="btn btn-primary btn-square">
+					<%- include('../icons/plus') %>
+				</a>
+				<% } %>
+			</div>
+			<div class="navbar-end">
+				<div class="hidden md:flex">
+					<ul class="flex gap-2">
+						<%- include('navLinks') %>
+					</ul>
+				</div>
+				<div class="md:hidden">
+					<label
+						for="navbar-drawer"
+						aria-label="open sidebar"
+						class="btn btn-square btn-ghost"
+					>
+						<%- include('../icons/menu', { svgClass: "w-6 h-6" }) %>
+					</label>
+				</div>
+			</div>
+		</header>
+	</div>
+	<div class="drawer-side">
+		<label
+			for="navbar-drawer"
+			aria-label="close sidebar"
+			class="drawer-overlay"
+		></label>
+		<div
+			class="bg-base-100 text-base-content min-h-full w-80 gap-4 p-4 flex flex-col"
+		>
+			<div class="flex justify-end">
+				<label for="navbar-drawer" class="btn btn-ghost btn-square">
+					<%- include('../icons/x', { svgClass: "w-6 h-6" }) %>
+				</label>
+			</div>
+			<%- include('navLinks') %>
 		</div>
 	</div>
-</header>
+</div>
