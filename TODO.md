@@ -8,8 +8,6 @@ ajouter les medias dans un S3
 
 Regler la page d'edition avec une preview de la webcam et les stickers
 
-Responsive
-
 Fix le pb de security qui permet d'edit un post qui n'est pas a nous
 
 Bloquer la page max dans laccueil
