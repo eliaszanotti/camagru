@@ -1,0 +1,13 @@
+services:
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www/html
+            - ./assets/images/uploads:/var/www/html/assets/images/uploads
+            - ./assets/images/processed:/var/www/html/assets/images/processed
+        environment:
+            - APACHE_DOCUMENT_ROOT=/var/www/html
