@@ -3,7 +3,7 @@
 
 @plugin "daisyui/theme" {
 	name: "abyss";
-	default: false;
+	default: true;
 	prefersdark: false;
 	color-scheme: "dark";
 	--color-base-100: oklch(20% 0.08 209);
@@ -27,10 +27,10 @@
 	--color-error: oklch(65% 0.1985 24.22);
 	--color-error-content: oklch(27% 0.1985 24.22);
 	--radius-selector: 2rem;
-	--radius-field: 0.25rem;
-	--radius-box: 0.5rem;
+	--radius-field: 1rem;
+	--radius-box: 1rem;
 	--size-selector: 0.25rem;
-	--size-field: 0.25rem;
+	--size-field: 0.2rem;
 	--border: 1px;
 	--depth: 1;
 	--noise: 0;
