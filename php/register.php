@@ -56,7 +56,7 @@ $pageTitle = 'Register - Camagru';
                         <legend class="fieldset-legend">Username</legend>
                         <input type="text"
                             name="username"
-                            class="input input-bordered w-full validator-required"
+                            class="input w-full"
                             value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>"
                             placeholder="Choose a username"
                             pattern="[a-zA-Z0-9_]+"
@@ -73,7 +73,7 @@ $pageTitle = 'Register - Camagru';
                         <legend class="fieldset-legend">Email</legend>
                         <input type="email"
                             name="email"
-                            class="input input-bordered w-full validator-required"
+                            class="input w-full"
                             value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                             placeholder="your@email.com"
                             required />
@@ -87,11 +87,11 @@ $pageTitle = 'Register - Camagru';
                         <legend class="fieldset-legend">Password</legend>
                         <input type="password"
                             name="password"
-                            class="input input-bordered w-full validator-required"
+                            class="input w-full"
                             placeholder="Create a strong password"
                             minlength="8"
-                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?" :{}|<>]).{8,}"
-                        required />
+                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
+                            required />
                         <p class="label">8+ chars with uppercase, lowercase, number, and special character</p>
                         <?php if (isset($errors['password'])): ?>
                             <p class="label text-error"><?php echo htmlspecialchars($errors['password']); ?></p>
@@ -102,7 +102,7 @@ $pageTitle = 'Register - Camagru';
                         <legend class="fieldset-legend">Confirm Password</legend>
                         <input type="password"
                             name="confirm_password"
-                            class="input input-bordered w-full validator-required"
+                            class="input w-full"
                             placeholder="Confirm your password"
                             required />
                         <p class="label">Must match your password</p>
@@ -111,20 +111,16 @@ $pageTitle = 'Register - Camagru';
                         <?php endif; ?>
                     </fieldset>
 
-                    <div class="form-control mt-6">
+                    <div class="form-control mt-4">
                         <button type="submit" class="btn btn-primary w-full">
                             Create Account
                         </button>
                     </div>
-
                     <div class="divider">OR</div>
-
-                    <div class="text-center">
-                        <p class="text-base-content/70">
-                            Already have an account?
-                            <a href="login.php" class="link link-primary link-hover">Sign in</a>
-                        </p>
-                    </div>
+                    <p class="text-center">
+                        Already have an account?
+                        <a href="login.php" class="link link-primary">Sign in</a>
+                    </p>
                 </form>
             </div>
         </div>
