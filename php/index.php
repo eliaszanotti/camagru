@@ -3,19 +3,15 @@ $pageTitle = 'Home';
 require_once 'includes/header.php';
 ?>
 
-<!-- Main Content -->
 <main class="container mx-auto px-4 py-8">
-    <!-- Hero Section -->
     <section class="hero min-h-[300px] bg-gradient-to-r from-primary to-secondary text-primary-content rounded-2xl">
         <div class="hero-content text-center">
-            <div>
+            <div class="space-y-4">
                 <h1 class="text-4xl font-bold mb-4">Welcome to Camagru!</h1>
                 <p class="text-lg mb-6">Create, share and enjoy photo edits with webcam filters</p>
                 <?php if (!isset($_SESSION['user_id'])): ?>
-                    <div class="space-x-4">
                         <a href="register.php" class="btn btn-accent btn-lg">Get Started</a>
                         <a href="login.php" class="btn btn-secondary btn-lg">Login</a>
-                    </div>
                 <?php else: ?>
                     <a href="create.php" class="btn btn-accent btn-lg">Start Creating</a>
                 <?php endif; ?>
