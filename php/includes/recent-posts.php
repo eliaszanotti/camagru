@@ -19,154 +19,178 @@
     </section>
 
 <script>
-    // Mock posts data (replace with actual API call later)
-    const mockPosts = Array.from({
-        length: 47
-    }, (_, i) => ({
-        id: i + 1,
-        title: `Post ${i + 1}`,
-        author: `User ${Math.floor(Math.random() * 20) + 1}`,
-        likes: Math.floor(Math.random() * 100),
-        comments: Math.floor(Math.random() * 30),
-        created_at: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
-    }));
+    class PostsManager {
+        constructor() {
+            this.currentPage = 1;
+            this.totalPages = 1;
+            this.postsPerPage = 10;
+            this.init();
+        }
 
-    let currentPage = 1;
-    const postsPerPage = 10;
+        async init() {
+            await this.displayPosts(1);
+        }
 
-    function displayPosts(page) {
-        const postsContainer = document.getElementById('posts-container');
-        const loading = document.getElementById('loading');
+        async displayPosts(page) {
+            this.currentPage = page;
+            const postsContainer = document.getElementById('posts-container');
+            const loading = document.getElementById('loading');
 
-        // Show loading
-        loading.style.display = 'block';
-        postsContainer.innerHTML = '';
+            this.showLoading(postsContainer, loading);
 
-        // Simulate loading delay
-        setTimeout(() => {
-            const startIndex = (page - 1) * postsPerPage;
-            const endIndex = startIndex + postsPerPage;
-            const currentPosts = mockPosts.slice(startIndex, endIndex);
+            try {
+                const response = await fetch(`api/posts.php?page=${page}`);
+                const data = await response.json();
 
-            // Hide loading
+                this.hideLoading(postsContainer, loading);
+
+                if (data.success) {
+                    this.renderPosts(data.posts, postsContainer);
+                    this.totalPages = data.pagination.totalPages;
+                    this.updatePagination(page);
+                } else {
+                    this.showError(postsContainer, 'Failed to load posts');
+                }
+            } catch (error) {
+                this.hideLoading(postsContainer, loading);
+                this.showError(postsContainer, 'Error loading posts');
+                console.error('Error:', error);
+            }
+        }
+
+        showLoading(postsContainer, loading) {
+            loading.style.display = 'block';
+            postsContainer.innerHTML = '';
+        }
+
+        hideLoading(postsContainer, loading) {
             loading.style.display = 'none';
+        }
 
-            // Display posts
-            currentPosts.forEach(post => {
-                const postCard = createPostCard(post);
-                postsContainer.appendChild(postCard);
+        showError(postsContainer, message) {
+            postsContainer.innerHTML = `<p class="text-error">${message}</p>`;
+        }
+
+        renderPosts(posts, container) {
+            posts.forEach(post => {
+                const postCard = this.createPostCard(post);
+                container.innerHTML += postCard;
             });
+        }
 
-            // Update pagination
-            updatePagination(page);
-        }, 300);
-    }
+        createPostCard(post) {
+            const date = new Date(post.created_at).toLocaleDateString();
+            const imageSrc = post.image_path || `https://picsum.photos/seed/${post.id}/400/300.jpg`;
+            const caption = post.caption || 'Untitled Post';
 
-    function createPostCard(post) {
-        const card = document.createElement('div');
-        card.className = 'card bg-base-100 shadow-xl';
-
-        const date = new Date(post.created_at).toLocaleDateString();
-        const imageId = post.id % 1000; // Use post ID for varied images
-
-        card.innerHTML = `
-        <figure>
-            <img src="https://picsum.photos/seed/${imageId}/400/300.jpg" alt="${post.title}" class="w-full h-48 object-cover">
-        </figure>
-        <div class="card-body">
-            <h3 class="card-title text-lg">${post.title}</h3>
-            <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
-                <span>By ${post.author}</span>
-                <span>•</span>
-                <span>${date}</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <div class="flex gap-4">
-                    <button class="btn btn-sm btn-ghost">
-                        ❤️ ${post.likes}
-                    </button>
-                    <button class="btn btn-sm btn-ghost">
-                        💬 ${post.comments}
-                    </button>
+            return `
+            <div class="card bg-base-100 shadow-xl">
+                <figure>
+                    <img src="${imageSrc}" alt="${caption}" class="w-full h-48 object-cover">
+                </figure>
+                <div class="card-body">
+                    <h3 class="card-title text-lg">${caption}</h3>
+                    <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+                        <span>By ${post.username}</span>
+                        <span>•</span>
+                        <span>${date}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex gap-4">
+                            <button class="btn btn-sm btn-ghost" onclick="likePost(${post.id})">
+                                ❤️ Like
+                            </button>
+                            <button class="btn btn-sm btn-ghost" onclick="commentPost(${post.id})">
+                                💬 Comment
+                            </button>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="viewPost(${post.id})">
+                            View
+                        </button>
+                    </div>
                 </div>
-                <button class="btn btn-sm btn-primary">View</button>
-            </div>
-        </div>
-    `;
-
-        return card;
-    }
-
-    function updatePagination(page) {
-        const pagination = document.getElementById('pagination');
-        const totalPages = Math.ceil(mockPosts.length / postsPerPage);
-
-        let paginationHTML = '<div class="join">';
-
-        // Previous button
-        paginationHTML += `
-        <button class="join-item btn" onclick="goToPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>
-            «
-        </button>
-    `;
-
-        // Page numbers
-        const maxVisiblePages = 5;
-        let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-        if (endPage - startPage < maxVisiblePages - 1) {
-            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            </div>`;
         }
 
-        if (startPage > 1) {
-            paginationHTML += `<button class="join-item btn" onclick="goToPage(1)">1</button>`;
-            if (startPage > 2) {
-                paginationHTML += `<button class="join-item btn" disabled>...</button>`;
+        updatePagination(page) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = this.createPagination(page);
+        }
+
+        createPagination(page) {
+            let html = '<div class="join">';
+
+            // Previous button
+            html += `<button class="join-item btn" onclick="postsManager.goToPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>«</button>`;
+
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
-        }
 
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHTML += `
-            <button class="join-item btn ${i === page ? 'btn-active' : ''}" onclick="goToPage(${i})">
-                ${i}
-            </button>
-        `;
-        }
-
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                paginationHTML += `<button class="join-item btn" disabled>...</button>`;
+            if (startPage > 1) {
+                html += `<button class="join-item btn" onclick="postsManager.goToPage(1)">1</button>`;
+                if (startPage > 2) {
+                    html += `<button class="join-item btn" disabled>...</button>`;
+                }
             }
-            paginationHTML += `<button class="join-item btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                const active = i === page ? 'btn-active' : '';
+                html += `<button class="join-item btn ${active}" onclick="postsManager.goToPage(${i})">${i}</button>`;
+            }
+
+            if (endPage < this.totalPages) {
+                if (endPage < this.totalPages - 1) {
+                    html += `<button class="join-item btn" disabled>...</button>`;
+                }
+                html += `<button class="join-item btn" onclick="postsManager.goToPage(${this.totalPages})">${this.totalPages}</button>`;
+            }
+
+            // Next button
+            html += `<button class="join-item btn" onclick="postsManager.goToPage(${page + 1})" ${page === this.totalPages ? 'disabled' : ''}>»</button>`;
+
+            html += '</div>';
+            return html;
         }
 
-        // Next button
-        paginationHTML += `
-        <button class="join-item btn" onclick="goToPage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>
-            »
-        </button>
-    `;
+        goToPage(page) {
+            if (page < 1 || page > this.totalPages) return;
+            this.displayPosts(page);
+            this.scrollToTop();
+        }
 
-        paginationHTML += '</div>';
-        pagination.innerHTML = paginationHTML;
+        scrollToTop() {
+            document.getElementById('posts-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
     }
 
-    function goToPage(page) {
-        const totalPages = Math.ceil(mockPosts.length / postsPerPage);
-        if (page < 1 || page > totalPages) return;
+    // Global functions for button onclick events
+    let postsManager;
 
-        currentPage = page;
-        displayPosts(currentPage);
-
-        // Scroll to top of posts
-        document.getElementById('posts-container').scrollIntoView({
-            behavior: 'smooth'
-        });
+    function likePost(postId) {
+        console.log('Like post:', postId);
+        // TODO: Implement like functionality
     }
 
-    // Initialize
+    function commentPost(postId) {
+        console.log('Comment on post:', postId);
+        // TODO: Implement comment functionality
+    }
+
+    function viewPost(postId) {
+        console.log('View post:', postId);
+        // TODO: Implement view post functionality
+    }
+
+    // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
-        displayPosts(1);
+        postsManager = new PostsManager();
     });
 </script>
