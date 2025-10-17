@@ -27,30 +27,28 @@ $pageTitle = 'Register - Camagru';
 <div class="p-16">
     <div class="max-w-md mx-auto">
         <div class="card bg-base-200">
-            <div class="card-body">
+            <div class="card-body space-y-4">
                 <h1 class="card-title">Register</h1>
+                <?php if ($success): ?>
+                    <div class="alert alert-success">
+                        <!-- TODO mettre lucide -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><?php echo htmlspecialchars($success); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($errors['general'])): ?>
+                    <div class="alert alert-error">
+                        <!-- TODO mettre lucide -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><?php echo htmlspecialchars($errors['general']); ?></span>
+                    </div>
+                <?php endif; ?>
                 <form method="POST" novalidate>
                     <input type="hidden" name="csrf_token" value="<?php echo AuthMiddleware::getCSRFToken(); ?>">
-
-                    <?php if ($success): ?>
-                        <div class="alert alert-success">
-                            <!-- TODO mettre lucide -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span><?php echo htmlspecialchars($success); ?></span>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (isset($errors['general'])): ?>
-                        <div class="alert alert-error">
-                            <!-- TODO mettre lucide -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span><?php echo htmlspecialchars($errors['general']); ?></span>
-                        </div>
-                    <?php endif; ?>
 
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Username</legend>
@@ -116,122 +114,15 @@ $pageTitle = 'Register - Camagru';
                             Create Account
                         </button>
                     </div>
-                    <div class="divider">OR</div>
-                    <p class="text-center">
-                        Already have an account?
-                        <a href="login.php" class="link link-primary">Sign in</a>
-                    </p>
                 </form>
+                <div class="divider">OR</div>
+                <p class="text-center">
+                    Already have an account?
+                    <a href="login.php" class="link link-primary">Sign in</a>
+                </p>
             </div>
         </div>
     </div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-
-<script>
-    // Client-side validation
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const form = e.target;
-        const password = form.querySelector('input[name="password"]').value;
-        const confirmPassword = form.querySelector('input[name="confirm_password"]').value;
-        const username = form.querySelector('input[name="username"]').value;
-
-        // Clear previous client-side errors
-        document.querySelectorAll('.client-error').forEach(el => el.remove());
-
-        let hasError = false;
-
-        // Validate username
-        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-            showError('username', 'Username can only contain letters, numbers, and underscores');
-            hasError = true;
-        }
-
-        // Validate password match
-        if (password !== confirmPassword) {
-            showError('confirm_password', 'Passwords do not match');
-            hasError = true;
-        }
-
-        // Validate password strength
-        if (password.length < 8) {
-            showError('password', 'Password must be at least 8 characters long');
-            hasError = true;
-        } else if (!/[A-Z]/.test(password)) {
-            showError('password', 'Password must contain at least one uppercase letter');
-            hasError = true;
-        } else if (!/[a-z]/.test(password)) {
-            showError('password', 'Password must contain at least one lowercase letter');
-            hasError = true;
-        } else if (!/[0-9]/.test(password)) {
-            showError('password', 'Password must contain at least one number');
-            hasError = true;
-        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            showError('password', 'Password must contain at least one special character');
-            hasError = true;
-        }
-
-        if (hasError) {
-            e.preventDefault();
-        }
-    });
-
-    function showError(fieldName, message) {
-        const field = document.querySelector(`input[name="${fieldName}"]`);
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'text-error text-sm mt-1 client-error';
-        errorDiv.textContent = message;
-        field.parentNode.parentNode.insertBefore(errorDiv, field.parentNode.nextSibling);
-    }
-
-    // Real-time password validation feedback
-    const passwordInput = document.querySelector('input[name="password"]');
-    const confirmPasswordInput = document.querySelector('input[name="confirm_password"]');
-
-    if (passwordInput) {
-        passwordInput.addEventListener('input', function() {
-            const password = this.value;
-            let isValid = true;
-            let message = '';
-
-            if (password.length < 8) {
-                isValid = false;
-                message = 'Too short (min 8 chars)';
-            } else if (!/[A-Z]/.test(password)) {
-                isValid = false;
-                message = 'Needs uppercase';
-            } else if (!/[a-z]/.test(password)) {
-                isValid = false;
-                message = 'Needs lowercase';
-            } else if (!/[0-9]/.test(password)) {
-                isValid = false;
-                message = 'Needs number';
-            } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-                isValid = false;
-                message = 'Needs special char';
-            }
-
-            if (password.length > 0) {
-                this.className = isValid ?
-                    'input input-bordered w-full validator-required input-success' :
-                    'input input-bordered w-full validator-required input-error';
-            }
-        });
-    }
-
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', function() {
-            const password = passwordInput.value;
-            const confirmPassword = this.value;
-
-            if (confirmPassword.length > 0) {
-                if (password === confirmPassword) {
-                    this.className = 'input input-bordered w-full validator-required input-success';
-                } else {
-                    this.className = 'input input-bordered w-full validator-required input-error';
-                }
-            }
-        });
-    }
-</script>
