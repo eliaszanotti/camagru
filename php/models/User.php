@@ -70,7 +70,7 @@ class User {
     public function verifyEmail(string $token): bool {
         try {
             $sql = "UPDATE users
-                    SET email_verified = TRUE, email_verification_token = NULL
+                    SET is_verified = TRUE, email_verification_token = NULL, updated_at = CURRENT_TIMESTAMP
                     WHERE email_verification_token = :token";
 
             $stmt = $this->db->prepare($sql);
@@ -189,7 +189,7 @@ class User {
      */
     public function getAll(int $limit = 50, int $offset = 0): array {
         try {
-            $sql = "SELECT id, username, email, email_verified, created_at
+            $sql = "SELECT id, username, email, is_verified, created_at
                     FROM users
                     ORDER BY created_at DESC
                     LIMIT :limit OFFSET :offset";

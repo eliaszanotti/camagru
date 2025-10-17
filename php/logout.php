@@ -1,15 +1,22 @@
 <?php
-session_start();
 
-// Destroy all session data
-session_destroy();
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+require_once __DIR__ . '/controllers/AuthController.php';
 
-// Clear session cookie
-if (isset($_COOKIE[session_name()])) {
-    setcookie(session_name(), '', time() - 3600, '/');
+// Only allow logout if user is logged in
+if (AuthController::isLoggedIn()) {
+    // Log the logout event
+    AuthMiddleware::logSecurityEvent('user_logout', [
+        'user_id' => $_SESSION['user_id'],
+        'username' => $_SESSION['username']
+    ]);
+
+    // Perform logout
+    $authController = new AuthController();
+    $authController->logout();
 }
 
-// Redirect to home page
-header('Location: index.php');
+// Redirect to home page with a logout message
+header('Location: index.php?logout=1');
 exit;
 ?>

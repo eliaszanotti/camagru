@@ -1,51 +1,91 @@
 <?php
-$pageTitle = 'Verify Email';
-require_once 'includes/header.php';
 
-require_once 'models/User.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+require_once __DIR__ . '/controllers/AuthController.php';
 
-$userModel = new User();
+$authController = new AuthController();
 $token = $_GET['token'] ?? '';
-$verified = false;
-$error = '';
+$result = ['success' => false, 'message' => ''];
 
 if (empty($token)) {
-    $error = 'Invalid verification link';
+    $result['message'] = 'Invalid verification link';
 } else {
-    if ($userModel->verifyEmail($token)) {
-        $verified = true;
-    } else {
-        $error = 'Invalid or expired verification token';
-    }
+    $result = $authController->verifyEmail($token);
 }
+
+$pageTitle = 'Verify Email - Camagru';
 ?>
 
-<!-- Main Content -->
-<main class="container mx-auto px-4 py-8">
-    <div class="max-w-md mx-auto">
-        <div class="card bg-base-100 shadow-xl">
-            <div class="card-body text-center">
-                <?php if ($verified): ?>
-                    <div class="text-6xl mb-4">✅</div>
-                    <h1 class="text-2xl font-bold mb-4">Email Verified!</h1>
-                    <p class="text-base-content/70 mb-6">
-                        Your email has been successfully verified. You can now login to your account.
-                    </p>
-                    <a href="login.php" class="btn btn-primary">Login Now</a>
-                <?php else: ?>
-                    <div class="text-6xl mb-4">❌</div>
-                    <h1 class="text-2xl font-bold mb-4">Verification Failed</h1>
-                    <p class="text-base-content/70 mb-6">
-                        <?php echo htmlspecialchars($error); ?>
-                    </p>
-                    <div class="space-y-2">
-                        <a href="login.php" class="btn btn-primary btn-block">Login</a>
-                        <a href="register.php" class="btn btn-secondary btn-block">Register</a>
-                    </div>
-                <?php endif; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="min-h-screen bg-base-200">
+    <div class="hero min-h-screen">
+        <div class="hero-content text-center">
+            <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
+                <div class="card-body">
+                    <?php if ($result['success']): ?>
+                        <div class="text-center">
+                            <div class="text-6xl mb-4 text-success">✅</div>
+                            <h1 class="text-3xl font-bold mb-4 text-success">Email Verified!</h1>
+                            <p class="text-base-content/70 mb-8">
+                                <?php echo htmlspecialchars($result['message']); ?>
+                            </p>
+                            <div class="form-control">
+                                <a href="login.php" class="btn btn-primary w-full">
+                                    Login Now
+                                </a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center">
+                            <div class="text-6xl mb-4 text-error">❌</div>
+                            <h1 class="text-3xl font-bold mb-4 text-error">Verification Failed</h1>
+                            <p class="text-base-content/70 mb-8">
+                                <?php echo htmlspecialchars($result['message']); ?>
+                            </p>
+                            <div class="divider">OR</div>
+                            <div class="space-y-3">
+                                <a href="login.php" class="btn btn-outline btn-primary w-full">
+                                    Login
+                                </a>
+                                <a href="register.php" class="btn btn-outline btn-secondary w-full">
+                                    Register New Account
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-</main>
 
-<?php require_once 'includes/footer.php'; ?>
+    <script>
+        // Auto-redirect after 5 seconds on successful verification
+        <?php if ($result['success']): ?>
+        setTimeout(function() {
+            window.location.href = 'login.php';
+        }, 5000);
+        <?php endif; ?>
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                card.style.transition = 'all 0.5s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
