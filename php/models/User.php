@@ -33,7 +33,8 @@ class User {
             $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':email' => $email]);
-            return $stmt->fetch();
+            $result = $stmt->fetch();
+            return $result ?: null;
         } catch (PDOException $e) {
             error_log("Error finding user by email: " . $e->getMessage());
             return null;
@@ -45,7 +46,8 @@ class User {
             $sql = "SELECT * FROM users WHERE username = :username LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':username' => $username]);
-            return $stmt->fetch();
+            $result = $stmt->fetch();
+            return $result ?: null;
         } catch (PDOException $e) {
             error_log("Error finding user by username: " . $e->getMessage());
             return null;
@@ -57,7 +59,8 @@ class User {
             $sql = "SELECT * FROM users WHERE id = :id LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':id' => $id]);
-            return $stmt->fetch();
+            $result = $stmt->fetch();
+            return $result ?: null;
         } catch (PDOException $e) {
             error_log("Error finding user by ID: " . $e->getMessage());
             return null;
@@ -134,7 +137,8 @@ class User {
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':token' => $token]);
-            return $stmt->fetch();
+            $result = $stmt->fetch();
+            return $result ?: null;
         } catch (PDOException $e) {
             error_log("Error finding user by reset token: " . $e->getMessage());
             return null;
