@@ -11,12 +11,12 @@
                 <span><?php echo htmlspecialchars($user['email']); ?></span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-base-content/50">Member Since:</span>
-                <span><?php echo date('j M, Y', strtotime($user['created_at'])); ?></span>
+                <span class="text-base-content/50">Email Verified:</span>
+                <span class="badge <?php echo ($user['is_verified'] ?? false) ? 'badge-success' : 'badge-error'; ?>"><?php echo ($user['is_verified'] ?? false) ? 'Verified' : 'Not verified'; ?></span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-base-content/50">Email Verified:</span>
-                <span class="badge <?php echo ($user['is_verified'] ?? false) ? 'badge-success' : 'badge-error'; ?>"><?php echo ($user['is_verified'] ?? false) ? 'Yes' : 'No'; ?></span>
+                <span class="text-base-content/50">Member Since:</span>
+                <span><?php echo date('j M, Y', strtotime($user['created_at'])); ?></span>
             </div>
             <div class="flex justify-between items-center">
                 <span class="text-base-content/50">Photos Created:</span>
