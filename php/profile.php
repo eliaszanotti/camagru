@@ -44,20 +44,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Handle email form
         $email = trim($_POST['email'] ?? '');
 
-        $updateData = [
-            'email' => $email
-        ];
+        // Check if email is actually changing
+        if ($email !== $user['email']) {
+            // Generate new verification token
+            $verificationToken = bin2hex(random_bytes(32));
 
-        $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+            $updateData = [
+                'email' => $email,
+                'email_verification_token' => $verificationToken,
+                'is_verified' => false
+            ];
 
-        if (!$validationResult['success']) {
-            $errors = $validationResult['errors'];
+            $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+
+            if (!$validationResult['success']) {
+                $errors = $validationResult['errors'];
+            } else {
+                // Send new verification email
+                require_once __DIR__ . '/services/EmailService.php';
+                $emailService = new EmailService();
+
+                if (!$emailService->sendVerificationEmail($email, $user['username'], $verificationToken)) {
+                    error_log("Failed to send verification email to: " . $email);
+                    // Don't fail the update, but log it
+                }
+
+                $success = 'Email updated successfully! Please check your inbox to verify your new email address.';
+
+                // Update session variable (but mark as unverified)
+                $_SESSION['email'] = $email;
+                $_SESSION['is_verified'] = false;
+                // Refresh user data
+                $user = $userModel->findById($_SESSION['user_id']);
+            }
         } else {
-            $success = $validationResult['message'];
-            // Update session variable
-            $_SESSION['email'] = $email;
-            // Refresh user data
-            $user = $userModel->findById($_SESSION['user_id']);
+            // Email didn't change, just update profile normally
+            $updateData = [
+                'email' => $email
+            ];
+
+            $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+
+            if (!$validationResult['success']) {
+                $errors = $validationResult['errors'];
+            } else {
+                $success = $validationResult['message'];
+                // Refresh user data
+                $user = $userModel->findById($_SESSION['user_id']);
+            }
         }
     } elseif ($formType === 'password_change') {
         // Handle password change form
@@ -125,6 +159,7 @@ $pageTitle = 'Profile - Camagru';
                 <?php require_once __DIR__ . '/includes/profile/notifications-card.php'; ?>
             </div>
         </div>
+        <h1 class="text-3xl font-bold">My Photos</h1>
         <?php require_once __DIR__ . '/includes/profile/my-photos.php'; ?>
     </div>
 </main>
