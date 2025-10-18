@@ -1,10 +1,8 @@
 <?php
 $pageTitle = 'Photo Details';
 require_once 'includes/header.php';
-
-require_once 'models/Post.php';
-require_once 'models/Comment.php';
 require_once 'models/Like.php';
+require_once 'handlers/CommentHandler.php';
 
 $postId = $_GET['id'] ?? 0;
 
@@ -13,47 +11,17 @@ if (!$postId) {
     exit;
 }
 
-$postModel = new Post();
-$commentModel = new Comment();
+$commentHandler = new CommentHandler($postId);
+$formService = $commentHandler->getFormService();
+$post = $commentHandler->getPost();
+$comments = $commentHandler->getComments();
+
 $likeModel = new Like();
-
-$post = $postModel->findById($postId);
-if (!$post || !$post['is_published']) {
-    header('Location: gallery.php');
-    exit;
-}
-
-$comments = $commentModel->getByPostId($postId);
 $likesCount = $likeModel->getCount($postId);
 $isLiked = isset($_SESSION['user_id']) ? $likeModel->isLiked($postId, $_SESSION['user_id']) : false;
 
-$commentErrors = [];
-$commentSuccess = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
-    $content = trim($_POST['content'] ?? '');
-
-    if (empty($content)) {
-        $commentErrors[] = 'Comment cannot be empty';
-    } elseif (strlen($content) > 500) {
-        $commentErrors[] = 'Comment must be less than 500 characters';
-    }
-
-    if (empty($commentErrors)) {
-        $commentData = [
-            'post_id' => $postId,
-            'user_id' => $_SESSION['user_id'],
-            'content' => $content
-        ];
-
-        if ($commentModel->create($commentData)) {
-            $commentSuccess = 'Comment added successfully!';
-            $comments = $commentModel->getByPostId($postId); // Refresh comments
-            unset($_POST['content']);
-        } else {
-            $commentErrors[] = 'Failed to add comment';
-        }
-    }
+if ($commentHandler->shouldClearForm()) {
+    unset($_POST['content']);
 }
 ?>
 
@@ -114,19 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
                 <!-- Add Comment Form -->
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="mb-6">
-                        <?php if (!empty($commentErrors)): ?>
-                            <div class="alert alert-error mb-4">
-                                <ul class="list-disc list-inside">
-                                    <?php foreach ($commentErrors as $error): ?>
-                                        <li><?php echo htmlspecialchars($error); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                        <?php endif; ?>
+                        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
 
-                        <?php if ($commentSuccess): ?>
-                            <div class="alert alert-success mb-4">
-                                <?php echo htmlspecialchars($commentSuccess); ?>
+                        <?php if ($formService->getError('content')): ?>
+                            <div class="alert alert-error mb-4">
+                                <span><?php echo htmlspecialchars($formService->getError('content')); ?></span>
                             </div>
                         <?php endif; ?>
 

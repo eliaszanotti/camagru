@@ -1,108 +1,14 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
 $pageTitle = 'Create Photo';
 require_once 'includes/header.php';
+require_once 'handlers/CreatePostHandler.php';
 
-require_once 'models/Post.php';
+$createPostHandler = new CreatePostHandler();
+$formService = $createPostHandler->getFormService();
+$userPosts = $createPostHandler->getUserPosts();
 
-$postModel = new Post();
-$errors = [];
-$success = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $caption = trim($_POST['caption'] ?? '');
-
-    if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-        $errors[] = 'Please select an image to upload';
-    } else {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = $_FILES['image']['type'];
-
-        if (!in_array($fileType, $allowedTypes)) {
-            $errors[] = 'Only JPEG, PNG and GIF images are allowed';
-        }
-
-        if ($_FILES['image']['size'] > 5 * 1024 * 1024) { // 5MB limit
-            $errors[] = 'Image size must be less than 5MB';
-        }
-    }
-
-    if (empty($errors)) {
-        $uploadDir = 'uploads/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $fileName = uniqid() . '_' . time() . '.jpg';
-        $uploadPath = $uploadDir . $fileName;
-
-        // Process image
-        $sourcePath = $_FILES['image']['tmp_name'];
-
-        // Create image resource based on file type
-        switch ($fileType) {
-            case 'image/jpeg':
-                $sourceImage = imagecreatefromjpeg($sourcePath);
-                break;
-            case 'image/png':
-                $sourceImage = imagecreatefrompng($sourcePath);
-                break;
-            case 'image/gif':
-                $sourceImage = imagecreatefromgif($sourcePath);
-                break;
-            default:
-                $sourceImage = false;
-        }
-
-        if ($sourceImage) {
-            // Resize image to max 800x800
-            $maxSize = 800;
-            $width = imagesx($sourceImage);
-            $height = imagesy($sourceImage);
-
-            if ($width > $maxSize || $height > $maxSize) {
-                $ratio = min($maxSize / $width, $maxSize / $height);
-                $newWidth = $width * $ratio;
-                $newHeight = $height * $ratio;
-
-                $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-                imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                imagedestroy($sourceImage);
-                $sourceImage = $resizedImage;
-            }
-
-            // Save as JPEG
-            if (imagejpeg($sourceImage, $uploadPath, 90)) {
-                $postData = [
-                    'user_id' => $_SESSION['user_id'],
-                    'image_path' => $uploadPath,
-                    'caption' => $caption,
-                    'is_published' => true
-                ];
-
-                if ($postModel->create($postData)) {
-                    $success = 'Photo created successfully!';
-                    unset($_POST);
-                } else {
-                    $errors[] = 'Failed to save photo to database';
-                    if (file_exists($uploadPath)) {
-                        unlink($uploadPath);
-                    }
-                }
-            } else {
-                $errors[] = 'Failed to save image file';
-            }
-
-            imagedestroy($sourceImage);
-        } else {
-            $errors[] = 'Failed to process image';
-        }
-    }
+if ($createPostHandler->shouldClearForm()) {
+    unset($_POST);
 }
 ?>
 
@@ -111,22 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="max-w-4xl mx-auto">
         <h1 class="text-3xl font-bold text-center mb-8">Create Photo</h1>
 
-        <?php if (!empty($errors)): ?>
-            <div class="alert alert-error mb-6">
-                <ul class="list-disc list-inside">
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo htmlspecialchars($error); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
+
+        <?php if ($formService->hasSuccess()): ?>
+            <div class="mt-2">
+                <a href="gallery.php" class="btn btn-primary btn-sm">View in Gallery</a>
             </div>
         <?php endif; ?>
 
-        <?php if ($success): ?>
-            <div class="alert alert-success mb-6">
-                <?php echo htmlspecialchars($success); ?>
-                <div class="mt-2">
-                    <a href="gallery.php" class="btn btn-primary btn-sm">View in Gallery</a>
-                </div>
+        <?php if ($formService->getError('image')): ?>
+            <div class="alert alert-error mb-6">
+                <span><?php echo htmlspecialchars($formService->getError('image')); ?></span>
             </div>
         <?php endif; ?>
 
@@ -177,10 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Your Recent Photos -->
         <div class="mt-8">
             <h2 class="text-2xl font-bold mb-4">Your Recent Photos</h2>
-            <?php
-            $userPosts = $postModel->getByUserId($_SESSION['user_id']);
-            if (empty($userPosts)):
-            ?>
+            <?php if (empty($userPosts)): ?>
                 <div class="text-center py-8 bg-base-200 rounded-lg">
                     <p class="text-base-content/70">You haven't created any photos yet</p>
                 </div>
