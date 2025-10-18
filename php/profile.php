@@ -21,13 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $formType = $_POST['form_type'] ?? '';
 
-    if ($formType === 'profile_info') {
-        // Handle username/email form
+    if ($formType === 'profile_username') {
+        // Handle username form
         $username = trim($_POST['username'] ?? '');
+
+        $updateData = [
+            'username' => $username
+        ];
+
+        $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+
+        if (!$validationResult['success']) {
+            $errors = $validationResult['errors'];
+        } else {
+            $success = $validationResult['message'];
+            // Update session variable
+            $_SESSION['username'] = $username;
+            // Refresh user data
+            $user = $userModel->findById($_SESSION['user_id']);
+        }
+    } elseif ($formType === 'profile_email') {
+        // Handle email form
         $email = trim($_POST['email'] ?? '');
 
         $updateData = [
-            'username' => $username,
             'email' => $email
         ];
 
@@ -37,13 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = $validationResult['errors'];
         } else {
             $success = $validationResult['message'];
-            // Update session variables
-            $_SESSION['username'] = $username;
+            // Update session variable
             $_SESSION['email'] = $email;
             // Refresh user data
             $user = $userModel->findById($_SESSION['user_id']);
         }
-
     } elseif ($formType === 'password_change') {
         // Handle password change form
         $currentPassword = $_POST['current_password'] ?? '';
@@ -71,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $userModel->findById($_SESSION['user_id']);
             }
         }
-
     } elseif ($formType === 'notifications') {
         // Handle notifications form
         $emailNotifications = isset($_POST['email_notifications']) ? 1 : 0;
@@ -104,6 +118,7 @@ $pageTitle = 'Profile - Camagru';
             <div class="space-y-8">
                 <?php require_once __DIR__ . '/includes/profile/account-info-card.php'; ?>
                 <?php require_once __DIR__ . '/includes/profile/username-card.php'; ?>
+                <?php require_once __DIR__ . '/includes/profile/email-card.php'; ?>
             </div>
             <div class="space-y-8">
                 <?php require_once __DIR__ . '/includes/profile/password-card.php'; ?>

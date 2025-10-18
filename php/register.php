@@ -2,11 +2,12 @@
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/components/Fieldset.php';
 
 AuthMiddleware::requireGuest();
 
 $authController = new AuthController();
-$errors = [];
+$GLOBALS['errors'] = [];
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = $authController->register($_POST);
 
-    if ($result['success']) {
+    if (!$result['success']) {
+        $GLOBALS['errors'] = $result['errors'];
+    } else {
         $success = $result['message'];
         $_POST = [];
-    } else {
-        $errors = $result['errors'];
     }
 }
 
@@ -38,81 +39,25 @@ $pageTitle = 'Register - Camagru';
                         <span><?php echo htmlspecialchars($success); ?></span>
                     </div>
                 <?php endif; ?>
-                <?php if (isset($errors['general'])): ?>
+                <?php if (isset($GLOBALS['errors']['general'])): ?>
                     <div class="alert alert-error">
                         <!-- TODO mettre lucide -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span><?php echo htmlspecialchars($errors['general']); ?></span>
+                        <span><?php echo htmlspecialchars($GLOBALS['errors']['general']); ?></span>
                     </div>
                 <?php endif; ?>
                 <form method="POST" novalidate>
-                    <input type="hidden" name="csrf_token" value="<?php echo AuthMiddleware::getCSRFToken(); ?>">
-
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Username</legend>
-                        <input type="text"
-                            name="username"
-                            class="input w-full"
-                            value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>"
-                            placeholder="Choose a username"
-                            pattern="[a-zA-Z0-9_]+"
-                            minlength="3"
-                            maxlength="50"
-                            required />
-                        <p class="label">Must contain letters, numbers, and underscores only</p>
-                        <?php if (isset($errors['username'])): ?>
-                            <p class="label text-error"><?php echo htmlspecialchars($errors['username']); ?></p>
-                        <?php endif; ?>
-                    </fieldset>
-
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Email</legend>
-                        <input type="email"
-                            name="email"
-                            class="input w-full"
-                            value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                            placeholder="your@email.com"
-                            required />
-                        <p class="label">We'll send you a verification link</p>
-                        <?php if (isset($errors['email'])): ?>
-                            <p class="label text-error"><?php echo htmlspecialchars($errors['email']); ?></p>
-                        <?php endif; ?>
-                    </fieldset>
-
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Password</legend>
-                        <input type="password"
-                            name="password"
-                            class="input w-full"
-                            placeholder="Create a strong password"
-                            minlength="8"
-                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
-                            required />
-                        <p class="label">8+ chars with uppercase, lowercase, number, and special character</p>
-                        <?php if (isset($errors['password'])): ?>
-                            <p class="label text-error"><?php echo htmlspecialchars($errors['password']); ?></p>
-                        <?php endif; ?>
-                    </fieldset>
-
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Confirm Password</legend>
-                        <input type="password"
-                            name="confirm_password"
-                            class="input w-full"
-                            placeholder="Confirm your password"
-                            required />
-                        <p class="label">Must match your password</p>
-                        <?php if (isset($errors['confirm_password'])): ?>
-                            <p class="label text-error"><?php echo htmlspecialchars($errors['confirm_password']); ?></p>
-                        <?php endif; ?>
-                    </fieldset>
-
+                    <?php
+                    Fieldset::csrfToken();
+                    Fieldset::username();
+                    Fieldset::email();
+                    Fieldset::password();
+                    Fieldset::confirmPassword();
+                    ?>
                     <div class="form-control mt-4">
-                        <button type="submit" class="btn btn-primary w-full">
-                            Create Account
-                        </button>
+                        <?php Fieldset::submit('Create Account'); ?>
                     </div>
                 </form>
                 <div class="divider">OR</div>
