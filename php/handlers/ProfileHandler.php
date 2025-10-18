@@ -99,7 +99,7 @@ class ProfileHandler {
             } else {
                 $emailService = new EmailService();
                 if (!$emailService->sendVerificationEmail($email, $this->user['username'], $verificationToken)) {
-                    error_log("Failed to send verification email to: " . $email);
+                    error_log("Failed to send verification email to: {$email}");
                 }
 
                 $this->formService->setSuccess('Email updated successfully! Please check your inbox to verify your new email address.');

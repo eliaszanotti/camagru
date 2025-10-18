@@ -13,7 +13,7 @@ $pageTitle = 'Profile - Camagru';
 <main class="p-16">
     <div class="max-w-4xl mx-auto space-y-8">
         <h1 class="text-3xl font-bold">My Profile</h1>
-        <?php $formService->renderAlerts(); ?>
+        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="space-y-8">
                 <?php require_once __DIR__ . '/includes/profile/account-info-card.php'; ?>
@@ -25,7 +25,7 @@ $pageTitle = 'Profile - Camagru';
                 <?php require_once __DIR__ . '/includes/profile/notifications-card.php'; ?>
             </div>
         </div>
-        <h1 class="text-3xl font-bold">My Photos</h1>
+        <h1 class="text-xl font-bold">My Photos</h1>
         <?php require_once __DIR__ . '/includes/profile/my-photos.php'; ?>
     </div>
 </main>

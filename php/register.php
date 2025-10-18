@@ -17,24 +17,7 @@ $pageTitle = 'Register - Camagru';
         <div class="card bg-base-200">
             <div class="card-body space-y-4">
                 <h1 class="card-title">Register</h1>
-                <?php if ($formService->hasSuccess()): ?>
-                    <div class="alert alert-success">
-                        <!-- TODO mettre lucide -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span><?php echo htmlspecialchars($formService->getSuccess()); ?></span>
-                    </div>
-                <?php endif; ?>
-                <?php if ($formService->getError('general')): ?>
-                    <div class="alert alert-error">
-                        <!-- TODO mettre lucide -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span><?php echo htmlspecialchars($formService->getError('general')); ?></span>
-                    </div>
-                <?php endif; ?>
+                <?php require_once __DIR__ . '/includes/alerts.php'; ?>
                 <form method="POST" novalidate>
                     <?php
                     Fieldset::csrfToken();
