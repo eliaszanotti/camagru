@@ -90,11 +90,13 @@ $pageTitle = 'Login - Camagru';
                     </div>
                 </form>
                 <div class="divider">OR</div>
-                <p class="text-center">
-                    Don't have an account?
-                    <a href="register.php" class="link link-primary">Create one</a>
-                </p>
-                <a href="forgot-password.php" class="text-center link link-primary">Forgot your password?</a>
+                <div class="space-y-2 text-center">
+                    <p>
+                        Don't have an account?
+                        <a href="register.php" class="link link-primary">Create one</a>
+                    </p>
+                    <a href="forgot-password.php" class="link link-primary">Forgot your password?</a>
+                </div>
             </div>
         </div>
     </div>

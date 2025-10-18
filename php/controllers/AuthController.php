@@ -97,11 +97,7 @@ class AuthController {
             return ['success' => false, 'errors' => ['general' => 'Invalid username/email or password']];
         }
 
-        // Check if user is verified
-        if (!$user['is_verified']) {
-            return ['success' => false, 'errors' => ['general' => 'Please verify your email before logging in. Check your inbox for the verification link.']];
-        }
-
+  
         // Create secure session
         $this->createSecureSession($user);
 

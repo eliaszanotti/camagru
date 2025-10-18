@@ -118,7 +118,7 @@ $pageTitle = 'Register - Camagru';
                 <div class="divider">OR</div>
                 <p class="text-center">
                     Already have an account?
-                    <a href="login.php" class="link link-primary">Sign in</a>
+                    <a href="login.php" class="link link-secondary">Sign in</a>
                 </p>
             </div>
         </div>
