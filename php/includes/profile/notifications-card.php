@@ -3,6 +3,7 @@
         <h2 class="card-title">Notifications</h2>
         <form method="POST" class="space-y-4">
             <input type="hidden" name="csrf_token" value="<?php echo AuthMiddleware::getCSRFToken(); ?>">
+            <input type="hidden" name="form_type" value="notifications">
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Email Notifications</legend>

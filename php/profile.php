@@ -2,11 +2,13 @@
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/models/User.php';
 require_once __DIR__ . '/models/Post.php';
+require_once __DIR__ . '/controllers/AuthController.php';
 
 AuthMiddleware::requireAuth();
 
 $userModel = new User();
 $postModel = new Post();
+$authController = new AuthController();
 
 $user = $userModel->findById($_SESSION['user_id']);
 $userPosts = $postModel->getByUserId($_SESSION['user_id']);
@@ -17,73 +19,75 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     AuthMiddleware::requireCSRF();
 
-    $username = trim($_POST['username'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $currentPassword = $_POST['current_password'] ?? '';
-    $newPassword = $_POST['new_password'] ?? '';
-    $confirmPassword = $_POST['confirm_password'] ?? '';
-    $emailNotifications = isset($_POST['email_notifications']) ? 1 : 0;
+    $formType = $_POST['form_type'] ?? '';
 
-    // Basic validation
-    if (empty($username)) {
-        $errors[] = 'Username is required';
-    }
+    if ($formType === 'profile_info') {
+        // Handle username/email form
+        $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
 
-    if (empty($email)) {
-        $errors[] = 'Email is required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Please enter a valid email';
-    }
-
-    // Check if changing password
-    if (!empty($currentPassword) || !empty($newPassword) || !empty($confirmPassword)) {
-        if (empty($currentPassword)) {
-            $errors[] = 'Current password is required to change password';
-        } elseif (!password_verify($currentPassword, $user['password_hash'])) {
-            $errors[] = 'Current password is incorrect';
-        } elseif (empty($newPassword)) {
-            $errors[] = 'New password is required';
-        } elseif (strlen($newPassword) < 6) {
-            $errors[] = 'New password must be at least 6 characters';
-        } elseif ($newPassword !== $confirmPassword) {
-            $errors[] = 'New passwords do not match';
-        }
-    }
-
-    if (empty($errors)) {
-        // Check if username/email are already taken by other users
-        if ($username !== $user['username'] && $userModel->findByUsername($username)) {
-            $errors[] = 'Username already exists';
-        }
-
-        if ($email !== $user['email'] && $userModel->findByEmail($email)) {
-            $errors[] = 'Email already exists';
-        }
-    }
-
-    if (empty($errors)) {
         $updateData = [
             'username' => $username,
-            'email' => $email,
+            'email' => $email
+        ];
+
+        $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+
+        if (!$validationResult['success']) {
+            $errors = $validationResult['errors'];
+        } else {
+            $success = $validationResult['message'];
+            // Update session variables
+            $_SESSION['username'] = $username;
+            $_SESSION['email'] = $email;
+            // Refresh user data
+            $user = $userModel->findById($_SESSION['user_id']);
+        }
+
+    } elseif ($formType === 'password_change') {
+        // Handle password change form
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        // Verify current password first
+        if (empty($currentPassword)) {
+            $errors['current_password'] = 'Current password is required to change password';
+        } elseif (!password_verify($currentPassword, $user['password_hash'])) {
+            $errors['current_password'] = 'Current password is incorrect';
+        } else {
+            $updateData = [
+                'password' => $newPassword,
+                'confirm_password' => $confirmPassword
+            ];
+
+            $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
+
+            if (!$validationResult['success']) {
+                $errors = $validationResult['errors'];
+            } else {
+                $success = $validationResult['message'];
+                // Refresh user data
+                $user = $userModel->findById($_SESSION['user_id']);
+            }
+        }
+
+    } elseif ($formType === 'notifications') {
+        // Handle notifications form
+        $emailNotifications = isset($_POST['email_notifications']) ? 1 : 0;
+
+        $updateData = [
             'email_notifications' => $emailNotifications
         ];
 
-        if ($userModel->updateProfile($_SESSION['user_id'], $updateData)) {
-            // Update session
-            $_SESSION['username'] = $username;
-            $_SESSION['email'] = $email;
+        $validationResult = $authController->updateProfile($_SESSION['user_id'], $updateData);
 
-            // Update password if provided
-            if (!empty($newPassword)) {
-                $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-                $userModel->updatePassword($_SESSION['user_id'], $passwordHash);
-            }
-
+        if (!$validationResult['success']) {
+            $errors = $validationResult['errors'];
+        } else {
+            $success = $validationResult['message'];
             // Refresh user data
             $user = $userModel->findById($_SESSION['user_id']);
-            $success = 'Profile updated successfully!';
-        } else {
-            $errors[] = 'Failed to update profile';
         }
     }
 }

@@ -150,7 +150,7 @@ class User {
      */
     public function updateProfile(int $userId, array $data): bool {
         try {
-            $allowedFields = ['username', 'email', 'email_notifications'];
+            $allowedFields = ['username', 'email', 'email_notifications', 'password_hash'];
             $setClauses = [];
             $params = [':user_id' => $userId];
 

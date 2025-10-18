@@ -3,6 +3,7 @@
         <h2 class="card-title">Username & Email</h2>
         <form method="POST" class="space-y-4">
             <input type="hidden" name="csrf_token" value="<?php echo AuthMiddleware::getCSRFToken(); ?>">
+            <input type="hidden" name="form_type" value="profile_info">
 
             <fieldset class="fieldset w-full">
                 <legend class="fieldset-legend">Username</legend>

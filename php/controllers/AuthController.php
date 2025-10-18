@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../services/EmailService.php';
+require_once __DIR__ . '/../validators/UserValidator.php';
 
 class AuthController {
     private User $userModel;
@@ -19,7 +20,7 @@ class AuthController {
         $errors = [];
 
         // Validate input
-        $errors = array_merge($errors, $this->validateRegistrationData($data));
+        $errors = array_merge($errors, UserValidator::validateRegistrationData($data));
 
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
@@ -69,16 +70,8 @@ class AuthController {
      * Login user
      */
     public function login(array $data): array {
-        $errors = [];
-
         // Validate input
-        if (empty($data['login_identifier'])) {
-            $errors['login_identifier'] = 'Email or username is required';
-        }
-
-        if (empty($data['password'])) {
-            $errors['password'] = 'Password is required';
-        }
+        $errors = UserValidator::validateLoginData($data);
 
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
@@ -128,13 +121,8 @@ class AuthController {
      * Request password reset
      */
     public function requestPasswordReset(array $data): array {
-        $errors = [];
-
-        if (empty($data['email'])) {
-            $errors['email'] = 'Email is required';
-        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Invalid email format';
-        }
+        // Validate input
+        $errors = UserValidator::validatePasswordResetRequest($data);
 
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
@@ -169,15 +157,10 @@ class AuthController {
      * Reset password
      */
     public function resetPassword(array $data): array {
-        // Validate token
-        if (empty($data['token'])) {
-            return ['success' => false, 'errors' => ['general' => 'Invalid reset token']];
-        }
-
-        // Validate password
-        $passwordErrors = $this->validatePassword($data['password'] ?? '', $data['confirm_password'] ?? '');
-        if (!empty($passwordErrors)) {
-            return ['success' => false, 'errors' => $passwordErrors];
+        // Validate input
+        $errors = UserValidator::validatePasswordReset($data);
+        if (!empty($errors)) {
+            return ['success' => false, 'errors' => $errors];
         }
 
         // Find user by reset token
@@ -216,55 +199,16 @@ class AuthController {
      * Update user profile
      */
     public function updateProfile(int $userId, array $data): array {
-        $errors = [];
-
-        // Validate username if provided
-        if (isset($data['username'])) {
-            if (empty(trim($data['username']))) {
-                $errors['username'] = 'Username is required';
-            } elseif (strlen($data['username']) < 3) {
-                $errors['username'] = 'Username must be at least 3 characters long';
-            } elseif (strlen($data['username']) > 50) {
-                $errors['username'] = 'Username must be less than 50 characters';
-            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $data['username'])) {
-                $errors['username'] = 'Username can only contain letters, numbers, and underscores';
-            }
-
-            // Check if username is taken by another user
-            $existingUser = $this->userModel->findByUsername($data['username']);
-            if ($existingUser && $existingUser['id'] != $userId) {
-                $errors['username'] = 'Username is already taken';
-            }
-        }
-
-        // Validate email if provided
-        if (isset($data['email'])) {
-            if (empty(trim($data['email']))) {
-                $errors['email'] = 'Email is required';
-            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = 'Invalid email format';
-            }
-
-            // Check if email is taken by another user
-            $existingUser = $this->userModel->findByEmail($data['email']);
-            if ($existingUser && $existingUser['id'] != $userId) {
-                $errors['email'] = 'Email is already registered';
-            }
-        }
-
-        // Validate password if provided
-        if (isset($data['password']) && !empty($data['password'])) {
-            $passwordErrors = $this->validatePassword($data['password'], $data['confirm_password'] ?? '');
-            if (!empty($passwordErrors)) {
-                $errors = array_merge($errors, $passwordErrors);
-            } else {
-                // Hash password if valid
-                $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            }
-        }
+        // Validate input
+        $errors = UserValidator::validateProfileUpdate($data, $userId, $this->userModel);
 
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
+        }
+
+        // Hash password if valid
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
 
         // Update profile
@@ -275,64 +219,7 @@ class AuthController {
         return ['success' => true, 'message' => 'Profile updated successfully!'];
     }
 
-    /**
-     * Validate registration data
-     */
-    private function validateRegistrationData(array $data): array {
-        $errors = [];
-
-        // Validate username
-        if (empty(trim($data['username']))) {
-            $errors['username'] = 'Username is required';
-        } elseif (strlen($data['username']) < 3) {
-            $errors['username'] = 'Username must be at least 3 characters long';
-        } elseif (strlen($data['username']) > 50) {
-            $errors['username'] = 'Username must be less than 50 characters';
-        } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $data['username'])) {
-            $errors['username'] = 'Username can only contain letters, numbers, and underscores';
-        }
-
-        // Validate email
-        if (empty(trim($data['email']))) {
-            $errors['email'] = 'Email is required';
-        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Invalid email format';
-        }
-
-        // Validate password
-        $passwordErrors = $this->validatePassword($data['password'] ?? '', $data['confirm_password'] ?? '');
-        $errors = array_merge($errors, $passwordErrors);
-
-        return $errors;
-    }
-
-    /**
-     * Validate password
-     */
-    private function validatePassword(string $password, string $confirmPassword): array {
-        $errors = [];
-
-        if (empty($password)) {
-            $errors['password'] = 'Password is required';
-        } elseif (strlen($password) < 8) {
-            $errors['password'] = 'Password must be at least 8 characters long';
-        } elseif (!preg_match('/[A-Z]/', $password)) {
-            $errors['password'] = 'Password must contain at least one uppercase letter';
-        } elseif (!preg_match('/[a-z]/', $password)) {
-            $errors['password'] = 'Password must contain at least one lowercase letter';
-        } elseif (!preg_match('/[0-9]/', $password)) {
-            $errors['password'] = 'Password must contain at least one number';
-        } elseif (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
-            $errors['password'] = 'Password must contain at least one special character';
-        }
-
-        if ($password !== $confirmPassword) {
-            $errors['confirm_password'] = 'Passwords do not match';
-        }
-
-        return $errors;
-    }
-
+    
     /**
      * Create secure session
      */
