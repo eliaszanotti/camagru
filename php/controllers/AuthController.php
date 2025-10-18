@@ -169,8 +169,6 @@ class AuthController {
      * Reset password
      */
     public function resetPassword(array $data): array {
-        $errors = [];
-
         // Validate token
         if (empty($data['token'])) {
             return ['success' => false, 'errors' => ['general' => 'Invalid reset token']];
@@ -339,16 +337,18 @@ class AuthController {
      * Create secure session
      */
     private function createSecureSession(array $user): void {
-        // Regenerate session ID
-        session_regenerate_id(true);
-
-        // Set session variables
+        // Set session variables first, before any output
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['is_verified'] = $user['is_verified'];
         $_SESSION['logged_in'] = true;
         $_SESSION['last_activity'] = time();
+
+        // Try to regenerate session ID only if headers haven't been sent
+        if (!headers_sent()) {
+            session_regenerate_id(true);
+        }
     }
 
     /**
@@ -391,7 +391,17 @@ class AuthController {
         $timeout = 3600; // 1 hour
 
         if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-            self::logout();
+            // Destroy session manually instead of calling logout() statically
+            $_SESSION = [];
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+            session_destroy();
+
             header('Location: login.php?timeout=1');
             exit;
         }

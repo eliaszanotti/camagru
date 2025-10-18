@@ -50,8 +50,6 @@ class Database {
                     PDO::ATTR_EMULATE_PREPARES => false
                 ]);
 
-                echo "✅ Database connected successfully!<br>";
-
             } catch (PDOException $e) {
                 die("❌ Database connection failed: " . $e->getMessage());
             }

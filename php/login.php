@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 
@@ -36,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $pageTitle = 'Login - Camagru';
 ?>

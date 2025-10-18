@@ -14,7 +14,7 @@ require_once 'includes/header.php';
                         <a href="register.php" class="btn btn-lg btn-neutral">Register</a>
                         <a href="login.php" class="btn  btn-lg btn-neutral">Login</a>
                     <?php else: ?>
-                        <a href="create.php" class="btn btn-accent btn-lg">Start Creating</a>
+                        <a href="create.php" class="btn btn-neutral btn-lg">Start Creating</a>
                     <?php endif; ?>
                 </div>
             </div>
