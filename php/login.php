@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/handlers/LoginHandler.php';
 require_once __DIR__ . '/components/Fieldset.php';
 
@@ -10,6 +9,8 @@ if ($loginHandler->shouldRedirect()) {
     header('Location: ' . $loginHandler->getRedirectUrl());
     exit;
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $pageTitle = 'Login - Camagru';
 ?>
