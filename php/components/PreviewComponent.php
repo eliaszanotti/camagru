@@ -14,7 +14,7 @@ class PreviewComponent
                         </div>
                     </div>
                     <div class="form-control grid grid-cols-2 gap-4">
-                        <button id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
+                        <button id="discardBtn" class="btn btn-ghost btn-block" disabled onclick="handleDiscard()">Discard</button>
                         <button id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
                     </div>
                 </div>
@@ -31,8 +31,6 @@ class PreviewComponent
                 const previewArea = document.getElementById('previewArea');
                 const discardBtn = document.getElementById('discardBtn');
                 const saveBtn = document.getElementById('saveBtn');
-
-                console.log('Discard preview called', { previewArea, discardBtn, saveBtn });
 
                 // Reset preview area to original state
                 previewArea.innerHTML = `
@@ -66,8 +64,14 @@ class PreviewComponent
                 window.currentImageSource = source;
             }
 
+            // Handle discard click
+            function handleDiscard() {
+                discardPreview();
+            }
+
             // Make functions globally available
             window.discardPreview = discardPreview;
+            window.handleDiscard = handleDiscard;
         </script>
 <?php
     }
