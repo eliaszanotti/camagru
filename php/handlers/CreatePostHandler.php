@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../models/Post.php';
 require_once __DIR__ . '/../services/FormService.php';
+require_once __DIR__ . '/../components/SuperposableImagesComponent.php';
 
 class CreatePostHandler {
     private Post $postModel;
@@ -88,6 +89,15 @@ class CreatePostHandler {
             return;
         }
 
+        // Apply overlay if selected
+        $overlayId = $_POST['overlay'] ?? '';
+        if (!empty($overlayId)) {
+            $overlayPath = SuperposableImagesComponent::getOverlayPath($overlayId);
+            if ($overlayPath && file_exists(__DIR__ . '/..' . $overlayPath)) {
+                $sourceImage = $this->applyOverlay($sourceImage, __DIR__ . '/..' . $overlayPath);
+            }
+        }
+
         // Resize image to max 800x800
         $maxSize = 800;
         $width = imagesx($sourceImage);
@@ -127,5 +137,78 @@ class CreatePostHandler {
         }
 
         imagedestroy($sourceImage);
+    }
+
+    private function applyOverlay($sourceImage, string $overlayPath) {
+        // Load overlay image
+        $overlayInfo = getimagesize($overlayPath);
+        if (!$overlayInfo) {
+            return $sourceImage;
+        }
+
+        $overlayMimeType = $overlayInfo['mime'];
+        switch ($overlayMimeType) {
+            case 'image/png':
+                $overlayImage = imagecreatefrompng($overlayPath);
+                break;
+            case 'image/gif':
+                $overlayImage = imagecreatefromgif($overlayPath);
+                break;
+            default:
+                return $sourceImage;
+        }
+
+        if (!$overlayImage) {
+            return $sourceImage;
+        }
+
+        // Get dimensions
+        $sourceWidth = imagesx($sourceImage);
+        $sourceHeight = imagesy($sourceImage);
+        $overlayWidth = imagesx($overlayImage);
+        $overlayHeight = imagesy($overlayImage);
+
+        // Create a new image with the same dimensions as source
+        $resultImage = imagecreatetruecolor($sourceWidth, $sourceHeight);
+
+        // Preserve transparency
+        imagealphablending($resultImage, false);
+        imagesavealpha($resultImage, true);
+
+        // Copy source image
+        imagecopy($resultImage, $sourceImage, 0, 0, 0, 0, $sourceWidth, $sourceHeight);
+
+        // Calculate overlay position (center it)
+        $overlayX = ($sourceWidth - $overlayWidth) / 2;
+        $overlayY = ($sourceHeight - $overlayHeight) / 2;
+
+        // Ensure overlay fits within source image
+        if ($overlayWidth > $sourceWidth || $overlayHeight > $sourceHeight) {
+            // Scale overlay to fit
+            $scale = min($sourceWidth / $overlayWidth, $sourceHeight / $overlayHeight);
+            $newOverlayWidth = $overlayWidth * $scale;
+            $newOverlayHeight = $overlayHeight * $scale;
+            $overlayX = ($sourceWidth - $newOverlayWidth) / 2;
+            $overlayY = ($sourceHeight - $newOverlayHeight) / 2;
+
+            $scaledOverlay = imagecreatetruecolor($newOverlayWidth, $newOverlayHeight);
+            imagealphablending($scaledOverlay, false);
+            imagesavealpha($scaledOverlay, true);
+            imagecopyresampled($scaledOverlay, $overlayImage, 0, 0, 0, 0,
+                              $newOverlayWidth, $newOverlayHeight, $overlayWidth, $overlayHeight);
+            imagedestroy($overlayImage);
+            $overlayImage = $scaledOverlay;
+        }
+
+        // Copy overlay with transparency
+        imagealphablending($resultImage, true);
+        imagecopy($resultImage, $overlayImage, $overlayX, $overlayY, 0, 0,
+                  imagesx($overlayImage), imagesy($overlayImage));
+
+        // Clean up
+        imagedestroy($overlayImage);
+        imagedestroy($sourceImage);
+
+        return $resultImage;
     }
 }

@@ -107,3 +107,4 @@ When in doubt about requirements or implementation choices, refer to @subject.md
 -   tout les input dans des form doivent utilise fieldset
 -   les text en muted doivent etre en base-content/50 (pas 60 70 ou autre)
 -   attemtion dans le projet jai /express (old) et /php (new refactor) fais tout dans php, quand tu lance le docker compose lance bien le bon !
+- les card doivent etre en bgbase-200 et pas de shadow
