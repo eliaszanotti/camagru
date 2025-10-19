@@ -22,35 +22,47 @@ require_once 'includes/header.php';
 </main>
 
 <script>
-    // Discard button functionality
-    document.getElementById('discardBtn').addEventListener('click', function() {
-        discardPreview();
-    });
-
-    // Save button functionality
-    document.getElementById('saveBtn').addEventListener('click', function() {
-        if (window.currentImageData && window.currentImageSource) {
-            saveToHistory(window.currentImageData, window.currentImageSource);
-
-            // Show success feedback
-            this.textContent = '✅ Saved!';
-            this.classList.remove('btn-success');
-            this.classList.add('btn-success', 'btn-disabled');
-
-            setTimeout(() => {
-                this.textContent = '💾 Save to History';
-                this.classList.remove('btn-disabled');
-                // Reset preview after saving
-                discardPreview();
-            }, 1500);
-        }
-    });
-
-    // Load all component scripts
+    // Load all component scripts first
     <?php BrowseComponent::renderScripts(); ?>
     <?php WebcamCaptureComponent::renderScripts(); ?>
     <?php PreviewComponent::renderScripts(); ?>
     <?php HistoryComponent::renderScripts(); ?>
+
+    // Initialize button event listeners after components are loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const discardBtn = document.getElementById('discardBtn');
+        if (discardBtn) {
+            discardBtn.addEventListener('click', function() {
+                console.log('Discard button clicked');
+                discardPreview();
+            });
+        } else {
+            console.error('Discard button not found');
+        }
+
+        const saveBtn = document.getElementById('saveBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function() {
+                if (window.currentImageData && window.currentImageSource) {
+                    saveToHistory(window.currentImageData, window.currentImageSource);
+
+                    // Show success feedback
+                    this.textContent = '✅ Saved!';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-success', 'btn-disabled');
+
+                    setTimeout(() => {
+                        this.textContent = '💾 Save to History';
+                        this.classList.remove('btn-disabled');
+                        // Reset preview after saving
+                        discardPreview();
+                    }, 1500);
+                }
+            });
+        } else {
+            console.error('Save button not found');
+        }
+    });
 </script>
 
 <?php require_once 'includes/footer.php'; ?>

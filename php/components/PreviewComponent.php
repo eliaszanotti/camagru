@@ -32,7 +32,9 @@ class PreviewComponent
                 const discardBtn = document.getElementById('discardBtn');
                 const saveBtn = document.getElementById('saveBtn');
 
-                // Reset preview area
+                console.log('Discard preview called', { previewArea, discardBtn, saveBtn });
+
+                // Reset preview area to original state
                 previewArea.innerHTML = `
                     <p class="text-center">Preview will appear here</p>
                 `;

@@ -9,7 +9,7 @@ class WebcamCaptureComponent
                 <h2 class="card-title">Webcam</h2>
                 <div class="space-y-4">
                     <div class="aspect-square">
-                        <video id="webcam" class="w-full h-full rounded-box bg-black" autoplay></video>
+                        <video id="webcam" class="w-full h-full rounded-box bg-base-300" autoplay></video>
                         <canvas id="canvas" class="hidden"></canvas>
                     </div>
                     <div class="form-control">
