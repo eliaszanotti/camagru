@@ -1,7 +1,9 @@
 <?php
-class HistoryComponent {
-    public static function render(): void {
-        ?>
+class HistoryComponent
+{
+    public static function render(): void
+    {
+?>
         <div class="card bg-base-200">
             <div class="card-body">
                 <h2 class="card-title">History</h2>
@@ -13,11 +15,12 @@ class HistoryComponent {
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
 
-    public static function renderScripts(): void {
-        ?>
+    public static function renderScripts(): void
+    {
+    ?>
         <script>
             let imageHistory = JSON.parse(localStorage.getItem('camagru_history') || '[]');
 
@@ -39,20 +42,19 @@ class HistoryComponent {
 
                 imageHistory.slice().reverse().forEach((image, index) => {
                     const item = document.createElement('div');
-                    item.className = 'relative group cursor-pointer';
+                    item.className = 'flex flex-col gap-2';
                     item.innerHTML = `
                         <img src="${image.data}" alt="History image ${index + 1}"
-                             class="w-full h-24 object-cover rounded-lg hover:opacity-80 transition-opacity">
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
-                            <button onclick="selectFromHistory('${image.id}')"
-                                    class="opacity-0 group-hover:opacity-100 transition-opacity btn btn-xs btn-primary">
-                                Select
+                             class="w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                             onclick="selectFromHistory('${image.id}')">
+                        <div class="flex gap-2">
+                            <button onclick="shareImage('${image.id}')"
+                                    class="btn btn-primary flex-1">
+                                Share
                             </button>
-                        </div>
-                        <div class="absolute top-1 right-1">
                             <button onclick="deleteFromHistory('${image.id}')"
-                                    class="btn btn-xs btn-circle btn-error opacity-0 group-hover:opacity-100 transition-opacity">
-                                ×
+                                    class="btn btn-error flex-1">
+                                Delete
                             </button>
                         </div>
                     `;
@@ -90,15 +92,49 @@ class HistoryComponent {
                 }
             }
 
+            function shareImage(imageId) {
+                const image = imageHistory.find(img => img.id === imageId);
+                if (image) {
+                    // Create a temporary link to download the image
+                    const link = document.createElement('a');
+                    link.download = `camagru-${imageId}.png`;
+                    link.href = image.data;
+                    link.click();
+                }
+            }
+
             // Make functions globally available
             window.saveToHistory = saveToHistory;
             window.deleteFromHistory = deleteFromHistory;
             window.selectFromHistory = selectFromHistory;
+            window.shareImage = shareImage;
+
+            // Initialize save button event listener after all functions are available
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    if (window.currentImageData && window.currentImageSource) {
+                        saveToHistory(window.currentImageData, window.currentImageSource);
+
+                        // Show success feedback
+                        this.textContent = '✅ Saved!';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-success', 'btn-disabled');
+
+                        setTimeout(() => {
+                            this.textContent = '💾 Save to History';
+                            this.classList.remove('btn-disabled');
+                            // Reset preview after saving
+                            discardPreview();
+                        }, 1500);
+                    }
+                });
+            }
 
             // Initial render
             renderHistory();
         </script>
-        <?php
+<?php
     }
 }
 ?>

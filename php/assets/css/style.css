@@ -1896,6 +1896,9 @@
   .grid-cols-\[2fr_1fr\] {
     grid-template-columns: 2fr 1fr;
   }
+  .flex-col {
+    flex-direction: column;
+  }
   .items-center {
     align-items: center;
   }

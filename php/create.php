@@ -27,30 +27,6 @@ require_once 'includes/header.php';
     <?php WebcamCaptureComponent::renderScripts(); ?>
     <?php PreviewComponent::renderScripts(); ?>
     <?php HistoryComponent::renderScripts(); ?>
-
-    // Initialize save button event listener after components are loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        const saveBtn = document.getElementById('saveBtn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', function() {
-                if (window.currentImageData && window.currentImageSource) {
-                    saveToHistory(window.currentImageData, window.currentImageSource);
-
-                    // Show success feedback
-                    this.textContent = '✅ Saved!';
-                    this.classList.remove('btn-success');
-                    this.classList.add('btn-success', 'btn-disabled');
-
-                    setTimeout(() => {
-                        this.textContent = '💾 Save to History';
-                        this.classList.remove('btn-disabled');
-                        // Reset preview after saving
-                        discardPreview();
-                    }, 1500);
-                }
-            });
-        }
-    });
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
