@@ -1,8 +1,8 @@
 class BrowseComponent {
 	constructor() {
-		this.fileInput = document.getElementById('fileInput');
-		this.browseArea = document.getElementById('browseArea');
-
+		console.log("All file inputs on page:", document.querySelectorAll('input[type="file"]'));
+		this.fileInput = document.getElementById("fileInput");
+		console.log("BrowseComponent: fileInput found:", !!this.fileInput);
 		this.init();
 	}
 
@@ -11,36 +11,34 @@ class BrowseComponent {
 	}
 
 	handleFileSelect(e) {
+		console.log("handleFileSelect called");
 		const file = e.target.files[0];
+		console.log("File selected:", file);
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
+				console.log("FileReader loaded, image data length:", e.target.result.length);
 				this.updatePreview(e.target.result);
-				this.updateBrowseArea(e.target.result);
 			};
 			reader.readAsDataURL(file);
 		}
 	}
 
-	updateBrowseArea(imageData) {
-		this.browseArea.innerHTML = `
-			<img src="${imageData}" alt="Selected image"
-				 class="w-full h-full object-cover rounded-box">
-		`;
-	}
 
 	updatePreview(imageData) {
+		console.log("updatePreview called, window.updatePreview exists:", !!window.updatePreview);
 		if (window.updatePreview) {
-			window.updatePreview(imageData, 'file');
+			console.log("Calling window.updatePreview with image data");
+			window.updatePreview(imageData, "file");
+		} else {
+			console.error("window.updatePreview is not defined!");
 		}
 	}
 
 	setupEventListeners() {
-		this.browseArea.addEventListener('click', () => {
-			this.fileInput.click();
-		});
-
-		this.fileInput.addEventListener('change', (e) => {
+		console.log("Setting up event listeners");
+		this.fileInput.addEventListener("change", (e) => {
+			console.log("File input change event triggered");
 			this.handleFileSelect(e);
 		});
 	}

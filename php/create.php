@@ -21,12 +21,9 @@ require_once 'includes/header.php';
     </div>
 </main>
 
-<script>
-    // Load all component scripts first
-    <?php BrowseComponent::renderScripts(); ?>
-    <?php WebcamCaptureComponent::renderScripts(); ?>
-    <?php PreviewComponent::renderScripts(); ?>
-    <?php HistoryComponent::renderScripts(); ?>
-</script>
+<?php BrowseComponent::renderScripts(); ?>
+<?php WebcamCaptureComponent::renderScripts(); ?>
+<?php PreviewComponent::renderScripts(); ?>
+<?php HistoryComponent::renderScripts(); ?>
 
 <?php require_once 'includes/footer.php'; ?>
