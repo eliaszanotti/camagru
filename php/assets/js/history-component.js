@@ -105,10 +105,16 @@ class HistoryComponent {
 	shareImage(imageId) {
 		const image = this.imageHistory.find((img) => img.id === imageId);
 		if (image) {
-			const link = document.createElement("a");
-			link.download = `camagru-${imageId}.png`;
-			link.href = image.data;
-			link.click();
+			// Store image data in sessionStorage for the share page
+			sessionStorage.setItem('shareImage', JSON.stringify({
+				id: image.id,
+				data: image.data,
+				source: image.source,
+				timestamp: image.timestamp
+			}));
+
+			// Redirect to share page
+			window.location.href = 'share.php';
 		}
 	}
 

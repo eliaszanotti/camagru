@@ -283,6 +283,27 @@ class AuthMiddleware {
             unlink($rateLimitFile);
         }
     }
+
+    /**
+     * Check if user is logged in
+     */
+    public static function isLoggedIn(): bool {
+        return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+    }
+
+    /**
+     * Get current user ID
+     */
+    public static function getUserId(): ?int {
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    /**
+     * Get current username
+     */
+    public static function getUsername(): ?string {
+        return $_SESSION['username'] ?? null;
+    }
 }
 
 // Initialize middleware for all requests

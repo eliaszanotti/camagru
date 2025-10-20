@@ -21,6 +21,16 @@ CREATE TABLE posts (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     image_path VARCHAR(255) NOT NULL,
     caption TEXT,
+    is_published BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Captured images table (for temporary storage before sharing)
+CREATE TABLE captured_images (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    image_path VARCHAR(255) NOT NULL,
+    source VARCHAR(50) DEFAULT 'webcam',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -165,6 +165,34 @@ class Fieldset
     }
 
     /**
+     * Text area fieldset TODO faire en sorte de pas avoir de truc comme ca generique mais jsute de lappeler sharedescritiption textarea
+     */
+    public static function textArea(array $config): void
+    {
+        $name = $config['name'] ?? '';
+        $label = $config['label'] ?? '';
+        $placeholder = $config['placeholder'] ?? '';
+        $rows = $config['rows'] ?? 4;
+        $required = $config['required'] ?? false;
+        $help = $config['help'] ?? '';
+    ?>
+        <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend"><?php echo htmlspecialchars($label); ?></legend>
+            <textarea name="<?php echo htmlspecialchars($name); ?>" class="textarea w-full"
+                placeholder="<?php echo htmlspecialchars($placeholder); ?>"
+                rows="<?php echo $rows; ?>"
+                <?php echo $required ? 'required' : ''; ?>><?php echo htmlspecialchars($_POST[$name] ?? ''); ?></textarea>
+            <?php if ($help): ?>
+                <p class="label text-base-content/50"><?php echo htmlspecialchars($help); ?></p>
+            <?php endif; ?>
+            <?php if (isset($GLOBALS['errors'][$name])): ?>
+                <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors'][$name]); ?></p>
+            <?php endif; ?>
+        </fieldset>
+    <?php
+    }
+
+    /**
      * Submit button
      */
     public static function submit(string $text = 'Submit'): void
