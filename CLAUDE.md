@@ -102,6 +102,19 @@ When in doubt about requirements or implementation choices, refer to @subject.md
 -   **JAMAIS** écrire de HTML de formulaire brut, utiliser les méthodes statiques
 -   Les composants Fieldset gèrent automatiquement l'affichage des erreurs via FormService
 
+## JavaScript Best Practices
+
+-   **TOUJOURS** séparer le JavaScript dans des fichiers `.js` dédiés dans `/assets/js/`
+-   **JAMAIS** mélanger PHP et JavaScript dans le même fichier
+-   **TOUJOURS** créer des classes JavaScript pour organiser le code (pas de fonctions globales)
+-   **TOUJOURS** utiliser `addEventListener` au lieu de `onclick` inline
+-   **JAMAIS** utiliser `document.createElement()` - préférer les templates HTML en string avec `innerHTML`
+-   **TOUJOURS** utiliser des `data-attributes` pour les interactions (ex: `data-action="delete"`)
+-   **TOUJOURS** initialiser les composants avec `DOMContentLoaded`
+-   **JAMAIS** utiliser de variables globales sauf si nécessaire pour l'interop entre composants
+-   **TOUJOURS** séparer les responsabilités : rendering, events, storage, business logic
+-   Les composants PHP doivent uniquement inclure les fichiers JS : `<script src="assets/js/component.js"></script>`
+
 # Rules
 
 -   tout les input dans des form doivent utilise fieldset
