@@ -7,7 +7,13 @@ class BrowseComponent
         <div class="card bg-base-200">
             <div class="card-body">
                 <h2 class="card-title">Browse Image</h2>
-                <input type="file" id="fileInput" class="file-input w-full" accept="image/jpeg,image/png,image/gif" />
+                <div id="browseArea" class="aspect-square bg-base-300 rounded-box flex items-center justify-center cursor-pointer hover:bg-base-400 transition-colors">
+                    <div class="text-center text-base-content/50">
+                        <div class="text-4xl mb-2">📁</div>
+                        <p>Click to browse</p>
+                    </div>
+                </div>
+                <input type="file" id="fileInput" class="hidden" accept="image/jpeg,image/png,image/gif" />
             </div>
         </div>
     <?php
@@ -16,30 +22,7 @@ class BrowseComponent
     public static function renderScripts(): void
     {
     ?>
-        <script>
-            document.getElementById('browseArea').addEventListener('click', function() {
-                document.getElementById('fileInput').click();
-            });
-
-            document.getElementById('fileInput').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        // Update preview area
-                        updatePreview(e.target.result, 'file');
-
-                        // Update browse area with thumbnail
-                        const browseArea = document.getElementById('browseArea');
-                        browseArea.innerHTML = `
-                            <img src="${e.target.result}" alt="Selected image"
-                                 class="w-full h-full object-cover rounded-lg">
-                        `;
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-        </script>
+        <script src="assets/js/browse-component.js"></script>
 <?php
     }
 }

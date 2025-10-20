@@ -14,7 +14,7 @@ class PreviewComponent
                         </div>
                     </div>
                     <div class="form-control grid grid-cols-2 gap-4">
-                        <button id="discardBtn" class="btn btn-ghost btn-block" disabled onclick="handleDiscard()">Discard</button>
+                        <button id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
                         <button id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
                     </div>
                 </div>
@@ -26,53 +26,7 @@ class PreviewComponent
     public static function renderScripts(): void
     {
     ?>
-        <script>
-            function discardPreview() {
-                const previewArea = document.getElementById('previewArea');
-                const discardBtn = document.getElementById('discardBtn');
-                const saveBtn = document.getElementById('saveBtn');
-
-                // Reset preview area to original state
-                previewArea.innerHTML = `
-                    <p class="text-center">Preview will appear here</p>
-                `;
-
-                // Disable buttons
-                discardBtn.disabled = true;
-                saveBtn.disabled = true;
-
-                // Clear current image data
-                window.currentImageData = null;
-                window.currentImageSource = null;
-            }
-
-            function updatePreview(imageData, source) {
-                const previewArea = document.getElementById('previewArea');
-                const saveBtn = document.getElementById('saveBtn');
-                const discardBtn = document.getElementById('discardBtn');
-
-                previewArea.innerHTML = `
-                    <img src="${imageData}" alt="Preview" class="w-full h-full object-cover rounded-lg">
-                `;
-
-                // Enable buttons
-                saveBtn.disabled = false;
-                discardBtn.disabled = false;
-
-                // Store current image data for saving
-                window.currentImageData = imageData;
-                window.currentImageSource = source;
-            }
-
-            // Handle discard click
-            function handleDiscard() {
-                discardPreview();
-            }
-
-            // Make functions globally available
-            window.discardPreview = discardPreview;
-            window.handleDiscard = handleDiscard;
-        </script>
+        <script src="assets/js/preview-component.js"></script>
 <?php
     }
 }
