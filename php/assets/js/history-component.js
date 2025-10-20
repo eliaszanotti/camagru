@@ -1,142 +1,157 @@
 class HistoryComponent {
-    constructor() {
-        this.storageKey = 'camagru_history';
-        this.container = document.getElementById('historyContainer');
-        this.imageHistory = this.loadFromStorage();
+	constructor() {
+		this.storageKey = "camagru_history";
+		this.container = document.getElementById("historyContainer");
+		this.imageHistory = this.loadFromStorage();
 
-        this.init();
-    }
+		this.init();
+	}
 
-    init() {
-        this.render();
-        this.setupSaveButton();
-        this.setupEventListeners();
-    }
+	init() {
+		this.render();
+		this.setupSaveButton();
+		this.setupEventListeners();
+	}
 
-    loadFromStorage() {
-        try {
-            return JSON.parse(localStorage.getItem(this.storageKey) || '[]');
-        } catch (error) {
-            console.error('Error loading history from storage:', error);
-            return [];
-        }
-    }
+	loadFromStorage() {
+		try {
+			return JSON.parse(localStorage.getItem(this.storageKey) || "[]");
+		} catch (error) {
+			console.error("Error loading history from storage:", error);
+			return [];
+		}
+	}
 
-    saveToStorage() {
-        try {
-            localStorage.setItem(this.storageKey, JSON.stringify(this.imageHistory));
-        } catch (error) {
-            console.error('Error saving history to storage:', error);
-        }
-    }
+	saveToStorage() {
+		try {
+			localStorage.setItem(
+				this.storageKey,
+				JSON.stringify(this.imageHistory)
+			);
+		} catch (error) {
+			console.error("Error saving history to storage:", error);
+		}
+	}
 
-    render() {
-        if (this.imageHistory.length === 0) {
-            this.container.innerHTML = `
-                <div class="text-center py-8 text-base-content/50">
-                    <div class="text-4xl mb-2">📚</div>
-                    <p>No images saved yet</p>
-                </div>
-            `;
-            return;
-        }
+	getEmptyStateHtml() {
+		return `<div class="text-center text-base-content/50">
+			<div></div>
+			<p>No images saved yet</p>
+		</div>`;
+	}
 
-        let itemsHtml = '';
+	getHistoryItemHtml(image, index) {
+		return `<div class="flex flex-col gap-2">
+			<img src="${image.data}" alt="History image ${index + 1}"
+				 class="w-full aspect-square object-cover rounded-box">
+			<div class="grid grid-cols-2 gap-2">
+				<button data-action="delete" data-image-id="${image.id}"
+						class="btn btn-error">
+					Delete
+				</button>
+				<button data-action="share" data-image-id="${image.id}"
+						class="btn btn-primary">
+					Share
+				</button>
+			</div>
+		</div>`;
+	}
 
-        this.imageHistory.slice().reverse().forEach((image, index) => {
-            itemsHtml += `
-                <div class="flex flex-col gap-2">
-                    <img src="${image.data}" alt="History image ${index + 1}"
-                         class="w-full aspect-square object-cover rounded-lg">
-                    <div class="flex gap-2">
-                        <button data-action="share" data-image-id="${image.id}"
-                                class="btn btn-primary flex-1">
-                            Share
-                        </button>
-                        <button data-action="delete" data-image-id="${image.id}"
-                                class="btn btn-error flex-1">
-                            Delete
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
+	getHistoryGridHtml() {
+		let itemsHtml = '';
 
-        this.container.innerHTML = `
-            <div class="grid grid-cols-6 gap-2">
-                ${itemsHtml}
-            </div>
-        `;
-    }
+		this.imageHistory
+			.slice()
+			.reverse()
+			.forEach((image, index) => {
+				itemsHtml += this.getHistoryItemHtml(image, index + 1);
+			});
 
-    addImage(imageData, source) {
-        const imageEntry = {
-            id: Date.now().toString(),
-            data: imageData,
-            source: source,
-            timestamp: new Date().toISOString()
-        };
+		return `<div class="grid grid-cols-6 gap-2">
+			${itemsHtml}
+		</div>`;
+	}
 
-        this.imageHistory.push(imageEntry);
-        this.saveToStorage();
-        this.render();
-    }
+	render() {
+		if (this.imageHistory.length === 0) {
+			this.container.innerHTML = this.getEmptyStateHtml();
+			return;
+		}
 
-    deleteImage(imageId) {
-        this.imageHistory = this.imageHistory.filter(img => img.id !== imageId);
-        this.saveToStorage();
-        this.render();
-    }
+		this.container.innerHTML = this.getHistoryGridHtml();
+	}
 
-    shareImage(imageId) {
-        const image = this.imageHistory.find(img => img.id === imageId);
-        if (image) {
-            const link = document.createElement('a');
-            link.download = `camagru-${imageId}.png`;
-            link.href = image.data;
-            link.click();
-        }
-    }
+	addImage(imageData, source) {
+		const imageEntry = {
+			id: Date.now().toString(),
+			data: imageData,
+			source: source,
+			timestamp: new Date().toISOString(),
+		};
 
-    setupSaveButton() {
-        const saveBtn = document.getElementById('saveBtn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => {
-                if (window.currentImageData && window.currentImageSource) {
-                    this.addImage(window.currentImageData, window.currentImageSource);
-                }
-            });
-        }
-    }
+		this.imageHistory.push(imageEntry);
+		this.saveToStorage();
+		this.render();
+	}
 
-    setupEventListeners() {
-        this.container.addEventListener('click', (e) => {
-            const button = e.target.closest('button[data-action]');
-            if (!button) return;
+	deleteImage(imageId) {
+		this.imageHistory = this.imageHistory.filter(
+			(img) => img.id !== imageId
+		);
+		this.saveToStorage();
+		this.render();
+	}
 
-            const action = button.dataset.action;
-            const imageId = button.dataset.imageId;
+	shareImage(imageId) {
+		const image = this.imageHistory.find((img) => img.id === imageId);
+		if (image) {
+			const link = document.createElement("a");
+			link.download = `camagru-${imageId}.png`;
+			link.href = image.data;
+			link.click();
+		}
+	}
 
-            switch (action) {
-                case 'share':
-                    this.shareImage(imageId);
-                    break;
-                case 'delete':
-                    this.deleteImage(imageId);
-                    break;
-            }
-        });
-    }
+	setupSaveButton() {
+		const saveBtn = document.getElementById("saveBtn");
+		if (saveBtn) {
+			saveBtn.addEventListener("click", () => {
+				if (window.currentImageData && window.currentImageSource) {
+					this.addImage(
+						window.currentImageData,
+						window.currentImageSource
+					);
+				}
+			});
+		}
+	}
+
+	setupEventListeners() {
+		this.container.addEventListener("click", (e) => {
+			const button = e.target.closest("button[data-action]");
+			if (!button) return;
+
+			const action = button.dataset.action;
+			const imageId = button.dataset.imageId;
+
+			switch (action) {
+				case "share":
+					this.shareImage(imageId);
+					break;
+				case "delete":
+					this.deleteImage(imageId);
+					break;
+			}
+		});
+	}
 }
 
-// Initialize the component when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.historyComponent = new HistoryComponent();
+document.addEventListener("DOMContentLoaded", () => {
+	window.historyComponent = new HistoryComponent();
 });
 
-// Expose method globally for other components
 window.saveToHistory = (imageData, source) => {
-    if (window.historyComponent) {
-        window.historyComponent.addImage(imageData, source);
-    }
+	if (window.historyComponent) {
+		window.historyComponent.addImage(imageData, source);
+	}
 };
