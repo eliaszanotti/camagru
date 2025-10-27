@@ -105,16 +105,7 @@ class HistoryComponent {
 	shareImage(imageId) {
 		const image = this.imageHistory.find((img) => img.id === imageId);
 		if (image) {
-			sessionStorage.setItem(
-				"shareImage",
-				JSON.stringify({
-					id: image.id,
-					data: image.data,
-					source: image.source,
-					timestamp: image.timestamp,
-				})
-			);
-			window.location.href = "share.php";
+			window.location.href = `share.php?image=${imageId}`;
 		}
 	}
 

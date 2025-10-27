@@ -1,8 +1,6 @@
 <?php
 $pageTitle = 'Share Photo';
 require_once 'middleware/AuthMiddleware.php';
-
-// Require authentication
 AuthMiddleware::requireAuth();
 
 require_once 'includes/header.php';
@@ -13,7 +11,6 @@ require_once 'includes/header.php';
         <h1 class="text-3xl font-bold">Share Your Photo</h1>
 
         <div id="shareContent">
-            <!-- Loading state -->
             <div class="text-center py-8">
                 <p class="text-base-content/50">Loading image...</p>
             </div>
