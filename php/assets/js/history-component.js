@@ -58,7 +58,7 @@ class HistoryComponent {
 	}
 
 	getHistoryGridHtml() {
-		let itemsHtml = '';
+		let itemsHtml = "";
 
 		this.imageHistory
 			.slice()
@@ -105,16 +105,16 @@ class HistoryComponent {
 	shareImage(imageId) {
 		const image = this.imageHistory.find((img) => img.id === imageId);
 		if (image) {
-			// Store image data in sessionStorage for the share page
-			sessionStorage.setItem('shareImage', JSON.stringify({
-				id: image.id,
-				data: image.data,
-				source: image.source,
-				timestamp: image.timestamp
-			}));
-
-			// Redirect to share page
-			window.location.href = 'share.php';
+			sessionStorage.setItem(
+				"shareImage",
+				JSON.stringify({
+					id: image.id,
+					data: image.data,
+					source: image.source,
+					timestamp: image.timestamp,
+				})
+			);
+			window.location.href = "share.php";
 		}
 	}
 
