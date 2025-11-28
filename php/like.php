@@ -24,7 +24,7 @@ if ($postId && in_array($action, ['like', 'unlike'])) {
 }
 
 // Redirect back to referring page
-$referer = $_SERVER['HTTP_REFERER'] ?? 'gallery.php';
+$referer = $_SERVER['HTTP_REFERER'] ?? 'index.php';
 header("Location: $referer");
 exit;
 ?>

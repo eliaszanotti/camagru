@@ -33,7 +33,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             </div>
             <div class="navbar-center gap-2">
                 <a href="index.php" class="<?php echo $currentPage === 'index' ? 'active' : ''; ?> btn btn-ghost">Home</a>
-                <a href="gallery.php" class="<?php echo $currentPage === 'gallery' ? 'active' : ''; ?> btn btn-ghost">Gallery</a>
                 <?php if ($isLoggedIn): ?>
                     <a href="create.php" class="<?php echo $currentPage === 'create' ? 'active' : ''; ?> btn btn-ghost">Create</a>
                 <?php endif; ?>

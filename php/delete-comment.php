@@ -19,7 +19,7 @@ $postId = $_GET['post_id'] ?? $_SERVER['HTTP_REFERER'];
 if ($postId) {
     header("Location: post.php?id=$postId");
 } else {
-    header('Location: gallery.php');
+    header('Location: index.php');
 }
 exit;
 ?>

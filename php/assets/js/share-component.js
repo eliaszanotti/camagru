@@ -78,7 +78,7 @@ class ShareComponent {
 						<fieldset class='fieldset'>
 							<label class='cursor-pointer label'>
 								<input type='checkbox' name='is_published' class='checkbox checkbox-primary' checked>
-								<span class='label-text'>Publish to gallery</span>
+								<span class='label-text'>Publish to public feed</span>
 							</label>
 						</fieldset>
 
@@ -137,7 +137,7 @@ class ShareComponent {
 			const result = await response.json();
 
 			if (result.success) {
-				window.location.href = "gallery.php";
+				window.location.href = "index.php";
 			} else {
 				this.showError(result.error || "Failed to share photo");
 			}

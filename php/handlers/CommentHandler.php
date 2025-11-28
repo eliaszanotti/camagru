@@ -20,7 +20,7 @@ class CommentHandler {
         // Validate post exists and is published
         $this->post = $this->postModel->findById($postId);
         if (!$this->post || !$this->post['is_published']) {
-            header('Location: gallery.php');
+            header('Location: index.php');
             exit;
         }
 

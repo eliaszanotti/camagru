@@ -84,25 +84,20 @@
             const caption = post.caption || 'Untitled Post';
 
             return `
-            <div class="card bg-base-100 shadow-xl">
-                <figure>
-                    <img src="${imageSrc}" alt="${caption}" class="w-full h-48 object-cover">
-                </figure>
+            <div class="card bg-base-200">
                 <div class="card-body">
-                    <h3 class="card-title text-lg">${caption}</h3>
-                    <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+                    <div class="card-title">${caption}</div>
+                    <figure class="mb-4">
+                        <img src="${imageSrc}" alt="${caption}" class="w-full h-48 object-cover rounded-box">
+                    </figure>
+                    <div class="flex items-center gap-2 text-sm text-base-content/50 mb-4">
                         <span>By ${post.username}</span>
                         <span>•</span>
                         <span>${date}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <div class="flex gap-4">
-                            <button class="btn btn-sm btn-ghost" onclick="likePost(${post.id})">
-                                ❤️ Like
-                            </button>
-                            <button class="btn btn-sm btn-ghost" onclick="commentPost(${post.id})">
-                                💬 Comment
-                            </button>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">${post.likes_count || 0} likes</span>
                         </div>
                         <button class="btn btn-sm btn-primary" onclick="viewPost(${post.id})">
                             View
@@ -185,8 +180,7 @@
     }
 
     function viewPost(postId) {
-        console.log('View post:', postId);
-        // TODO: Implement view post functionality
+        window.location.href = `post.php?id=${postId}`;
     }
 
     // Initialize when DOM is ready

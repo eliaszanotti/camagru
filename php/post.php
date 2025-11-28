@@ -7,7 +7,7 @@ require_once 'handlers/CommentHandler.php';
 $postId = $_GET['id'] ?? 0;
 
 if (!$postId) {
-    header('Location: gallery.php');
+    header('Location: index.php');
     exit;
 }
 
@@ -30,7 +30,7 @@ if ($commentHandler->shouldClearForm()) {
     <div class="max-w-4xl mx-auto">
         <!-- Back button -->
         <div class="mb-6">
-            <a href="gallery.php" class="btn btn-ghost">← Back to Gallery</a>
+            <a href="index.php" class="btn btn-ghost">← Back to Home</a>
         </div>
 
         <!-- Photo Details -->
