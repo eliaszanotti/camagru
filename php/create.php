@@ -24,6 +24,5 @@ require_once 'includes/header.php';
 <?php BrowseComponent::renderScripts(); ?>
 <?php WebcamCaptureComponent::renderScripts(); ?>
 <?php PreviewComponent::renderScripts(); ?>
-<?php HistoryComponent::renderScripts(); ?>
 
 <?php require_once 'includes/footer.php'; ?>

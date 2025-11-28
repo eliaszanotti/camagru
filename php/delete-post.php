@@ -10,6 +10,7 @@ require_once 'models/Post.php';
 $postModel = new Post();
 $postId = $_POST['post_id'] ?? 0;
 
+$success = false;
 if ($postId) {
     // Get post info to delete the image file
     $post = $postModel->findById($postId);
@@ -21,11 +22,13 @@ if ($postId) {
             if (file_exists($post['image_path'])) {
                 unlink($post['image_path']);
             }
+            $success = true;
         }
     }
 }
 
-// Redirect back to profile
-header('Location: profile.php');
+// Return JSON response for AJAX requests
+header('Content-Type: application/json');
+echo json_encode(['success' => $success]);
 exit;
 ?>
