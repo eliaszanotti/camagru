@@ -13,8 +13,9 @@ try {
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     if ($page < 1) $page = 1;
 
-    // Get posts
-    $posts = $postModel->getAll($page);
+    // Get posts (8 per page)
+    $postsPerPage = 8;
+    $posts = $postModel->getAll($page, $postsPerPage);
     $totalCount = $postModel->getTotalCount();
 
     // Format response
@@ -24,7 +25,8 @@ try {
         'pagination' => [
             'currentPage' => $page,
             'totalPosts' => $totalCount,
-            'totalPages' => ceil($totalCount / 9)
+            'totalPages' => ceil($totalCount / $postsPerPage),
+            'postsPerPage' => $postsPerPage
         ]
     ];
 

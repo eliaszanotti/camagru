@@ -1,190 +1,116 @@
-  <section class="mt-16">
-        <h2 class="text-3xl font-bold mb-8">Recent Posts</h2>
+<?php
+require_once 'models/Post.php';
+require_once 'models/Like.php';
 
-        <!-- Posts Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="posts-container">
-            <!-- Posts will be loaded here via JavaScript -->
+$postModel = new Post();
+$likeModel = new Like();
+
+// Get current page from URL parameter, default to 1
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$postsPerPage = 8;
+
+// Get posts for current page
+$posts = $postModel->getAll($currentPage, $postsPerPage);
+$totalPosts = $postModel->getTotalCount();
+$totalPages = ceil($totalPosts / $postsPerPage);
+?>
+
+<section class="mt-16">
+    <h2 class="text-3xl font-bold mb-8">Recent Posts</h2>
+
+    <?php if (empty($posts)): ?>
+        <div class="text-center py-16">
+            <h2 class="text-2xl font-semibold mb-4">No photos yet</h2>
+            <p class="text-base-content/70 mb-6">Be the first to create and share a photo!</p>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="create.php" class="btn btn-primary">Create Photo</a>
+            <?php else: ?>
+                <a href="register.php" class="btn btn-primary">Sign Up to Create</a>
+            <?php endif; ?>
         </div>
-
-        <!-- Loading state -->
-        <div id="loading" class="text-center py-8">
-            <span class="loading loading-spinner loading-lg"></span>
-            <p class="mt-4">Loading posts...</p>
+    <?php else: ?>
+        <!-- Posts Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <?php foreach ($posts as $post): ?>
+                <?php
+                $likesCount = $likeModel->getCount($post['id']);
+                $imageSrc = $post['image_path'] ?: "https://picsum.photos/seed/{$post['id']}/400/300.jpg";
+                $caption = $post['caption'] ?: 'Untitled Post';
+                $date = date('M j, Y', strtotime($post['created_at']));
+                ?>
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <div class="card-title"><?php echo htmlspecialchars($caption); ?></div>
+                        <figure class="mb-4">
+                            <img src="<?php echo htmlspecialchars($imageSrc); ?>"
+                                 alt="<?php echo htmlspecialchars($caption); ?>"
+                                 class="w-full h-48 object-cover rounded-box">
+                        </figure>
+                        <div class="flex items-center gap-2 text-sm text-base-content/50 mb-4">
+                            <span>By <?php echo htmlspecialchars($post['username']); ?></span>
+                            <span>•</span>
+                            <span><?php echo $date; ?></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm"><?php echo $likesCount; ?> likes</span>
+                            </div>
+                            <a href="post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
 
         <!-- Pagination -->
-        <div class="flex justify-center mt-8" id="pagination">
-            <!-- Pagination will be generated here -->
-        </div>
-    </section>
+        <?php if ($totalPages >= 1): ?>
+            <div class="flex justify-center">
+                <div class="join">
+                    <!-- Previous button -->
+                    <?php if ($currentPage > 1): ?>
+                        <a href="?page=<?php echo $currentPage - 1; ?>" class="join-item btn">«</a>
+                    <?php else: ?>
+                        <button class="join-item btn" disabled>«</button>
+                    <?php endif; ?>
 
-<script>
-    class PostsManager {
-        constructor() {
-            this.currentPage = 1;
-            this.totalPages = 1;
-            this.postsPerPage = 10;
-            this.init();
-        }
+                    <!-- Page numbers -->
+                    <?php
+                    $maxVisiblePages = 5;
+                    $startPage = max(1, $currentPage - floor($maxVisiblePages / 2));
+                    $endPage = min($totalPages, $startPage + $maxVisiblePages - 1);
 
-        async init() {
-            await this.displayPosts(1);
-        }
+                    if ($endPage - $startPage < $maxVisiblePages - 1) {
+                        $startPage = max(1, $endPage - $maxVisiblePages + 1);
+                    }
 
-        async displayPosts(page) {
-            this.currentPage = page;
-            const postsContainer = document.getElementById('posts-container');
-            const loading = document.getElementById('loading');
+                    if ($startPage > 1) {
+                        echo '<a href="?page=1" class="join-item btn">1</a>';
+                        if ($startPage > 2) {
+                            echo '<button class="join-item btn" disabled>...</button>';
+                        }
+                    }
 
-            this.showLoading(postsContainer, loading);
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $active = $i == $currentPage ? 'btn-active' : '';
+                        echo "<a href=\"?page=$i\" class=\"join-item btn $active\">$i</a>";
+                    }
 
-            try {
-                const response = await fetch(`api/posts.php?page=${page}`);
-                const data = await response.json();
+                    if ($endPage < $totalPages) {
+                        if ($endPage < $totalPages - 1) {
+                            echo '<button class="join-item btn" disabled>...</button>';
+                        }
+                        echo "<a href=\"?page=$totalPages\" class=\"join-item btn\">$totalPages</a>";
+                    }
+                    ?>
 
-                this.hideLoading(postsContainer, loading);
-
-                if (data.success) {
-                    this.renderPosts(data.posts, postsContainer);
-                    this.totalPages = data.pagination.totalPages;
-                    this.updatePagination(page);
-                } else {
-                    this.showError(postsContainer, 'Failed to load posts');
-                }
-            } catch (error) {
-                this.hideLoading(postsContainer, loading);
-                this.showError(postsContainer, 'Error loading posts');
-                console.error('Error:', error);
-            }
-        }
-
-        showLoading(postsContainer, loading) {
-            loading.style.display = 'block';
-            postsContainer.innerHTML = '';
-        }
-
-        hideLoading(postsContainer, loading) {
-            loading.style.display = 'none';
-        }
-
-        showError(postsContainer, message) {
-            postsContainer.innerHTML = `<p class="text-error">${message}</p>`;
-        }
-
-        renderPosts(posts, container) {
-            posts.forEach(post => {
-                const postCard = this.createPostCard(post);
-                container.innerHTML += postCard;
-            });
-        }
-
-        createPostCard(post) {
-            const date = new Date(post.created_at).toLocaleDateString();
-            const imageSrc = post.image_path || `https://picsum.photos/seed/${post.id}/400/300.jpg`;
-            const caption = post.caption || 'Untitled Post';
-
-            return `
-            <div class="card bg-base-200">
-                <div class="card-body">
-                    <div class="card-title">${caption}</div>
-                    <figure class="mb-4">
-                        <img src="${imageSrc}" alt="${caption}" class="w-full h-48 object-cover rounded-box">
-                    </figure>
-                    <div class="flex items-center gap-2 text-sm text-base-content/50 mb-4">
-                        <span>By ${post.username}</span>
-                        <span>•</span>
-                        <span>${date}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm">${post.likes_count || 0} likes</span>
-                        </div>
-                        <button class="btn btn-sm btn-primary" onclick="viewPost(${post.id})">
-                            View
-                        </button>
-                    </div>
+                    <!-- Next button -->
+                    <?php if ($currentPage < $totalPages): ?>
+                        <a href="?page=<?php echo $currentPage + 1; ?>" class="join-item btn">»</a>
+                    <?php else: ?>
+                        <button class="join-item btn" disabled>»</button>
+                    <?php endif; ?>
                 </div>
-            </div>`;
-        }
-
-        updatePagination(page) {
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = this.createPagination(page);
-        }
-
-        createPagination(page) {
-            let html = '<div class="join">';
-
-            // Previous button
-            html += `<button class="join-item btn" onclick="postsManager.goToPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>«</button>`;
-
-            // Page numbers
-            const maxVisiblePages = 5;
-            let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
-
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            if (startPage > 1) {
-                html += `<button class="join-item btn" onclick="postsManager.goToPage(1)">1</button>`;
-                if (startPage > 2) {
-                    html += `<button class="join-item btn" disabled>...</button>`;
-                }
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                const active = i === page ? 'btn-active' : '';
-                html += `<button class="join-item btn ${active}" onclick="postsManager.goToPage(${i})">${i}</button>`;
-            }
-
-            if (endPage < this.totalPages) {
-                if (endPage < this.totalPages - 1) {
-                    html += `<button class="join-item btn" disabled>...</button>`;
-                }
-                html += `<button class="join-item btn" onclick="postsManager.goToPage(${this.totalPages})">${this.totalPages}</button>`;
-            }
-
-            // Next button
-            html += `<button class="join-item btn" onclick="postsManager.goToPage(${page + 1})" ${page === this.totalPages ? 'disabled' : ''}>»</button>`;
-
-            html += '</div>';
-            return html;
-        }
-
-        goToPage(page) {
-            if (page < 1 || page > this.totalPages) return;
-            this.displayPosts(page);
-            this.scrollToTop();
-        }
-
-        scrollToTop() {
-            document.getElementById('posts-container').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    // Global functions for button onclick events
-    let postsManager;
-
-    function likePost(postId) {
-        console.log('Like post:', postId);
-        // TODO: Implement like functionality
-    }
-
-    function commentPost(postId) {
-        console.log('Comment on post:', postId);
-        // TODO: Implement comment functionality
-    }
-
-    function viewPost(postId) {
-        window.location.href = `post.php?id=${postId}`;
-    }
-
-    // Initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        postsManager = new PostsManager();
-    });
-</script>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+</section>
