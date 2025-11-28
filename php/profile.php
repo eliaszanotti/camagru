@@ -25,9 +25,7 @@ $pageTitle = 'Profile - Camagru';
                 <?php require_once __DIR__ . '/includes/profile/notifications-card.php'; ?>
             </div>
         </div>
-        <h1 class="text-xl font-bold">My Photos</h1>
-        <?php require_once __DIR__ . '/includes/profile/my-photos.php'; ?>
-    </div>
+      </div>
 </main>
 
 <?php require_once 'includes/footer.php'; ?>
