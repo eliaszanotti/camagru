@@ -3,6 +3,7 @@ $pageTitle = 'Photo Details';
 require_once 'includes/header.php';
 require_once 'models/Like.php';
 require_once 'handlers/CommentHandler.php';
+require_once 'components/LikeButton.php';
 
 $postId = $_GET['id'] ?? 0;
 
@@ -53,20 +54,7 @@ if ($commentHandler->shouldClearForm()) {
 
                 <!-- Like and Stats -->
                 <div class="flex items-center gap-6 mb-4">
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <form method="POST" action="like.php" class="inline">
-                            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                            <input type="hidden" name="action" value="<?php echo $isLiked ? 'unlike' : 'like'; ?>">
-                            <button type="submit" class="btn btn-ghost">
-                                <?php echo $isLiked ? '❤️' : '🤍'; ?> <span id="likes-count"><?php echo $likesCount; ?></span> Likes
-                            </button>
-                        </form>
-                    <?php else: ?>
-                        <button class="btn btn-ghost" disabled>
-                            🤍 <span id="likes-count"><?php echo $likesCount; ?></span> Likes
-                        </button>
-                    <?php endif; ?>
-
+                    <?php echo LikeButton::create($post['id'], $_SESSION['user_id'] ?? 0); ?>
                     <div class="text-base-content/70">
                         💬 <span id="comments-count"><?php echo count($comments); ?></span> Comments
                     </div>
