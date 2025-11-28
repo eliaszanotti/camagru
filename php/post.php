@@ -5,7 +5,7 @@ require_once 'models/Like.php';
 require_once 'handlers/CommentHandler.php';
 require_once 'components/LikeButton.php';
 
-$postId = $_GET['id'] ?? 0;
+$postId = (int)($_GET['id'] ?? 0);
 
 if (!$postId) {
     header('Location: index.php');
@@ -106,6 +106,7 @@ if ($commentHandler->shouldClearForm()) {
                                         <?php if (isset($_SESSION['user_id']) && $comment['user_id'] == $_SESSION['user_id']): ?>
                                             <form method="POST" action="delete-comment.php" class="inline">
                                                 <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                                                <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
                                                 <button type="submit" class="btn btn-error"
                                                     onclick="return confirm('Delete this comment?')">
                                                     Delete
