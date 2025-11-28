@@ -26,48 +26,41 @@ if ($commentHandler->shouldClearForm()) {
 }
 ?>
 
-<!-- Main Content -->
-<main class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        <!-- Back button -->
-        <div class="mb-6">
-            <a href="index.php" class="btn btn-ghost">← Back to Home</a>
-        </div>
+<main class="p-16">
+    <div class="container mx-auto grid grid-cols-[1fr_2fr] gap-8">
+        <div class="space-y-4">
+            <a href="index.php" class="btn btn-ghost">Back to Home</a>
+            <div class="card bg-base-200">
+                <figure class="max-h-96">
+                    <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
+                        alt="Photo by <?php echo htmlspecialchars($post['username']); ?>"
+                        class="w-full aspect-square object-center object-cover ">
+                </figure>
+                <div class="card-body">
+                    <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+                        <span>By <?php echo htmlspecialchars($post['username']); ?></span>
+                        <span>•</span>
+                        <span><?php echo date('M j, Y g:i A', strtotime($post['created_at'])); ?></span>
+                    </div>
 
-        <!-- Photo Details -->
-        <div class="card bg-base-100 shadow-xl mb-8">
-            <figure class="max-h-96">
-                <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
-                     alt="Photo by <?php echo htmlspecialchars($post['username']); ?>"
-                     class="w-full h-full object-contain">
-            </figure>
-            <div class="card-body">
-                <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
-                    <span>By <?php echo htmlspecialchars($post['username']); ?></span>
-                    <span>•</span>
-                    <span><?php echo date('M j, Y g:i A', strtotime($post['created_at'])); ?></span>
-                </div>
+                    <?php if (!empty($post['caption'])): ?>
+                        <p class="text-lg mb-4"><?php echo htmlspecialchars($post['caption']); ?></p>
+                    <?php endif; ?>
 
-                <?php if (!empty($post['caption'])): ?>
-                    <p class="text-lg mb-4"><?php echo htmlspecialchars($post['caption']); ?></p>
-                <?php endif; ?>
-
-                <!-- Like and Stats -->
-                <div class="flex items-center gap-6 mb-4">
-                    <?php echo LikeButton::create($post['id'], $_SESSION['user_id'] ?? 0); ?>
-                    <div class="text-base-content/70">
-                        💬 <span id="comments-count"><?php echo count($comments); ?></span> Comments
+                    <!-- Like and Stats -->
+                    <div class="flex items-center gap-6 mb-4">
+                        <?php echo LikeButton::create($post['id'], $_SESSION['user_id'] ?? 0); ?>
+                        <div class="text-base-content/70">
+                            💬 <span id="comments-count"><?php echo count($comments); ?></span> Comments
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Comments Section -->
-        <div class="card bg-base-100 shadow-xl">
+        <div class="card bg-base-200">
             <div class="card-body">
-                <h2 class="card-title mb-4">Comments</h2>
+                <h2 class="card-title">Comments</h2>
 
-                <!-- Add Comment Form -->
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="mb-6">
                         <?php require_once __DIR__ . '/includes/alerts.php'; ?>
@@ -81,8 +74,8 @@ if ($commentHandler->shouldClearForm()) {
                         <form method="POST" class="space-y-4">
                             <div class="form-control">
                                 <textarea name="content" class="textarea textarea-bordered h-24"
-                                          placeholder="Add a comment..." maxlength="500"
-                                          required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
+                                    placeholder="Add a comment..." maxlength="500"
+                                    required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
                                 <label class="label">
                                     <span class="label-text-alt">Max 500 characters</span>
                                 </label>
@@ -122,7 +115,7 @@ if ($commentHandler->shouldClearForm()) {
                                         <form method="POST" action="delete-comment.php" class="inline">
                                             <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                                             <button type="submit" class="btn btn-error btn-xs"
-                                                    onclick="return confirm('Delete this comment?')">
+                                                onclick="return confirm('Delete this comment?')">
                                                 Delete
                                             </button>
                                         </form>

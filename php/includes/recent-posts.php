@@ -40,13 +40,13 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                 $userId = $_SESSION['user_id'] ?? 0;
                 ?>
                 <div class="card bg-base-200">
-                    <div class="card-body space-y-4">
+                    <figure>
+                        <img src="<?php echo htmlspecialchars($imageSrc); ?>"
+                            alt="<?php echo htmlspecialchars($caption); ?>"
+                            class="w-full aspect-square object-cover object-center">
+                    </figure>
+                    <div class="card-body space-y-2">
                         <div class="card-title"><?php echo htmlspecialchars($caption); ?></div>
-                        <figure>
-                            <img src="<?php echo htmlspecialchars($imageSrc); ?>"
-                                alt="<?php echo htmlspecialchars($caption); ?>"
-                                class="w-full aspect-square object-cover object-center rounded-box">
-                        </figure>
                         <div class="flex items-center gap-2 text-sm text-base-content/50">
                             <span>By <?php echo htmlspecialchars($post['username']); ?></span>
                             <span>•</span>
@@ -54,7 +54,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                         </div>
                         <div class="flex justify-between card-actions">
                             <?php echo LikeButton::create($post['id'], $userId); ?>
-                            <a href="post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-primary">View</a>
+                            <a href="post.php?id=<?php echo $post['id']; ?>" class="btn btn-primary">View</a>
                         </div>
                     </div>
                 </div>
