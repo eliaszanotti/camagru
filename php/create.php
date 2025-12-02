@@ -3,7 +3,7 @@ $pageTitle = 'Create Photo';
 require_once 'components/BrowseComponent.php';
 require_once 'components/WebcamCaptureComponent.php';
 require_once 'components/PreviewComponent.php';
-require_once 'components/HistoryComponent.php';
+require_once 'components/UnpublishedHistoryComponent.php';
 
 require_once 'includes/header.php';
 ?>
@@ -17,7 +17,7 @@ require_once 'includes/header.php';
             <div class="divider divider-horizontal"></div>
             <?php PreviewComponent::render(); ?>
         </div>
-        <?php HistoryComponent::render(); ?>
+        <?php UnpublishedHistoryComponent::render(); ?>
     </div>
 </main>
 

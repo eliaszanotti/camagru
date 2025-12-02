@@ -60,6 +60,18 @@ class Post {
         }
     }
 
+    public function getUnpublishedByUserId(int $userId): array {
+        try {
+            $sql = "SELECT * FROM posts WHERE user_id = :user_id AND is_published = false ORDER BY created_at DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':user_id' => $userId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Error getting unpublished user posts: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function findById(int $id): ?array {
         try {
             $sql = "SELECT p.*, u.username
