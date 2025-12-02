@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../models/Post.php';
-require_once __DIR__ . '/../models/CapturedImage.php';
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
 header('Content-Type: application/json');
@@ -9,12 +8,10 @@ header('Content-Type: application/json');
 class ShareHandler
 {
     private Post $postModel;
-    private CapturedImage $capturedImageModel;
 
     public function __construct()
     {
         $this->postModel = new Post();
-        $this->capturedImageModel = new CapturedImage();
 
         // Only handle POST requests for AJAX
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,88 +28,33 @@ class ShareHandler
         }
 
         $userId = AuthMiddleware::getUserId();
-        $imageData = $_POST['image_data'] ?? null;
-        $clientImageId = $_POST['image_id'] ?? null;
-        $source = $_POST['source'] ?? 'webcam';
+        $postId = (int)($_POST['post_id'] ?? 0);
         $caption = $_POST['caption'] ?? '';
         $isPublished = isset($_POST['is_published']);
 
         // Validate required fields
-        if (!$imageData || !$clientImageId) {
-            $this->jsonResponse(false, 'Missing required image data');
+        if (!$postId) {
+            $this->jsonResponse(false, 'Missing post ID');
             return;
         }
 
-        // Process base64 image
-        $imagePath = $this->saveImageToServer($imageData, $userId, $source);
-        if (!$imagePath) {
-            $this->jsonResponse(false, 'Failed to save image');
+        // Check if post exists and belongs to user
+        $post = $this->postModel->findById($postId);
+        if (!$post || $post['user_id'] != $userId) {
+            $this->jsonResponse(false, 'Post not found or access denied');
             return;
         }
 
-        // Save image to captured_images table
-        $capturedImageId = $this->capturedImageModel->create([
-            'user_id' => $userId,
-            'image_path' => $imagePath,
-            'source' => $source
-        ]);
-
-        if (!$capturedImageId) {
-            $this->jsonResponse(false, 'Failed to save image record');
-            return;
-        }
-
-        // Create post
-        $postData = [
-            'user_id' => $userId,
-            'image_path' => $imagePath,
+        // Update post
+        $updateData = [
             'caption' => $caption,
             'is_published' => $isPublished
         ];
 
-        if ($this->postModel->create($postData)) {
-            $this->jsonResponse(true, 'Photo shared successfully!');
+        if ($this->postModel->update($postId, $updateData)) {
+            $this->jsonResponse(true, 'Photo updated successfully!');
         } else {
-            $this->jsonResponse(false, 'Failed to create post');
-        }
-    }
-
-    private function saveImageToServer(string $imageData, int $userId, string $source): ?string
-    {
-        try {
-            // Validate base64 image
-            if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $matches)) {
-                $imageType = $matches[1];
-                $imageData = substr($imageData, strpos($imageData, ',') + 1);
-                $imageData = base64_decode($imageData);
-
-                if ($imageData === false) {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-
-            // Create uploads directory if it doesn't exist
-            $uploadsDir = __DIR__ . '/../uploads/captured/';
-            if (!is_dir($uploadsDir)) {
-                mkdir($uploadsDir, 0755, true);
-            }
-
-            // Generate unique filename
-            $filename = 'captured_' . $userId . '_' . time() . '_' . uniqid() . '.' . $imageType;
-            $filepath = $uploadsDir . $filename;
-            $relativePath = '/uploads/captured/' . $filename;
-
-            // Save image to file
-            if (file_put_contents($filepath, $imageData) === false) {
-                return null;
-            }
-
-            return $relativePath;
-        } catch (Exception $e) {
-            error_log("Error saving image: " . $e->getMessage());
-            return null;
+            $this->jsonResponse(false, 'Failed to update photo');
         }
     }
 

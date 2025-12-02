@@ -76,6 +76,25 @@ class Post {
         }
     }
 
+    public function update(int $postId, array $updateData): bool {
+        try {
+            $setParts = [];
+            $params = [':id' => $postId];
+
+            foreach ($updateData as $column => $value) {
+                $setParts[] = "{$column} = :{$column}";
+                $params[":{$column}"] = $value;
+            }
+
+            $sql = "UPDATE posts SET " . implode(', ', $setParts) . " WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute($params);
+        } catch (PDOException $e) {
+            error_log("Error updating post: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function delete(int $postId, int $userId): bool {
         try {
             $sql = "DELETE FROM posts WHERE id = :id AND user_id = :user_id";
