@@ -19,7 +19,7 @@
                 <span><?php echo date('j M, Y', strtotime($user['created_at'])); ?></span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-base-content/50">Photos Created:</span>
+                <span class="text-base-content/50">Posts Created:</span>
                 <span><?php echo count($userPosts); ?></span>
             </div>
         </div>
