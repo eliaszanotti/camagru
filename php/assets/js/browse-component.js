@@ -21,7 +21,7 @@ class BrowseComponent {
 
 	updatePreview(imageData) {
 		if (window.updatePreview) {
-			window.updatePreview(imageData, "file");
+			window.updatePreview(imageData);
 		}
 	}
 

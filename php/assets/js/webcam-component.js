@@ -53,7 +53,7 @@ class WebcamComponent {
 
 	updatePreview(imageData) {
 		if (window.updatePreview) {
-			window.updatePreview(imageData, 'webcam');
+			window.updatePreview(imageData);
 		}
 	}
 

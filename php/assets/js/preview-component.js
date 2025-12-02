@@ -17,16 +17,14 @@ class PreviewComponent {
 		this.saveBtn.disabled = true;
 
 		window.currentImageData = null;
-		window.currentImageSource = null;
 	}
 
-	updatePreview(imageData, source) {
+	updatePreview(imageData) {
 		this.previewArea.innerHTML = `<img src="${imageData}" alt="Preview" class="w-full h-full object-cover rounded-box">`;
 		this.saveBtn.disabled = false;
 		this.discardBtn.disabled = false;
 
 		window.currentImageData = imageData;
-		window.currentImageSource = source;
 	}
 
 	saveToHistory() {
@@ -82,8 +80,8 @@ class PreviewComponent {
 	}
 
 	makeGloballyAvailable() {
-		window.updatePreview = (imageData, source) => {
-			this.updatePreview(imageData, source);
+		window.updatePreview = (imageData) => {
+			this.updatePreview(imageData);
 		};
 
 		window.discardPreview = () => {
