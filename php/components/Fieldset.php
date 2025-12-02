@@ -39,7 +39,7 @@ class Fieldset
             <input type="email" name="email" class="input w-full"
                 placeholder="your@email.com"
                 required />
-            <p class="label text-base-content/50">We'll send you a verification link</p>
+            <p class="label text-base-content/50 whitespace-break-spaces">We'll send you a verification link</p>
             <?php if (isset($GLOBALS['errors']['email'])): ?>
                 <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors']['email']); ?></p>
             <?php endif; ?>
@@ -60,7 +60,7 @@ class Fieldset
                 pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
                 minlength="8"
                 required />
-            <p class="label text-base-content/50">8+ chars with uppercase, lowercase, number, and special character</p>
+            <p class="label text-base-content/50 whitespace-break-spaces">8+ chars with uppercase, lowercase, number, and special character</p>
             <?php if (isset($GLOBALS['errors']['password'])): ?>
                 <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors']['password']); ?></p>
             <?php endif; ?>
@@ -137,7 +137,7 @@ class Fieldset
             <input type="text" name="login_identifier" class="input w-full"
                 value="<?php echo htmlspecialchars($_POST['login_identifier'] ?? ''); ?>"
                 placeholder="Enter your email or username" required />
-            <p class="label text-base-content/50">You can use either your email or username</p>
+            <p class="label text-base-content/50 whitespace-break-spaces">You can use either your email or username</p>
             <?php if (isset($GLOBALS['errors']['login_identifier'])): ?>
                 <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors']['login_identifier']); ?></p>
             <?php endif; ?>

@@ -18,7 +18,7 @@ class GalleryComponent
                     <p>No photos saved yet</p>
                 </div>
             <?php else: ?>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     <?php foreach ($userPosts as $post): ?>
                         <div class="card bg-base-200">
                             <figure>

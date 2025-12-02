@@ -20,7 +20,7 @@ class UnpublishedHistoryComponent
                         <p>No draft photos saved yet</p>
                     </div>
                 <?php else: ?>
-                    <div class="grid grid-cols-6 gap-4">
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         <?php foreach ($userPosts as $post): ?>
                             <div class="space-y-2">
                                 <img src="<?php echo htmlspecialchars($post['image_path'] ?? ''); ?>"

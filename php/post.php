@@ -26,103 +26,99 @@ if ($commentHandler->shouldClearForm()) {
 }
 ?>
 
-<main class="p-16">
-    <div class="container mx-auto grid grid-cols-[1fr_2fr] gap-8">
-        <div class="space-y-4">
-            <a href="index.php" class="btn btn-ghost">Back to Home</a>
-            <div class="card bg-base-200">
-                <figure class="max-h-96">
-                    <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
-                        alt="Photo by <?php echo htmlspecialchars($post['username']); ?>"
-                        class="w-full aspect-square object-center object-cover ">
-                </figure>
-                <div class="card-body">
-                    <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
-                        <span>By <?php echo htmlspecialchars($post['username']); ?></span>
-                        <span>•</span>
-                        <span><?php echo date('M j, Y g:i A', strtotime($post['created_at'])); ?></span>
-                    </div>
-
-                    <?php if (!empty($post['caption'])): ?>
-                        <p class="text-lg mb-4"><?php echo htmlspecialchars($post['caption']); ?></p>
-                    <?php endif; ?>
-
-                    <div class="flex items-center gap-6 mb-4">
-                        <?php echo LikeButton::create($post['id'], $_SESSION['user_id'] ?? 0); ?>
-                        <div class="text-base-content/70">
-                            <span id="comments-count"><?php echo count($comments); ?></span> Comments
-                        </div>
-                    </div>
+<div class="grid md:grid-cols-[1fr_2fr] gap-8">
+    <div class="space-y-4">
+        <a href="index.php" class="btn btn-ghost">Back to Home</a>
+        <div class="card bg-base-200">
+            <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
+                alt="Photo by <?php echo htmlspecialchars($post['username']); ?>"
+                class="w-full aspect-square object-center object-cover ">
+            <div class="card-body">
+                <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+                    <span>By <?php echo htmlspecialchars($post['username']); ?></span>
+                    <span>•</span>
+                    <span><?php echo date('M j, Y g:i A', strtotime($post['created_at'])); ?></span>
                 </div>
-            </div>
-        </div>
-        <div>
-            <div class="card bg-base-200">
-                <div class="card-body space-y-4">
-                    <h2 class="card-title">Comments</h2>
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <div class="space-y-4">
-                            <?php require_once __DIR__ . '/includes/alerts.php'; ?>
 
-                            <?php if ($formService->getError('content')): ?>
-                                <div class="alert alert-error mb-4">
-                                    <span><?php echo htmlspecialchars($formService->getError('content')); ?></span>
-                                </div>
-                            <?php endif; ?>
+                <?php if (!empty($post['caption'])): ?>
+                    <p class="text-lg mb-4"><?php echo htmlspecialchars($post['caption']); ?></p>
+                <?php endif; ?>
 
-                            <form method="POST" class="space-y-4">
-                                <div class="form-control">
-                                    <textarea name="content" class="textarea textarea-bordered w-full"
-                                        placeholder="Add a comment..." maxlength="500"
-                                        required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button type="submit" class="btn btn-primary">Post Comment</button>
-                                </div>
-                            </form>
-                        </div>
-                    <?php else: ?>
-                        <div class="alert alert-info">
-                            <p>Please <a href="login.php" class="link link-primary">login</a> to add comments.</p>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (empty($comments)): ?>
-                        <div class="text-center py-8 bg-base-100 rounded-box">
-                            <p class="text-base-content/50">No comments yet. Be the first to comment!</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="space-y-4">
-                            <?php foreach ($comments as $comment): ?>
-                                <div class="bg-base-100 rounded-box p-4">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?></span>
-                                            <span class="text-sm text-base-content/70">
-                                                <?php echo date('M j, Y g:i A', strtotime($comment['created_at'])); ?>
-                                            </span>
-                                        </div>
-
-                                        <?php if (isset($_SESSION['user_id']) && $comment['user_id'] == $_SESSION['user_id']): ?>
-                                            <form method="POST" action="delete-comment.php" class="inline">
-                                                <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
-                                                <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
-                                                <button type="submit" class="btn btn-error"
-                                                    onclick="return confirm('Delete this comment?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
-                                    </div>
-                                    <p class="text-base-content"><?php echo htmlspecialchars($comment['content']); ?></p>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
+                <div class="flex items-center gap-6 mb-4">
+                    <?php echo LikeButton::create($post['id'], $_SESSION['user_id'] ?? 0); ?>
+                    <div class="text-base-content/70">
+                        <span id="comments-count"><?php echo count($comments); ?></span> Comments
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
+    <div>
+        <div class="card bg-base-200">
+            <div class="card-body space-y-4">
+                <h2 class="card-title">Comments</h2>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="space-y-4">
+                        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
+
+                        <?php if ($formService->getError('content')): ?>
+                            <div class="alert alert-error mb-4">
+                                <span><?php echo htmlspecialchars($formService->getError('content')); ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <form method="POST" class="space-y-4">
+                            <div class="form-control">
+                                <textarea name="content" class="textarea textarea-bordered w-full"
+                                    placeholder="Add a comment..." maxlength="500"
+                                    required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="btn btn-primary">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info">
+                        <p>Please <a href="login.php" class="link link-primary">login</a> to add comments.</p>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (empty($comments)): ?>
+                    <div class="text-center py-8 bg-base-100 rounded-box">
+                        <p class="text-base-content/50">No comments yet. Be the first to comment!</p>
+                    </div>
+                <?php else: ?>
+                    <div class="space-y-4">
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="bg-base-100 rounded-box p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?></span>
+                                        <span class="text-sm text-base-content/70">
+                                            <?php echo date('M j, Y g:i A', strtotime($comment['created_at'])); ?>
+                                        </span>
+                                    </div>
+
+                                    <?php if (isset($_SESSION['user_id']) && $comment['user_id'] == $_SESSION['user_id']): ?>
+                                        <form method="POST" action="delete-comment.php" class="inline">
+                                            <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                                            <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
+                                            <button type="submit" class="btn btn-error"
+                                                onclick="return confirm('Delete this comment?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                                <p class="text-base-content"><?php echo htmlspecialchars($comment['content']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php require_once 'includes/footer.php'; ?>
