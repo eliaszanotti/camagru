@@ -88,13 +88,13 @@ if ($commentHandler->shouldClearForm()) {
                     <?php endif; ?>
 
                     <?php if (empty($comments)): ?>
-                        <div class="text-center py-8 bg-base-100">
+                        <div class="text-center py-8 bg-base-100 rounded-box">
                             <p class="text-base-content/50">No comments yet. Be the first to comment!</p>
                         </div>
                     <?php else: ?>
                         <div class="space-y-4">
                             <?php foreach ($comments as $comment): ?>
-                                <div class="bg-base-100 rounded-lg p-4">
+                                <div class="bg-base-100 rounded-box p-4">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-2">
                                             <span class="font-semibold"><?php echo htmlspecialchars($comment['username']); ?></span>
