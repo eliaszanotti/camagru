@@ -30,7 +30,7 @@ class ShareHandler
         $userId = AuthMiddleware::getUserId();
         $postId = (int)($_POST['post_id'] ?? 0);
         $caption = $_POST['caption'] ?? '';
-        $isPublished = isset($_POST['is_published']);
+        $isPublished = isset($_POST['is_published']) && $_POST['is_published'] === 'on';
 
         // Validate required fields
         if (!$postId) {
@@ -48,7 +48,7 @@ class ShareHandler
         // Update post
         $updateData = [
             'caption' => $caption,
-            'is_published' => $isPublished
+            'is_published' => $isPublished ? 1 : 0
         ];
 
         if ($this->postModel->update($postId, $updateData)) {
