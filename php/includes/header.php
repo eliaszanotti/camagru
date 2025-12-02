@@ -49,3 +49,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             </div>
         </header>
     </div>
+
+    <main class="lg:p-16 md:p-8 p-4">
+        <div class="container mx-auto">

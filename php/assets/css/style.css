@@ -12,8 +12,6 @@
     --container-md: 28rem;
     --container-4xl: 56rem;
     --container-6xl: 72rem;
-    --text-xs: 0.75rem;
-    --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
     --text-lg: 1.125rem;
@@ -1434,9 +1432,6 @@
   .max-w-md {
     max-width: var(--container-md);
   }
-  .flex-1 {
-    flex: 1;
-  }
   .shrink-0 {
     flex-shrink: 0;
   }
@@ -1558,9 +1553,6 @@
   .rounded-box {
     border-radius: var(--radius-box);
   }
-  .rounded-lg {
-    border-radius: var(--radius-lg);
-  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
@@ -1651,6 +1643,12 @@
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
+  }
+  .break-words {
+    overflow-wrap: break-word;
+  }
+  .whitespace-break-spaces {
+    white-space: break-spaces;
   }
   .alert-error {
     @layer daisyui.modifier {
@@ -1847,6 +1845,11 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
+  .md\:p-8 {
+    @media (width >= 48rem) {
+      padding: calc(var(--spacing) * 8);
+    }
+  }
   .lg\:grid-cols-2 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1865,6 +1868,11 @@
   .lg\:grid-cols-\[1fr_2fr\] {
     @media (width >= 64rem) {
       grid-template-columns: 1fr 2fr;
+    }
+  }
+  .lg\:p-16 {
+    @media (width >= 64rem) {
+      padding: calc(var(--spacing) * 16);
     }
   }
   .xl\:grid-cols-4 {

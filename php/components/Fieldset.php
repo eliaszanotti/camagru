@@ -20,7 +20,7 @@ class Fieldset
                 minlength="3"
                 maxlength="50"
                 required />
-            <p class="label text-base-content/50">Must contain letters, numbers, and underscores only</p>
+            <p class="label text-base-content/50 whitespace-break-spaces">Must contain letters, numbers, and underscores only</p>
             <?php if (isset($GLOBALS['errors']['username'])): ?>
                 <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors']['username']); ?></p>
             <?php endif; ?>
@@ -155,7 +155,7 @@ class Fieldset
             <label class="cursor-pointer label">
                 <input type="checkbox" name="<?php echo htmlspecialchars($name); ?>" class="checkbox checkbox-primary"
                     <?php echo $checked ? 'checked' : ''; ?>>
-                <span class="label-text"><?php echo htmlspecialchars($label); ?></span>
+                <span class="label-text whitespace-break-spaces"><?php echo htmlspecialchars($label); ?></span>
             </label>
             <?php if (isset($GLOBALS['errors'][$name])): ?>
                 <p class="label text-error"><?php echo htmlspecialchars($GLOBALS['errors'][$name]); ?></p>
