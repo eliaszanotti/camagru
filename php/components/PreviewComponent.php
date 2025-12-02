@@ -13,10 +13,12 @@ class PreviewComponent
                             <p class="text-center">Preview will appear here</p>
                         </div>
                     </div>
+                    <form id="savePostForm">
                     <div class="form-control grid grid-cols-2 gap-4">
-                        <button id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
-                        <button id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
+                        <button type="button" id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
+                        <button type="submit" id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
                     </div>
+                </form>
                 </div>
             </div>
         </div>

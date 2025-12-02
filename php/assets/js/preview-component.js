@@ -29,10 +29,56 @@ class PreviewComponent {
 		window.currentImageSource = source;
 	}
 
+	saveToHistory() {
+		if (!window.currentImageData) {
+			alert('No image to save');
+			return;
+		}
+
+		// Create a hidden form
+		const form = document.createElement('form');
+		form.method = 'POST';
+		form.action = 'handlers/PostHandler.php';
+		form.style.display = 'none';
+
+		// Add image data as hidden field
+		const imageInput = document.createElement('input');
+		imageInput.type = 'hidden';
+		imageInput.name = 'image_data';
+		imageInput.value = window.currentImageData;
+		form.appendChild(imageInput);
+
+		// Add caption and publish status
+		const captionInput = document.createElement('input');
+		captionInput.type = 'hidden';
+		captionInput.name = 'caption';
+		captionInput.value = '';
+		form.appendChild(captionInput);
+
+		const publishedInput = document.createElement('input');
+		publishedInput.type = 'hidden';
+		publishedInput.name = 'is_published';
+		publishedInput.value = '0';
+		form.appendChild(publishedInput);
+
+		// Submit form
+		document.body.appendChild(form);
+		form.submit();
+	}
+
 	setupEventListeners() {
 		this.discardBtn.addEventListener('click', () => {
 			this.discardPreview();
 		});
+
+		// Handle form submission
+		const savePostForm = document.getElementById('savePostForm');
+		if (savePostForm) {
+			savePostForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				this.saveToHistory();
+			});
+		}
 	}
 
 	makeGloballyAvailable() {
