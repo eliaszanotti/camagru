@@ -1,7 +1,0 @@
-services:
-    express:
-        build:
-            context: ./express
-        restart: always
-        ports:
-            - "3000:3000"
