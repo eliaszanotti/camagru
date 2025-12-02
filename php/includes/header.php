@@ -35,11 +35,11 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 <a href="index.php" class="<?php echo $currentPage === 'index' ? 'active' : ''; ?> btn btn-ghost">Home</a>
                 <?php if ($isLoggedIn): ?>
                     <a href="create.php" class="<?php echo $currentPage === 'create' ? 'active' : ''; ?> btn btn-ghost">Create</a>
-                    <a href="gallery.php" class="<?php echo $currentPage === 'gallery' ? 'active' : ''; ?> btn btn-ghost">Gallery</a>
                 <?php endif; ?>
             </div>
             <div class="navbar-end gap-2">
                 <?php if ($isLoggedIn): ?>
+                    <a href="gallery.php" class="<?php echo $currentPage === 'gallery' ? 'active' : ''; ?> btn btn-ghost">Gallery</a>
                     <a href="profile.php" class="btn btn-ghost">Profile</a>
                     <a href="logout.php" class="btn btn-ghost">Logout</a>
                 <?php else: ?>

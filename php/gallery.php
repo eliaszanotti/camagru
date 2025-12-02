@@ -1,5 +1,7 @@
 <?php
 $pageTitle = 'My Gallery';
+require_once 'middleware/AuthMiddleware.php';
+AuthMiddleware::requireAuth();
 require_once 'components/GalleryComponent.php';
 
 require_once 'includes/header.php';
