@@ -11,3 +11,21 @@ services:
             - ./assets/images/processed:/var/www/html/assets/images/processed
         environment:
             - APACHE_DOCUMENT_ROOT=/var/www/html
+            - SMTP_FROM_EMAIL=noreply@camagru.com
+            - SMTP_FROM_NAME=Camagru
+        depends_on:
+            - mailhog
+        networks:
+            - camagru-network
+
+    mailhog:
+        image: mailhog/mailhog:latest
+        ports:
+            - "1025:1025" # SMTP server
+            - "8025:8025" # Web interface
+        networks:
+            - camagru-network
+
+networks:
+    camagru-network:
+        driver: bridge

@@ -5,27 +5,47 @@ require_once __DIR__ . '/../config/database.php';
 class EmailService {
     private string $fromEmail;
     private string $fromName;
-    private PDO $db;
 
     public function __construct() {
-        $this->db = Database::getConnection();
 
-        // Load environment variables
+        // Prioritize Docker environment variables, then fallback to .env file
+        $this->fromEmail = $_ENV['SMTP_FROM_EMAIL'] ?? $_ENV['SMTP_FROM'] ?? 'noreply@camagru.com';
+        $this->fromName = $_ENV['SMTP_FROM_NAME'] ?? 'Camagru';
+
+        // If no environment variables are set, try to load from .env file
+        if ($this->fromEmail === 'noreply@camagru.com') {
+            $this->loadEnvFromFile();
+        }
+    }
+
+    /**
+     * Load environment variables from .env file (fallback)
+     */
+    private function loadEnvFromFile(): void {
         $envFile = __DIR__ . '/../.env';
-        $env = [];
 
-        if (file_exists($envFile)) {
-            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos($line, '=') !== false && !str_starts_with($line, '#')) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $env[trim($key)] = trim($value);
+        if (!file_exists($envFile)) {
+            return;
+        }
+
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            if (strpos($line, '=') !== false && !str_starts_with($line, '#')) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+
+                switch ($key) {
+                    case 'SMTP_FROM_EMAIL':
+                        $this->fromEmail = $value;
+                        break;
+                    case 'SMTP_FROM_NAME':
+                        $this->fromName = $value;
+                        break;
                 }
             }
         }
-
-        $this->fromEmail = $env['SMTP_FROM'] ?? 'noreply@camagru.com';
-        $this->fromName = 'Camagru';
     }
 
     /**
@@ -35,9 +55,8 @@ class EmailService {
         $subject = "Verify your Camagru account";
 
         // Create verification URL
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $verificationUrl = "{$protocol}://{$host}/php/verify.php?token=" . urlencode($token);
+        $baseUrl = $this->getBaseUrl();
+        $verificationUrl = "{$baseUrl}/php/verify.php?token=" . urlencode($token);
 
         $message = $this->getVerificationTemplate($username, $verificationUrl);
 
@@ -51,9 +70,8 @@ class EmailService {
         $subject = "Reset your Camagru password";
 
         // Create reset URL
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $resetUrl = "{$protocol}://{$host}/php/reset-password.php?token=" . urlencode($token);
+        $baseUrl = $this->getBaseUrl();
+        $resetUrl = "{$baseUrl}/php/reset-password.php?token=" . urlencode($token);
 
         $message = $this->getPasswordResetTemplate($username, $resetUrl);
 
@@ -83,14 +101,23 @@ class EmailService {
      */
     private function sendEmail(string $to, string $subject, string $message): bool {
         $headers = [
-            'From: ' . $this->fromName . ' <' . $this->fromEmail . '>',
+            "From: {$this->fromName} <{$this->fromEmail}>",
             'MIME-Version: 1.0',
             'Content-Type: text/html; charset=UTF-8',
-            'Reply-To: ' . $this->fromEmail,
+            "Reply-To: {$this->fromEmail}",
             'X-Mailer: PHP/' . phpversion()
         ];
 
         return mail($to, $subject, $message, implode("\r\n", $headers));
+    }
+
+    /**
+     * Generate base URL dynamically
+     */
+    private function getBaseUrl(): string {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return "{$protocol}://{$host}";
     }
 
     /**
