@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     unzip \
     zip \
+    ssmtp \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_pgsql pgsql
 
@@ -19,6 +20,9 @@ WORKDIR /var/www/html
 
 # Copy Apache config (using default config)
 # COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Copy custom PHP configuration
+COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 # Expose port
 EXPOSE 80
