@@ -29,10 +29,10 @@ if ($commentHandler->shouldClearForm()) {
 <div class="grid md:grid-cols-[1fr_2fr] gap-8">
     <div class="space-y-4">
         <a href="index.php" class="btn btn-ghost">Back to Home</a>
-        <div class="card bg-base-200">
+        <div class="card bg-base-200 overflow-hidden">
             <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
                 alt="Photo by <?php echo htmlspecialchars($post['username']); ?>"
-                class="w-full aspect-square object-center object-cover ">
+                class="w-full aspect-square object-center object-cover">
             <div class="card-body">
                 <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
                     <span>By <?php echo htmlspecialchars($post['username']); ?></span>
