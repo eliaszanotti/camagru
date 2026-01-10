@@ -12,7 +12,7 @@ class GalleryComponent
         }
 
 ?>
-        <div class="">
+        <div>
             <?php if (empty($userPosts)): ?>
                 <div class="text-center text-base-content/50 py-8">
                     <p>No photos saved yet</p>
@@ -21,10 +21,10 @@ class GalleryComponent
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     <?php foreach ($userPosts as $post): ?>
                         <div class="card bg-base-200">
-                            <figure>
+                            <figure class="aspect-square">
                                 <img src="<?php echo htmlspecialchars($post['image_path'] ?? ''); ?>"
                                     alt="Photo by <?php echo htmlspecialchars($post['username'] ?? 'Unknown'); ?>"
-                                    class="w-full h-48 object-cover">
+                                    class="w-full h-full object-cover object-center">
                             </figure>
                             <div class="card-body p-4">
                                 <div class="flex justify-between items-start mb-2">
