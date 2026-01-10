@@ -7,29 +7,21 @@ class EmailService {
     private string $fromName;
 
     public function __construct() {
-
-        // Prioritize Docker environment variables, then fallback to .env file
-        $this->fromEmail = $_ENV['SMTP_FROM_EMAIL'] ?? $_ENV['SMTP_FROM'] ?? 'noreply@camagru.com';
+        $this->fromEmail = $_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@camagru.com';
         $this->fromName = $_ENV['SMTP_FROM_NAME'] ?? 'Camagru';
 
-        // If no environment variables are set, try to load from .env file
         if ($this->fromEmail === 'noreply@camagru.com') {
             $this->loadEnvFromFile();
         }
     }
 
-    /**
-     * Load environment variables from .env file (fallback)
-     */
     private function loadEnvFromFile(): void {
         $envFile = __DIR__ . '/../.env';
-
         if (!file_exists($envFile)) {
             return;
         }
 
         $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
         foreach ($lines as $line) {
             if (strpos($line, '=') !== false && !str_starts_with($line, '#')) {
                 list($key, $value) = explode('=', $line, 2);
@@ -48,57 +40,43 @@ class EmailService {
         }
     }
 
-    /**
-     * Send verification email
-     */
     public function sendVerificationEmail(string $email, string $username, string $token): bool {
         $subject = "Verify your Camagru account";
-
-        // Create verification URL
         $baseUrl = $this->getBaseUrl();
         $verificationUrl = "{$baseUrl}/php/verify.php?token=" . urlencode($token);
-
         $message = $this->getVerificationTemplate($username, $verificationUrl);
-
         return $this->sendEmail($email, $subject, $message);
     }
 
-    /**
-     * Send password reset email
-     */
     public function sendPasswordResetEmail(string $email, string $username, string $token): bool {
         $subject = "Reset your Camagru password";
-
-        // Create reset URL
         $baseUrl = $this->getBaseUrl();
         $resetUrl = "{$baseUrl}/php/reset-password.php?token=" . urlencode($token);
-
         $message = $this->getPasswordResetTemplate($username, $resetUrl);
-
         return $this->sendEmail($email, $subject, $message);
     }
 
-    /**
-     * Send comment notification email
-     */
     public function sendCommentNotification(string $authorEmail, string $authorUsername, string $commenterUsername, string $postUrl): bool {
-        // Check if author has email notifications enabled
         $userModel = new User();
         $author = $userModel->findByEmail($authorEmail);
 
         if (!$author || !$author['email_notifications']) {
-            return true; // No notification needed
+            return true;
         }
 
         $subject = "New comment on your Camagru post";
         $message = $this->getCommentNotificationTemplate($authorUsername, $commenterUsername, $postUrl);
-
         return $this->sendEmail($authorEmail, $subject, $message);
     }
 
-    /**
-     * Send email using PHP mail function
-     */
+    public function sendTestEmail(string $to, string $subject, string $message): bool {
+        return $this->sendEmail($to, $subject, $message);
+    }
+
+    public function getFromEmail(): string {
+        return $this->fromEmail;
+    }
+
     private function sendEmail(string $to, string $subject, string $message): bool {
         $headers = [
             "From: {$this->fromName} <{$this->fromEmail}>",
@@ -111,18 +89,12 @@ class EmailService {
         return mail($to, $subject, $message, implode("\r\n", $headers));
     }
 
-    /**
-     * Generate base URL dynamically
-     */
     private function getBaseUrl(): string {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return "{$protocol}://{$host}";
     }
 
-    /**
-     * Verification email template
-     */
     private function getVerificationTemplate(string $username, string $verificationUrl): string {
         return "
         <!DOCTYPE html>
@@ -163,9 +135,6 @@ class EmailService {
         </html>";
     }
 
-    /**
-     * Password reset email template
-     */
     private function getPasswordResetTemplate(string $username, string $resetUrl): string {
         return "
         <!DOCTYPE html>
@@ -206,9 +175,6 @@ class EmailService {
         </html>";
     }
 
-    /**
-     * Comment notification email template
-     */
     private function getCommentNotificationTemplate(string $authorUsername, string $commenterUsername, string $postUrl): string {
         return "
         <!DOCTYPE html>

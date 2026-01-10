@@ -24,8 +24,12 @@ WORKDIR /var/www/html
 # Copy custom PHP configuration
 COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Expose port
 EXPOSE 80
 
-# Start Apache
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
