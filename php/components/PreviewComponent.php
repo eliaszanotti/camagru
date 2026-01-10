@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/StickerComponent.php';
+
 class PreviewComponent
 {
     public static function render(): void
@@ -8,6 +10,7 @@ class PreviewComponent
             <div class="card-body">
                 <h2 class="card-title">Preview</h2>
                 <div class="space-y-4">
+                    <?php StickerComponent::render(); ?>
                     <div class="aspect-square">
                         <div id="previewArea" class="w-full h-full bg-base-300 rounded-box flex items-center justify-center">
                             <p class="text-center">Preview will appear here</p>
@@ -30,6 +33,7 @@ class PreviewComponent
     ?>
         <script src="assets/js/preview-component.js"></script>
 <?php
+        StickerComponent::renderScripts();
     }
 }
 ?>

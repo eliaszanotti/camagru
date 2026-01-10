@@ -29,15 +29,14 @@ class PostHandler
         $imageData = $_POST['image_data'] ?? '';
         $caption = $_POST['caption'] ?? '';
         $isPublished = isset($_POST['is_published']) ? (int)$_POST['is_published'] : 0;
+        $sticker = $_POST['sticker'] ?? null;
 
-        // Validate required fields
         if (!$imageData) {
             header('Location: /create.php?error=missing_image');
             exit;
         }
 
-        // Convert data URL to image file
-        $imagePath = $this->saveImageData($imageData);
+        $imagePath = $this->saveImageData($imageData, $sticker);
         if (!$imagePath) {
             header('Location: /create.php?error=save_failed');
             exit;
@@ -59,33 +58,65 @@ class PostHandler
         exit;
     }
 
-    private function saveImageData(string $dataUrl): ?string
+    private function saveImageData(string $dataUrl, ?string $sticker = null): ?string
     {
-        // Extract image data from data URL
         if (preg_match('/^data:image\/(\w+);base64,/', $dataUrl, $matches)) {
             $imageType = $matches[1];
             $base64Data = substr($dataUrl, strpos($dataUrl, ',') + 1);
 
-            // Decode base64
             $imageData = base64_decode($base64Data);
             if ($imageData === false) {
                 return null;
             }
 
-            // Create uploads directory if it doesn't exist
             $uploadsDir = __DIR__ . '/../uploads/posts/';
             if (!file_exists($uploadsDir)) {
                 @mkdir($uploadsDir, 0777, true);
             }
 
-            // Generate unique filename
-            $filename = 'post_' . uniqid() . '.' . $imageType;
+            $filename = 'post_' . uniqid() . '.png';
             $filepath = $uploadsDir . $filename;
 
-            // Save image
-            if (@file_put_contents($filepath, $imageData)) {
+            $baseImage = imagecreatefromstring($imageData);
+            if ($baseImage === false) {
+                return null;
+            }
+
+            if ($sticker) {
+                $stickerPath = __DIR__ . '/../assets/stickers/' . basename($sticker);
+                if (file_exists($stickerPath)) {
+                    $stickerImage = imagecreatefrompng($stickerPath);
+                    if ($stickerImage !== false) {
+                        imagealphablending($stickerImage, true);
+                        imagesavealpha($stickerImage, true);
+
+                        $baseWidth = imagesx($baseImage);
+                        $baseHeight = imagesy($baseImage);
+                        $stickerWidth = imagesx($stickerImage);
+                        $stickerHeight = imagesy($stickerImage);
+
+                        $newStickerWidth = (int)($baseWidth * 0.5);
+                        $newStickerHeight = (int)($stickerHeight * ($newStickerWidth / $stickerWidth));
+
+                        $resizedSticker = imagescale($stickerImage, $newStickerWidth, $newStickerHeight);
+
+                        $destX = (int)(($baseWidth - $newStickerWidth) / 2);
+                        $destY = (int)(($baseHeight - $newStickerHeight) / 2);
+
+                        imagecopy($baseImage, $resizedSticker, $destX, $destY, 0, 0, $newStickerWidth, $newStickerHeight);
+
+                        imagedestroy($stickerImage);
+                        imagedestroy($resizedSticker);
+                    }
+                }
+            }
+
+            if (imagepng($baseImage, $filepath)) {
+                imagedestroy($baseImage);
                 return 'uploads/posts/' . $filename;
             }
+
+            imagedestroy($baseImage);
         }
 
         return null;

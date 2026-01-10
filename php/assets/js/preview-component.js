@@ -21,10 +21,22 @@ class PreviewComponent {
 
 	updatePreview(imageData) {
 		this.previewArea.innerHTML = `<img src="${imageData}" alt="Preview" class="w-full h-full object-cover rounded-box">`;
-		this.saveBtn.disabled = false;
 		this.discardBtn.disabled = false;
 
 		window.currentImageData = imageData;
+		this.checkSaveButtonState();
+	}
+
+	checkSaveButtonState() {
+		this.saveBtn.disabled = !window.currentImageData || !window.selectedSticker;
+	}
+
+	onStickerSelected() {
+		this.checkSaveButtonState();
+	}
+
+	onStickerDeselected() {
+		this.checkSaveButtonState();
 	}
 
 	saveToHistory() {
@@ -33,20 +45,17 @@ class PreviewComponent {
 			return;
 		}
 
-		// Create a hidden form
 		const form = document.createElement('form');
 		form.method = 'POST';
 		form.action = 'handlers/PostHandler.php';
 		form.style.display = 'none';
 
-		// Add image data as hidden field
 		const imageInput = document.createElement('input');
 		imageInput.type = 'hidden';
 		imageInput.name = 'image_data';
 		imageInput.value = window.currentImageData;
 		form.appendChild(imageInput);
 
-		// Add caption and publish status
 		const captionInput = document.createElement('input');
 		captionInput.type = 'hidden';
 		captionInput.name = 'caption';
@@ -59,7 +68,14 @@ class PreviewComponent {
 		publishedInput.value = '0';
 		form.appendChild(publishedInput);
 
-		// Submit form
+		if (window.selectedSticker) {
+			const stickerInput = document.createElement('input');
+			stickerInput.type = 'hidden';
+			stickerInput.name = 'sticker';
+			stickerInput.value = window.selectedSticker;
+			form.appendChild(stickerInput);
+		}
+
 		document.body.appendChild(form);
 		form.submit();
 	}
