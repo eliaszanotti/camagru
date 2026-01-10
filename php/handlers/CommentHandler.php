@@ -4,6 +4,7 @@ require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../models/Post.php';
 require_once __DIR__ . '/../models/Comment.php';
 require_once __DIR__ . '/../services/FormService.php';
+require_once __DIR__ . '/../services/EmailService.php';
 
 class CommentHandler {
     private Post $postModel;
@@ -71,7 +72,19 @@ class CommentHandler {
 
         if ($this->commentModel->create($commentData)) {
             $this->formService->setSuccess('Comment added successfully!');
-            $this->comments = $this->commentModel->getByPostId($postId); // Refresh comments
+            $this->comments = $this->commentModel->getByPostId($postId);
+
+            if ($_SESSION['user_id'] != $this->post['user_id']) {
+                $emailService = new EmailService();
+                $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+                $postUrl = "{$baseUrl}/post.php?id={$postId}";
+                $emailService->sendCommentNotification(
+                    $this->post['email'],
+                    $this->post['username'],
+                    $_SESSION['username'],
+                    $postUrl
+                );
+            }
         } else {
             $this->formService->addError('general', 'Failed to add comment');
         }

@@ -74,7 +74,7 @@ class Post {
 
     public function findById(int $id): ?array {
         try {
-            $sql = "SELECT p.*, u.username
+            $sql = "SELECT p.*, u.username, u.email
                     FROM posts p
                     JOIN users u ON p.user_id = u.id
                     WHERE p.id = :id LIMIT 1";
