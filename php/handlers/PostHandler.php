@@ -84,16 +84,28 @@ class PostHandler
                 return null;
             }
 
+            $origWidth = imagesx($baseImage);
+            $origHeight = imagesy($baseImage);
+            $size = min($origWidth, $origHeight);
+
+            $squareImage = imagecreatetruecolor($size, $size);
+
+            $srcX = (int)(($origWidth - $size) / 2);
+            $srcY = (int)(($origHeight - $size) / 2);
+
+            imagecopyresampled($squareImage, $baseImage, 0, 0, $srcX, $srcY, $size, $size, $size, $size);
+            imagedestroy($baseImage);
+
             if ($sticker) {
                 $stickerPath = __DIR__ . '/../assets/stickers/' . basename($sticker);
                 if (file_exists($stickerPath)) {
                     $stickerImage = imagecreatefrompng($stickerPath);
                     if ($stickerImage !== false) {
-                        imagealphablending($stickerImage, true);
-                        imagesavealpha($stickerImage, true);
+                        imagealphablending($squareImage, true);
+                        imagesavealpha($squareImage, true);
 
-                        $baseWidth = imagesx($baseImage);
-                        $baseHeight = imagesy($baseImage);
+                        $baseWidth = imagesx($squareImage);
+                        $baseHeight = imagesy($squareImage);
                         $stickerWidth = imagesx($stickerImage);
                         $stickerHeight = imagesy($stickerImage);
 
@@ -105,7 +117,7 @@ class PostHandler
                         $destX = $baseWidth - $newStickerWidth;
                         $destY = $baseHeight - $newStickerHeight;
 
-                        imagecopy($baseImage, $resizedSticker, $destX, $destY, 0, 0, $newStickerWidth, $newStickerHeight);
+                        imagecopy($squareImage, $resizedSticker, $destX, $destY, 0, 0, $newStickerWidth, $newStickerHeight);
 
                         imagedestroy($stickerImage);
                         imagedestroy($resizedSticker);
@@ -113,12 +125,12 @@ class PostHandler
                 }
             }
 
-            if (imagepng($baseImage, $filepath)) {
-                imagedestroy($baseImage);
+            if (imagepng($squareImage, $filepath)) {
+                imagedestroy($squareImage);
                 return 'uploads/posts/' . $filename;
             }
 
-            imagedestroy($baseImage);
+            imagedestroy($squareImage);
         }
 
         return null;
