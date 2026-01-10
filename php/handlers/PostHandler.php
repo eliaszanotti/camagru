@@ -60,6 +60,8 @@ class PostHandler
 
     private function saveImageData(string $dataUrl, ?string $sticker = null): ?string
     {
+        ini_set('memory_limit', '512M');
+
         if (preg_match('/^data:image\/(\w+);base64,/', $dataUrl, $matches)) {
             $imageType = $matches[1];
             $base64Data = substr($dataUrl, strpos($dataUrl, ',') + 1);
