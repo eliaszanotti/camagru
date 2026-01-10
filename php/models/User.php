@@ -77,7 +77,8 @@ class User {
                     WHERE email_verification_token = :token";
 
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([':token' => $token]);
+            $stmt->execute([':token' => $token]);
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log("Error verifying email: " . $e->getMessage());
             return false;
