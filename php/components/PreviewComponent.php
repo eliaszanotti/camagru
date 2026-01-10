@@ -10,18 +10,21 @@ class PreviewComponent
             <div class="card-body">
                 <h2 class="card-title">Preview</h2>
                 <div class="space-y-4">
-                    <?php StickerComponent::render(); ?>
+                    <div>
+                        <h1>Add a sticker</h1>
+                        <?php StickerComponent::render(); ?>
+                    </div>
                     <div class="aspect-square">
                         <div id="previewArea" class="w-full h-full bg-base-300 rounded-box flex items-center justify-center">
                             <p class="text-center">Preview will appear here</p>
                         </div>
                     </div>
                     <form id="savePostForm">
-                    <div class="form-control grid grid-cols-2 gap-4">
-                        <button type="button" id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
-                        <button type="submit" id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
-                    </div>
-                </form>
+                        <div class="form-control grid grid-cols-2 gap-4">
+                            <button type="button" id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
+                            <button type="submit" id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

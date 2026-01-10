@@ -17,6 +17,10 @@ class PreviewComponent {
 		this.saveBtn.disabled = true;
 
 		window.currentImageData = null;
+
+		if (window.stickerComponent) {
+			window.stickerComponent.clearSelection();
+		}
 	}
 
 	updatePreview(imageData) {

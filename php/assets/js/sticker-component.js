@@ -9,6 +9,10 @@ class StickerComponent {
 	}
 
 	selectSticker(stickerName, buttonElement) {
+		if (!window.currentImageData) {
+			return;
+		}
+
 		if (this.selectedSticker === stickerName) {
 			this.clearSelection();
 			return;
