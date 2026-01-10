@@ -94,7 +94,6 @@ class PostHandler
             $srcY = (int)(($origHeight - $size) / 2);
 
             imagecopyresampled($squareImage, $baseImage, 0, 0, $srcX, $srcY, $size, $size, $size, $size);
-            imagedestroy($baseImage);
 
             if ($sticker) {
                 $stickerPath = __DIR__ . '/../assets/stickers/' . basename($sticker);
@@ -118,19 +117,13 @@ class PostHandler
                         $destY = $baseHeight - $newStickerHeight;
 
                         imagecopy($squareImage, $resizedSticker, $destX, $destY, 0, 0, $newStickerWidth, $newStickerHeight);
-
-                        imagedestroy($stickerImage);
-                        imagedestroy($resizedSticker);
                     }
                 }
             }
 
             if (imagepng($squareImage, $filepath)) {
-                imagedestroy($squareImage);
                 return 'uploads/posts/' . $filename;
             }
-
-            imagedestroy($squareImage);
         }
 
         return null;
