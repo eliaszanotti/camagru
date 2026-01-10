@@ -43,7 +43,7 @@ class EmailService {
     public function sendVerificationEmail(string $email, string $username, string $token): bool {
         $subject = "Verify your Camagru account";
         $baseUrl = $this->getBaseUrl();
-        $verificationUrl = "{$baseUrl}/php/verify.php?token=" . urlencode($token);
+        $verificationUrl = "{$baseUrl}/verify.php?token=" . urlencode($token);
         $message = $this->getVerificationTemplate($username, $verificationUrl);
         return $this->sendEmail($email, $subject, $message);
     }
@@ -51,7 +51,7 @@ class EmailService {
     public function sendPasswordResetEmail(string $email, string $username, string $token): bool {
         $subject = "Reset your Camagru password";
         $baseUrl = $this->getBaseUrl();
-        $resetUrl = "{$baseUrl}/php/reset-password.php?token=" . urlencode($token);
+        $resetUrl = "{$baseUrl}/reset-password.php?token=" . urlencode($token);
         $message = $this->getPasswordResetTemplate($username, $resetUrl);
         return $this->sendEmail($email, $subject, $message);
     }
