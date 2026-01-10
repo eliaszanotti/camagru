@@ -63,6 +63,9 @@ class ProfileHandler {
             case 'notifications':
                 $this->handleNotificationsUpdate();
                 break;
+            case 'resend_verification':
+                $this->handleResendVerification();
+                break;
         }
     }
 
@@ -157,6 +160,29 @@ class ProfileHandler {
         } else {
             $this->formService->setSuccess($validationResult['message']);
             $this->user = $this->userModel->findById($_SESSION['user_id']);
+        }
+    }
+
+    private function handleResendVerification(): void {
+        $verificationToken = bin2hex(random_bytes(32));
+
+        $updateData = [
+            'email_verification_token' => $verificationToken
+        ];
+
+        $validationResult = $this->authController->updateProfile($_SESSION['user_id'], $updateData);
+
+        if (!$validationResult['success']) {
+            $this->formService->addErrors($validationResult['errors']);
+        } else {
+            $emailService = new EmailService();
+            if (!$emailService->sendVerificationEmail($this->user['email'], $this->user['username'], $verificationToken)) {
+                error_log("Failed to send verification email to: {$this->user['email']}");
+                $this->formService->addError('general', 'Failed to send verification email. Please try again later.');
+            } else {
+                $this->formService->setSuccess('Verification email sent! Please check your inbox.');
+                $this->user = $this->userModel->findById($_SESSION['user_id']);
+            }
         }
     }
 }

@@ -1099,6 +1099,9 @@
       border-width: var(--border, 1px) 0 var(--border, 1px) var(--border, 1px);
     }
   }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
   }
@@ -1452,6 +1455,9 @@
   }
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .flex-col {
+    flex-direction: column;
   }
   .items-center {
     align-items: center;
