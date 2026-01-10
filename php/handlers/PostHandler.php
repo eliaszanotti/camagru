@@ -95,13 +95,13 @@ class PostHandler
                         $stickerWidth = imagesx($stickerImage);
                         $stickerHeight = imagesy($stickerImage);
 
-                        $newStickerWidth = (int)($baseWidth * 0.5);
+                        $newStickerWidth = (int)($baseWidth * 0.33);
                         $newStickerHeight = (int)($stickerHeight * ($newStickerWidth / $stickerWidth));
 
                         $resizedSticker = imagescale($stickerImage, $newStickerWidth, $newStickerHeight);
 
-                        $destX = (int)(($baseWidth - $newStickerWidth) / 2);
-                        $destY = (int)(($baseHeight - $newStickerHeight) / 2);
+                        $destX = $baseWidth - $newStickerWidth;
+                        $destY = $baseHeight - $newStickerHeight;
 
                         imagecopy($baseImage, $resizedSticker, $destX, $destY, 0, 0, $newStickerWidth, $newStickerHeight);
 

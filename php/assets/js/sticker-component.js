@@ -50,7 +50,7 @@ class StickerComponent {
 		previewArea.innerHTML = `
 			<div class="relative w-full h-full">
 				<img src="${window.currentImageData}" alt="Preview" class="w-full h-full object-cover rounded-box">
-				<img src="assets/stickers/${this.selectedSticker}" alt="Sticker" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 object-contain pointer-events-none">
+				<img src="assets/stickers/${this.selectedSticker}" alt="Sticker" class="absolute bottom-0 right-0 w-1/3 h-1/3 object-contain pointer-events-none p-2">
 			</div>
 		`;
 	}
