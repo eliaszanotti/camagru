@@ -1,46 +1,40 @@
 <?php
-$pageTitle = 'Forgot Password';
-require_once 'includes/header.php';
-require_once 'handlers/ForgotPasswordHandler.php';
+require_once __DIR__ . '/handlers/ForgotPasswordHandler.php';
 
 $forgotPasswordHandler = new ForgotPasswordHandler();
 $formService = $forgotPasswordHandler->getFormService();
+
+require_once __DIR__ . '/includes/header.php';
+
+$pageTitle = 'Forgot Password - Camagru';
 ?>
-
-<main class="container mx-auto px-4 py-8">
-    <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-bold text-center mb-8">Forgot Password</h1>
-
-        <div class="text-center mb-6">
+<div class="max-w-md mx-auto">
+    <div class="card bg-base-200">
+        <div class="card-body space-y-4">
+            <h1 class="card-title">Forgot Password</h1>
             <p class="text-base-content/70">Enter your email address and we'll send you a link to reset your password.</p>
-        </div>
+            <?php require_once __DIR__ . '/includes/alerts.php'; ?>
 
-        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
+            <?php if ($forgotPasswordHandler->shouldShowForm()): ?>
+                <form method="POST" novalidate>
+                    <fieldset class="fieldset w-full">
+                        <legend class="fieldset-legend">Email</legend>
+                        <input type="email" name="email" class="input w-full"
+                            placeholder="your@email.com"
+                            value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            required />
+                    </fieldset>
+                    <div class="form-control mt-4">
+                        <button type="submit" class="btn btn-primary w-full">Send Reset Link</button>
+                    </div>
+                </form>
+            <?php endif; ?>
 
-        <?php if ($formService->hasSuccess()): ?>
-            <div class="mt-4">
-                <a href="login.php" class="btn btn-primary btn-sm">Back to Login</a>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($forgotPasswordHandler->shouldShowForm()): ?>
-            <form method="POST" class="space-y-6">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Email</span>
-                    </label>
-                    <input type="email" name="email" class="input input-bordered w-full"
-                           value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-full">Send Reset Link</button>
-            </form>
-
-            <div class="text-center mt-6">
+            <div class="text-center">
                 <a href="login.php" class="link link-primary">Back to Login</a>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
-</main>
+</div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
