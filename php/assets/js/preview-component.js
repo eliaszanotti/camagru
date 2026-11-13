@@ -3,6 +3,7 @@ class PreviewComponent {
 		this.previewArea = document.getElementById('previewArea');
 		this.discardBtn = document.getElementById('discardBtn');
 		this.saveBtn = document.getElementById('saveBtn');
+		this.editorHint = document.getElementById('editorHint');
 
 		this.init();
 	}
@@ -12,9 +13,11 @@ class PreviewComponent {
 	}
 
 	discardPreview() {
-		this.previewArea.innerHTML = `<p class="text-center">Preview will appear here</p>`;
+		this.previewArea.innerHTML = `<div class="max-w-xs px-6 text-center"><span class="mb-3 block text-4xl" aria-hidden="true">▧</span><p class="font-medium">Your photo will appear here</p><p class="mt-1 text-sm text-base-content/60">Upload an image or take one with your camera.</p></div>`;
 		this.discardBtn.disabled = true;
 		this.saveBtn.disabled = true;
+		this.editorHint.textContent = 'Choose a photo to begin.';
+		this.setStickerAvailability(false);
 
 		window.currentImageData = null;
 
@@ -24,11 +27,22 @@ class PreviewComponent {
 	}
 
 	updatePreview(imageData) {
+		if (window.stickerComponent) {
+			window.stickerComponent.clearSelection();
+		}
 		this.previewArea.innerHTML = `<img src="${imageData}" alt="Preview" class="w-full h-full object-cover rounded-box">`;
 		this.discardBtn.disabled = false;
+		this.editorHint.textContent = 'Select a sticker, then save your draft.';
+		this.setStickerAvailability(true);
 
 		window.currentImageData = imageData;
 		this.checkSaveButtonState();
+	}
+
+	setStickerAvailability(isAvailable) {
+		document.querySelectorAll('.sticker-btn').forEach((button) => {
+			button.disabled = !isAvailable;
+		});
 	}
 
 	checkSaveButtonState() {

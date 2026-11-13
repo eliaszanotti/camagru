@@ -6,16 +6,44 @@ require_once 'components/PreviewComponent.php';
 require_once 'components/UnpublishedHistoryComponent.php';
 
 require_once 'includes/header.php';
+
+$statusMessages = [
+    'success' => ['success', 'Your photo was saved to drafts.'],
+    'missing_image' => ['error', 'Choose a photo before saving.'],
+    'save_failed' => ['error', 'The photo could not be processed. Please try another image.'],
+    'create_failed' => ['error', 'The photo could not be saved. Please try again.'],
+];
+$status = (($_GET['success'] ?? null) === '1') ? 'success' : ($_GET['error'] ?? null);
 ?>
 
-<div class="space-y-8">
-    <h1 class="text-3xl font-bold">Create Photo</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div><?php BrowseComponent::render(); ?></div>
-        <div><?php WebcamCaptureComponent::render(); ?></div>
-        <div class="sm:col-span-2 lg:col-span-1"><?php PreviewComponent::render(); ?></div>
+<?php if (is_string($status) && isset($statusMessages[$status])): ?>
+    <div class="alert alert-<?= htmlspecialchars($statusMessages[$status][0]) ?> mb-6" role="<?= $statusMessages[$status][0] === 'error' ? 'alert' : 'status' ?>">
+        <span><?= htmlspecialchars($statusMessages[$status][1]) ?></span>
     </div>
-    <?php UnpublishedHistoryComponent::render(); ?>
+<?php endif; ?>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold tracking-tight">Create a photo</h1>
+        <p class="mt-2 max-w-2xl text-base-content/70">Choose an image, add a sticker, then save it to your drafts.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <section aria-labelledby="source-title" class="space-y-4">
+            <h2 id="source-title" class="text-lg font-semibold">1. Choose a photo</h2>
+            <?php BrowseComponent::render(); ?>
+            <?php WebcamCaptureComponent::render(); ?>
+        </section>
+
+        <section aria-labelledby="edit-title">
+            <h2 id="edit-title" class="mb-4 text-lg font-semibold">2. Preview and edit</h2>
+            <?php PreviewComponent::render(); ?>
+        </section>
+    </div>
+
+    <section id="draft-photos" aria-label="Draft photos">
+        <?php UnpublishedHistoryComponent::render(); ?>
+    </section>
 </div>
 
 <?php BrowseComponent::renderScripts(); ?>

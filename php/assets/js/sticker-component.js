@@ -22,9 +22,11 @@ class StickerComponent {
 
 		document.querySelectorAll('.sticker-btn').forEach(btn => {
 			btn.classList.remove('ring-2', 'ring-primary');
+			btn.setAttribute('aria-pressed', 'false');
 		});
 
 		buttonElement.classList.add('ring-2', 'ring-primary');
+		buttonElement.setAttribute('aria-pressed', 'true');
 
 		window.selectedSticker = stickerName;
 
@@ -61,6 +63,7 @@ class StickerComponent {
 
 		document.querySelectorAll('.sticker-btn').forEach(btn => {
 			btn.classList.remove('ring-2', 'ring-primary');
+			btn.setAttribute('aria-pressed', 'false');
 		});
 
 		this.updatePreviewWithSticker();
