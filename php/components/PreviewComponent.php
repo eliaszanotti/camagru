@@ -23,6 +23,7 @@ class PreviewComponent
                     </div>
                 </div>
                 <form id="savePostForm">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(AuthMiddleware::getCSRFToken(), ENT_QUOTES, 'UTF-8'); ?>">
                     <div class="flex flex-col-reverse gap-3 border-t border-base-300 pt-4 sm:flex-row sm:items-center sm:justify-between">
                         <button type="button" id="discardBtn" class="btn btn-ghost" disabled>Start over</button>
                         <button type="submit" id="saveBtn" class="btn btn-primary" disabled>Save to drafts</button>

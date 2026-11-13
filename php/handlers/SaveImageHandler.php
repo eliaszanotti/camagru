@@ -15,6 +15,8 @@ try {
         exit;
     }
 
+    AuthMiddleware::requireCSRF();
+
     $userId = AuthMiddleware::getUserId();
 
     // Validate input

@@ -1,10 +1,7 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+AuthMiddleware::requireAuth();
+AuthMiddleware::requireCSRF();
 require_once 'models/Comment.php';
 
 $commentModel = new Comment();

@@ -25,6 +25,8 @@ class PostHandler
             exit;
         }
 
+        AuthMiddleware::requireCSRF();
+
         $userId = AuthMiddleware::getUserId();
         $imageData = $_POST['image_data'] ?? '';
         $caption = $_POST['caption'] ?? '';

@@ -27,6 +27,8 @@ class ShareHandler
             return;
         }
 
+        AuthMiddleware::requireCSRF();
+
         $userId = AuthMiddleware::getUserId();
         $postId = (int)($_POST['post_id'] ?? 0);
         $caption = $_POST['caption'] ?? '';

@@ -11,6 +11,7 @@ if (!$postId) {
 }
 
 require_once 'models/Post.php';
+require_once 'components/Fieldset.php';
 $postModel = new Post();
 $post = $postModel->findById($postId);
 
@@ -32,6 +33,7 @@ require_once 'includes/header.php';
         <div class="space-y-4">
             <h2 class="text-xl font-semibold">Post Details</h2>
             <form method="POST" action="handlers/ShareHandler.php" class="space-y-6" id="share-form">
+                <?php Fieldset::csrfToken(); ?>
                 <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Caption</legend>
                     <textarea name="caption" class="textarea w-full"

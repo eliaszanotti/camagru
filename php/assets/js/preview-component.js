@@ -65,6 +65,12 @@ class PreviewComponent {
 		form.action = 'handlers/PostHandler.php';
 		form.style.display = 'none';
 
+		const csrfInput = document.createElement('input');
+		csrfInput.type = 'hidden';
+		csrfInput.name = 'csrf_token';
+		csrfInput.value = document.querySelector('#savePostForm input[name="csrf_token"]')?.value || '';
+		form.appendChild(csrfInput);
+
 		const imageInput = document.createElement('input');
 		imageInput.type = 'hidden';
 		imageInput.name = 'image_data';

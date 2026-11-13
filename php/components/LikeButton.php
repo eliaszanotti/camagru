@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/Like.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
 class LikeButton
 {
@@ -27,6 +28,7 @@ class LikeButton
         if ($this->userId > 0) {
             return "
                 <form method='POST' action='like.php' class='inline'>
+                    <input type='hidden' name='csrf_token' value='" . htmlspecialchars(AuthMiddleware::getCSRFToken(), ENT_QUOTES, 'UTF-8') . "'>
                     <input type='hidden' name='post_id' value='{$this->postId}'>
                     <input type='hidden' name='action' value='" . ($this->isLiked ? 'unlike' : 'like') . "'>
                     <button type='submit' class='btn {$btnClass}'>

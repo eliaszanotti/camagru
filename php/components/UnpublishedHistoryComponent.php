@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 class UnpublishedHistoryComponent
 {
     public static function render(): void
@@ -55,6 +56,7 @@ class UnpublishedHistoryComponent
             </div>
         </div>
         <script>
+            const deletePostCsrfToken = <?= json_encode(AuthMiddleware::getCSRFToken(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
             let postIdToDelete = null;
 
             function openDeletePostDialog(postId) {
@@ -72,7 +74,7 @@ class UnpublishedHistoryComponent
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
-                        body: 'post_id=' + postIdToDelete
+                        body: 'post_id=' + encodeURIComponent(postIdToDelete) + '&csrf_token=' + encodeURIComponent(deletePostCsrfToken)
                     })
                     .then(response => response.json())
                     .then(data => {
