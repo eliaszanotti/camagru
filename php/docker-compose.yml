@@ -1,8 +1,29 @@
 services:
+    db:
+        image: postgres:latest
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: camagru
+            POSTGRES_USER: camagru
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in php/.env}
+        volumes:
+            - postgres_data:/var/lib/postgresql
+            - ./database/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U camagru -d camagru"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        networks:
+            - camagru-network
+
     php:
         build:
             context: .
             dockerfile: Dockerfile
+        depends_on:
+            db:
+                condition: service_healthy
         ports:
             - "8080:80"
         volumes:
@@ -17,6 +38,11 @@ services:
             - SMTP_PASS=${SMTP_PASS}
             - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL:-no-reply@camagru.com}
             - SMTP_FROM_NAME=${SMTP_FROM_NAME:-Camagru}
+        networks:
+            - camagru-network
+
+volumes:
+    postgres_data:
 
 networks:
     camagru-network:
