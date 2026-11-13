@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/handlers/ForgotPasswordHandler.php';
+require_once __DIR__ . '/components/Fieldset.php';
 
 $forgotPasswordHandler = new ForgotPasswordHandler();
 $formService = $forgotPasswordHandler->getFormService();
@@ -29,6 +30,7 @@ $pageTitle = 'Forgot Password - Camagru';
 
             <?php if ($forgotPasswordHandler->shouldShowForm()): ?>
                 <form method="POST" novalidate>
+                    <?php Fieldset::csrfToken(); ?>
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Email</legend>
                         <input type="email" name="email" class="input w-full"

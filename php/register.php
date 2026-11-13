@@ -1,7 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/handlers/RegisterHandler.php';
-require_once __DIR__ . '/components/Fieldset.php';
 
 $registerHandler = new RegisterHandler();
 $formService = $registerHandler->getFormService();
@@ -11,6 +9,8 @@ if ($registerHandler->shouldClearForm()) {
 }
 
 $pageTitle = 'Register - Camagru';
+require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/components/Fieldset.php';
 ?>
 <div class="max-w-md mx-auto">
     <div class="card bg-base-200">

@@ -30,6 +30,8 @@ class ForgotPasswordHandler {
             return;
         }
 
+        AuthMiddleware::requireCSRF();
+
         $data = [
             'email' => trim($_POST['email'] ?? '')
         ];
