@@ -8,6 +8,8 @@ class LoginHandler {
     private AuthController $authController;
     private FormService $formService;
     private string $redirectTo;
+    private bool $loginSucceeded = false;
+    private bool $showResendVerification = false;
 
     public function __construct() {
         AuthMiddleware::requireGuest();
@@ -25,11 +27,15 @@ class LoginHandler {
     }
 
     public function shouldRedirect(): bool {
-        return $this->formService->hasSuccess();
+        return $this->loginSucceeded;
     }
 
     public function getRedirectUrl(): string {
         return $this->redirectTo;
+    }
+
+    public function shouldShowResendVerification(): bool {
+        return $this->showResendVerification;
     }
 
     private function handleRequest(): void {
@@ -44,7 +50,17 @@ class LoginHandler {
         AuthMiddleware::requireCSRF();
 
         if (!AuthMiddleware::checkLoginRateLimit()) {
-            $this->formService->addError('general', 'Too many login attempts. Please try again later.');
+            $this->formService->addError('general', 'Too many attempts. Please try again later.');
+            return;
+        }
+
+        if (($_POST['form_type'] ?? '') === 'resend_verification') {
+            $grant = $_SESSION['verification_resend_grant'] ?? null;
+            if (is_array($grant) && ($grant['expires_at'] ?? 0) >= time()) {
+                $this->authController->resendVerification((int) $grant['user_id']);
+            }
+            unset($_SESSION['verification_resend_grant']);
+            $this->formService->setSuccess('If the account is still unverified, a verification email has been sent. Please wait a minute before requesting another.');
             return;
         }
 
@@ -52,8 +68,16 @@ class LoginHandler {
 
         if (!$result['success']) {
             $this->formService->addErrors($result['errors']);
+            if (!empty($result['resend_verification_user_id'])) {
+                $_SESSION['verification_resend_grant'] = [
+                    'user_id' => (int) $result['resend_verification_user_id'],
+                    'expires_at' => time() + 300
+                ];
+                $this->showResendVerification = true;
+            }
         } else {
             AuthMiddleware::clearLoginRateLimit();
+            $this->loginSucceeded = true;
             $this->formService->setSuccess($result['message']);
         }
     }

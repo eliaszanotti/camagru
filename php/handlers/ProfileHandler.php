@@ -164,6 +164,11 @@ class ProfileHandler {
     }
 
     private function handleResendVerification(): void {
+        if (!AuthMiddleware::checkVerificationEmailRateLimit((int) $this->user['id'])) {
+            $this->formService->addError('general', 'Please wait a minute before requesting another verification email.');
+            return;
+        }
+
         $verificationToken = bin2hex(random_bytes(32));
 
         $updateData = [

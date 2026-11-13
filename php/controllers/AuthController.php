@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../services/EmailService.php';
 require_once __DIR__ . '/../validators/UserValidator.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
 class AuthController {
     private User $userModel;
@@ -91,7 +92,12 @@ class AuthController {
         }
 
         if (!$user['is_verified']) {
-            return ['success' => false, 'errors' => ['general' => 'Please verify your email before logging in']];
+            return [
+                'success' => false,
+                'resend_verification' => true,
+                'resend_verification_user_id' => (int) $user['id'],
+                'errors' => ['general' => 'Please verify your email before logging in']
+            ];
         }
 
   
@@ -99,6 +105,31 @@ class AuthController {
         $this->createSecureSession($user);
 
         return ['success' => true, 'message' => 'Login successful!'];
+    }
+
+    /** Send a fresh verification link when the identifier belongs to an unverified account. */
+    public function resendVerification(int $userId): bool {
+        $user = $this->userModel->findById($userId);
+
+        if (!$user || $user['is_verified']) {
+            return false;
+        }
+
+        if (!AuthMiddleware::checkVerificationEmailRateLimit($userId)) {
+            return false;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        if (!$this->userModel->updateProfile((int) $user['id'], ['email_verification_token' => $token])) {
+            return false;
+        }
+
+        if (!$this->emailService->sendVerificationEmail($user['email'], $user['username'], $token)) {
+            error_log('Failed to resend verification email to: ' . $user['email']);
+            return false;
+        }
+
+        return true;
     }
 
     /**

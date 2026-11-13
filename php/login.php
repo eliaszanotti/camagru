@@ -25,9 +25,17 @@ $pageTitle = 'Login - Camagru';
                     });
                 </script>
             <?php endif; ?>
+            <?php if ($formService->hasSuccess()): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        window.showToast(<?= json_encode($formService->getSuccess(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, 'success');
+                    });
+                </script>
+            <?php endif; ?>
             <form method="POST" novalidate>
                 <?php
                 Fieldset::csrfToken();
+                Fieldset::formType('login');
                 Fieldset::loginIdentifier();
                 Fieldset::password();
                 ?>
@@ -35,6 +43,15 @@ $pageTitle = 'Login - Camagru';
                     <?php Fieldset::submit('Sign In'); ?>
                 </div>
             </form>
+            <?php if ($loginHandler->shouldShowResendVerification()): ?>
+                <form method="POST" class="text-center">
+                    <?php
+                    Fieldset::csrfToken();
+                    Fieldset::formType('resend_verification');
+                    ?>
+                    <button type="submit" class="link link-primary">Resend verification email</button>
+                </form>
+            <?php endif; ?>
             <div class="divider">OR</div>
             <div class="space-y-2 text-center">
                 <p>

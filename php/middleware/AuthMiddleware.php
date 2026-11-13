@@ -284,6 +284,35 @@ class AuthMiddleware {
         }
     }
 
+    /** Limit verification email sends per account, even when requests come from different IPs. */
+    public static function checkVerificationEmailRateLimit(int $userId): bool {
+        $cooldownSeconds = 60;
+        $rateLimitFile = sys_get_temp_dir() . '/camagru_verification_rate_limit_' . $userId;
+        $handle = fopen($rateLimitFile, 'c+');
+
+        if ($handle === false || !flock($handle, LOCK_EX)) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+            return false;
+        }
+
+        $lastSentAt = (int) trim(stream_get_contents($handle));
+        if (time() - $lastSentAt < $cooldownSeconds) {
+            flock($handle, LOCK_UN);
+            fclose($handle);
+            return false;
+        }
+
+        ftruncate($handle, 0);
+        rewind($handle);
+        fwrite($handle, (string) time());
+        fflush($handle);
+        flock($handle, LOCK_UN);
+        fclose($handle);
+        return true;
+    }
+
     /**
      * Check if user is logged in
      */
