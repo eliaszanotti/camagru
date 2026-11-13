@@ -28,14 +28,14 @@ $status = (($_GET['success'] ?? null) === '1') ? 'success' : ($_GET['error'] ?? 
         <p class="mt-2 max-w-2xl text-base-content/70">Choose an image, add a sticker, then save it to your drafts.</p>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <section aria-labelledby="source-title" class="space-y-4">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <section aria-labelledby="source-title" class="space-y-4 lg:col-span-1 lg:flex lg:h-full lg:flex-col">
             <h2 id="source-title" class="text-lg font-semibold">1. Choose a photo</h2>
             <?php BrowseComponent::render(); ?>
             <?php WebcamCaptureComponent::render(); ?>
         </section>
 
-        <section aria-labelledby="edit-title">
+        <section aria-labelledby="edit-title" class="lg:col-span-2">
             <h2 id="edit-title" class="mb-4 text-lg font-semibold">2. Preview and edit</h2>
             <?php PreviewComponent::render(); ?>
         </section>

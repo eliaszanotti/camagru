@@ -8,24 +8,18 @@ class PreviewComponent
 ?>
         <div class="card border border-base-300 bg-base-100">
             <div class="card-body gap-5">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <h3 class="card-title text-base">Your composition</h3>
-                    <p id="editorHint" class="text-sm text-base-content/60">Choose a photo to begin.</p>
-                </div>
-                <div class="grid gap-5 md:grid-cols-2 md:items-start">
-                    <div id="previewArea" class="flex aspect-square w-full items-center justify-center overflow-hidden rounded-box border border-base-300 bg-base-200">
+                <div class="preview-editor-layout flex flex-col gap-5">
+                    <div id="previewArea" class="flex aspect-square w-full self-start items-center justify-center overflow-hidden rounded-box border border-base-300 bg-base-200">
                         <div class="max-w-xs px-6 text-center">
                             <span class="mb-3 block text-4xl" aria-hidden="true">▧</span>
                             <p class="font-medium">Your photo will appear here</p>
                             <p class="mt-1 text-sm text-base-content/60">Upload an image or take one with your camera.</p>
                         </div>
                     </div>
-                    <div class="space-y-3">
-                        <div>
-                            <h4 class="font-semibold">Add a sticker</h4>
-                            <p class="mt-1 text-sm text-base-content/60">Choose one to add it to your photo.</p>
+                    <div class="relative min-h-0">
+                        <div class="absolute inset-0 h-full min-h-0 overflow-y-auto">
+                            <?php StickerComponent::render(); ?>
                         </div>
-                        <?php StickerComponent::render(); ?>
                     </div>
                 </div>
                 <form id="savePostForm">

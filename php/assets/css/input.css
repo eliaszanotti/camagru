@@ -37,3 +37,11 @@
     --depth: 0;
     --noise: 0;
 }
+
+@media (min-width: 48rem) {
+    .preview-editor-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 4.5rem;
+        align-items: stretch;
+    }
+}

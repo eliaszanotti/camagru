@@ -9,11 +9,10 @@ class WebcamCaptureComponent
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h3 class="card-title text-base">Use your camera</h3>
-                        <p class="mt-1 text-sm text-base-content/70">Camera access is requested by your browser.</p>
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <div class="aspect-video overflow-hidden rounded-box bg-base-300">
+                    <div class="aspect-square overflow-hidden rounded-box bg-base-300">
                         <video id="webcam" class="h-full w-full object-cover" autoplay playsinline></video>
                         <canvas id="canvas" class="hidden"></canvas>
                     </div>

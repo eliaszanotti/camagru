@@ -16,11 +16,11 @@ class StickerComponent
 	public static function render(): void
 	{
 ?>
-		<div class="grid grid-cols-3 gap-2">
+		<div class="grid grid-cols-1 justify-items-center gap-2">
 			<?php foreach (self::$stickers as $sticker): ?>
 				<button
 					type="button"
-					class="sticker-btn aspect-square rounded-box bg-base-300 hover:bg-base-300/80 transition-all"
+					class="sticker-btn flex h-16 w-16 cursor-pointer items-center justify-center rounded-box bg-base-300 transition-all hover:bg-base-300/80 disabled:cursor-not-allowed"
 					disabled
 					aria-pressed="false"
 					aria-label="Add <?= htmlspecialchars(str_replace('-', ' ', pathinfo($sticker, PATHINFO_FILENAME))) ?> sticker"
@@ -28,7 +28,7 @@ class StickerComponent
 					<img
 						src="assets/stickers/<?= htmlspecialchars($sticker) ?>"
 						alt="<?= htmlspecialchars(pathinfo($sticker, PATHINFO_FILENAME)) ?>"
-						class="w-full h-full object-contain p-1">
+						class="h-12 w-12 object-contain">
 				</button>
 			<?php endforeach; ?>
 		</div>
