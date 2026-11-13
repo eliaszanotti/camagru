@@ -52,19 +52,14 @@ class ShareHandler
         ];
 
         if ($this->postModel->update($postId, $updateData)) {
-            $this->jsonResponse(true, 'Photo updated successfully!', true);
+            $this->jsonResponse(true, 'Photo updated successfully!');
         } else {
             $this->jsonResponse(false, 'Failed to update photo');
         }
     }
 
-    private function jsonResponse(bool $success, string $message, bool $redirect = false): void
+    private function jsonResponse(bool $success, string $message): void
     {
-        if ($success && $redirect) {
-            header('Location: /');
-            exit;
-        }
-
         echo json_encode([
             'success' => $success,
             'message' => $message

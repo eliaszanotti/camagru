@@ -31,12 +31,12 @@ require_once 'includes/header.php';
         </div>
         <div class="space-y-4">
             <h2 class="text-xl font-semibold">Post Details</h2>
-            <form method="POST" action="handlers/ShareHandler.php" class="space-y-6">
+            <form method="POST" action="handlers/ShareHandler.php" class="space-y-6" id="share-form">
                 <fieldset class="fieldset w-full">
                     <legend class="fieldset-legend">Caption</legend>
                     <textarea name="caption" class="textarea w-full"
                         placeholder="Add a caption to your photo..."
-                        rows="4"><?php echo htmlspecialchars($post['caption'] ?? ''); ?></textarea>
+                        rows="4" id="post-caption"><?php echo htmlspecialchars($post['caption'] ?? ''); ?></textarea>
                 </fieldset>
 
                 <fieldset class="fieldset">
@@ -47,10 +47,6 @@ require_once 'includes/header.php';
                 </fieldset>
 
                 <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-
-                <div id="shareAlerts">
-                    <?php require_once __DIR__ . '/includes/alerts.php'; ?>
-                </div>
 
                 <div class="flex justify-end gap-4">
                     <a href="gallery.php" class="btn btn-ghost">
@@ -64,5 +60,41 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+    const shareForm = document.getElementById('share-form');
+
+    shareForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const submitButton = shareForm.querySelector('#shareBtn');
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+
+        try {
+            const response = await fetch(shareForm.action, {
+                method: 'POST',
+                body: new FormData(shareForm),
+                headers: { Accept: 'application/json' },
+            });
+            const result = await response.json();
+            window.showToast(result.message, result.success ? 'success' : 'error');
+        } catch (error) {
+            window.showToast('The post could not be updated. Please try again.', 'error');
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+    });
+
+    document.getElementById('post-caption')?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+            event.preventDefault();
+            event.currentTarget.form?.requestSubmit();
+        }
+    });
+</script>
 
 <?php require_once 'includes/footer.php'; ?>
