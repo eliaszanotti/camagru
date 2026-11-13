@@ -39,7 +39,11 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                 $date = date('M j, Y', strtotime($post['created_at']));
                 $userId = $_SESSION['user_id'] ?? 0;
                 ?>
-                <div class="card bg-base-200">
+                <div class="card bg-base-200 cursor-pointer"
+                    role="link"
+                    tabindex="0"
+                    aria-label="View <?php echo htmlspecialchars($caption); ?>"
+                    data-href="post.php?id=<?php echo (int) $post['id']; ?>">
                     <figure>
                         <img src="<?php echo htmlspecialchars($imageSrc); ?>"
                             alt="<?php echo htmlspecialchars($caption); ?>"
@@ -113,3 +117,22 @@ $totalPages = ceil($totalPosts / $postsPerPage);
         <?php endif; ?>
     <?php endif; ?>
 </section>
+
+<script>
+    document.querySelectorAll('.card[data-href]').forEach((card) => {
+        card.addEventListener('click', (event) => {
+            if (event.target.closest('button, a')) {
+                return;
+            }
+
+            window.location.href = card.dataset.href;
+        });
+
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                window.location.href = card.dataset.href;
+            }
+        });
+    });
+</script>
