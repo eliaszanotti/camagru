@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+AuthMiddleware::requireAuth();
+
 $pageTitle = 'Create Photo';
 require_once 'components/BrowseComponent.php';
 require_once 'components/WebcamCaptureComponent.php';

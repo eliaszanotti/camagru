@@ -50,6 +50,8 @@ class CommentHandler {
             return;
         }
 
+        AuthMiddleware::requireCSRF();
+
         $content = trim($_POST['content'] ?? '');
 
         // Validate comment

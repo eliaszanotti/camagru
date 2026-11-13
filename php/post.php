@@ -1,9 +1,10 @@
 <?php
 $pageTitle = 'Photo Details';
-require_once 'includes/header.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once 'models/Like.php';
 require_once 'handlers/CommentHandler.php';
 require_once 'components/LikeButton.php';
+require_once 'components/Fieldset.php';
 
 $postId = (int)($_GET['id'] ?? 0);
 
@@ -16,6 +17,8 @@ $commentHandler = new CommentHandler($postId);
 $formService = $commentHandler->getFormService();
 $post = $commentHandler->getPost();
 $comments = $commentHandler->getComments();
+
+require_once 'includes/header.php';
 
 $likeModel = new Like();
 $likesCount = $likeModel->getCount($postId);
@@ -87,6 +90,7 @@ if ($commentHandler->shouldClearForm()) {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="space-y-4">
                         <form method="POST" class="space-y-4" id="comment-form">
+                            <?php Fieldset::csrfToken(); ?>
                             <div class="form-control">
                                 <textarea name="content" class="textarea textarea-bordered w-full"
                                     placeholder="Add a comment..." maxlength="500"

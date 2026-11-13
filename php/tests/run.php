@@ -1,12 +1,21 @@
 <?php
 
 require_once __DIR__ . '/../validators/UserValidator.php';
+require_once __DIR__ . '/Support/PageTestSupport.php';
 
 $testFiles = [
     __DIR__ . '/unit/UserValidatorTest.php',
     __DIR__ . '/pages/RegisterPageTest.php',
     __DIR__ . '/pages/LoginPageTest.php',
     __DIR__ . '/pages/ForgotPasswordPageTest.php',
+    __DIR__ . '/pages/VerifyPageTest.php',
+    __DIR__ . '/pages/ResetPasswordPageTest.php',
+    __DIR__ . '/pages/ProfilePageTest.php',
+    __DIR__ . '/pages/HomePageTest.php',
+    __DIR__ . '/pages/PostPageTest.php',
+    __DIR__ . '/pages/CreatePageTest.php',
+    __DIR__ . '/pages/GalleryPageTest.php',
+    __DIR__ . '/pages/SharePageTest.php',
 ];
 
 $tests = [];
