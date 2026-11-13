@@ -26,6 +26,20 @@ if ($commentHandler->shouldClearForm()) {
 }
 ?>
 
+<?php if ($formService->hasErrors()): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.showToast(<?= json_encode(implode(' ', $formService->getErrors()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, 'error');
+        });
+    </script>
+<?php elseif ($formService->hasSuccess()): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.showToast(<?= json_encode($formService->getSuccess(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+        });
+    </script>
+<?php endif; ?>
+
 <div class="grid md:grid-cols-[1fr_2fr] gap-8">
     <div class="space-y-4">
         <a href="index.php" class="btn btn-ghost">Back to Home</a>
@@ -59,19 +73,11 @@ if ($commentHandler->shouldClearForm()) {
                 <h2 class="card-title">Comments</h2>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="space-y-4">
-                        <?php require_once __DIR__ . '/includes/alerts.php'; ?>
-
-                        <?php if ($formService->getError('content')): ?>
-                            <div class="alert alert-error mb-4">
-                                <span><?php echo htmlspecialchars($formService->getError('content')); ?></span>
-                            </div>
-                        <?php endif; ?>
-
-                        <form method="POST" class="space-y-4">
+                        <form method="POST" class="space-y-4" id="comment-form">
                             <div class="form-control">
                                 <textarea name="content" class="textarea textarea-bordered w-full"
                                     placeholder="Add a comment..." maxlength="500"
-                                    required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
+                                    required id="comment-content"><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
                             </div>
                             <div class="flex justify-end">
                                 <button type="submit" class="btn btn-primary">Post Comment</button>
@@ -104,10 +110,23 @@ if ($commentHandler->shouldClearForm()) {
                                         <form method="POST" action="delete-comment.php" class="inline">
                                             <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
                                             <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
-                                            <button type="submit" class="btn btn-error"
-                                                onclick="return confirm('Delete this comment?')">
+                                            <button type="button" class="btn btn-error btn-outline"
+                                                onclick="document.getElementById('delete-comment-<?php echo $comment['id']; ?>').showModal()">
                                                 Delete
                                             </button>
+                                            <dialog id="delete-comment-<?php echo $comment['id']; ?>" class="modal"
+                                                onclick="if (event.target === this) this.close()"
+                                                onkeydown="if (event.key === 'Enter') { event.preventDefault(); this.querySelector('[data-confirm-delete]').click(); }">
+                                                <div class="modal-box">
+                                                    <h3 class="text-lg font-bold">Delete this comment?</h3>
+                                                    <p class="py-4 text-base-content/70">This action cannot be undone.</p>
+                                                    <div class="modal-action">
+                                                        <button type="button" class="btn btn-ghost"
+                                                            onclick="this.closest('dialog').close()">Cancel</button>
+                                                        <button type="submit" class="btn btn-error" data-confirm-delete>Delete comment</button>
+                                                    </div>
+                                                </div>
+                                            </dialog>
                                         </form>
                                     <?php endif; ?>
                                 </div>
@@ -120,5 +139,14 @@ if ($commentHandler->shouldClearForm()) {
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('comment-content')?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+            event.preventDefault();
+            event.currentTarget.form?.requestSubmit();
+        }
+    });
+</script>
 
 <?php require_once 'includes/footer.php'; ?>

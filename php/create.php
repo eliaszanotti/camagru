@@ -17,9 +17,11 @@ $status = (($_GET['success'] ?? null) === '1') ? 'success' : ($_GET['error'] ?? 
 ?>
 
 <?php if (is_string($status) && isset($statusMessages[$status])): ?>
-    <div class="alert alert-<?= htmlspecialchars($statusMessages[$status][0]) ?> mb-6" role="<?= $statusMessages[$status][0] === 'error' ? 'alert' : 'status' ?>">
-        <span><?= htmlspecialchars($statusMessages[$status][1]) ?></span>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.showToast(<?= json_encode($statusMessages[$status][1], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, <?= json_encode($statusMessages[$status][0]) ?>);
+        });
+    </script>
 <?php endif; ?>
 
 <div class="space-y-8">

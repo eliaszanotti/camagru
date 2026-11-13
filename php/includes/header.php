@@ -15,15 +15,13 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru - <?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) : 'Home'; ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/toast.js" defer></script>
 </head>
 
 <body>
+    <div id="toast-container" class="toast z-50" aria-live="polite" aria-atomic="false"></div>
     <?php if ($showLogoutMessage): ?>
-        <div class="toast toast-top toast-center z-50">
-            <div class="alert alert-success">
-                <span>You have been successfully logged out.</span>
-            </div>
-        </div>
+        <script>document.addEventListener('DOMContentLoaded', function () { window.showToast('You have been successfully logged out.', 'success'); });</script>
     <?php endif; ?>
 
     <div class="w-full">
