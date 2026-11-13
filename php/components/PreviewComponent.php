@@ -21,8 +21,8 @@ class PreviewComponent
                     </div>
                     <form id="savePostForm">
                         <div class="form-control grid grid-cols-2 gap-4">
-                            <button type="button" id="discardBtn" class="btn btn-ghost btn-block" disabled>Discard</button>
-                            <button type="submit" id="saveBtn" class="btn btn-primary btn-block" disabled>Save to History</button>
+                            <button type="button" id="discardBtn" class="btn btn-ghost" disabled>Discard</button>
+                            <button type="submit" id="saveBtn" class="btn btn-primary px-2" disabled>Save</button>
                         </div>
                     </form>
                 </div>
