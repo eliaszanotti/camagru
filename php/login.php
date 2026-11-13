@@ -18,7 +18,13 @@ $pageTitle = 'Login - Camagru';
     <div class="card bg-base-200">
         <div class="card-body space-y-4">
             <h1 class="card-title">Login</h1>
-            <?php require_once __DIR__ . '/includes/alerts.php'; ?>
+            <?php if ($formService->hasErrors()): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        window.showToast(<?= json_encode(implode("\n", $formService->getErrors()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, 'error');
+                    });
+                </script>
+            <?php endif; ?>
             <form method="POST" novalidate>
                 <?php
                 Fieldset::csrfToken();

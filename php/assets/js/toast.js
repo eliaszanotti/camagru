@@ -12,6 +12,7 @@
 
         const text = document.createElement('span');
         text.textContent = message;
+        text.style.whiteSpace = 'pre-line';
 
         const closeButton = document.createElement('button');
         closeButton.type = 'button';

@@ -13,7 +13,19 @@ $pageTitle = 'Forgot Password - Camagru';
         <div class="card-body space-y-4">
             <h1 class="card-title">Forgot Password</h1>
             <p class="text-base-content/70">Enter your email address and we'll send you a link to reset your password.</p>
-            <?php require_once __DIR__ . '/includes/alerts.php'; ?>
+            <?php if ($formService->hasErrors()): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        window.showToast(<?= json_encode(implode("\n", $formService->getErrors()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, 'error');
+                    });
+                </script>
+            <?php elseif ($formService->hasSuccess()): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        window.showToast(<?= json_encode($formService->getSuccess(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, 'success');
+                    });
+                </script>
+            <?php endif; ?>
 
             <?php if ($forgotPasswordHandler->shouldShowForm()): ?>
                 <form method="POST" novalidate>
