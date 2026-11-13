@@ -2144,6 +2144,12 @@
     }
   }
 }
+.post-title-truncate {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 @media (min-width: 48rem) {
   .preview-editor-layout {
     display: grid;

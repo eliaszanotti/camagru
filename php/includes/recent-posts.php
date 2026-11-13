@@ -50,7 +50,7 @@ $totalPages = ceil($totalPosts / $postsPerPage);
                             class="w-full aspect-square object-cover object-center">
                     </figure>
                     <div class="card-body space-y-2">
-                        <div class="card-title"><?php echo htmlspecialchars($caption); ?></div>
+                        <div class="card-title post-title-truncate"><?php echo htmlspecialchars($caption); ?></div>
                         <div class="flex items-center gap-2 text-sm text-base-content/50">
                             <span>By <?php echo htmlspecialchars($post['username']); ?></span>
                             <span>•</span>

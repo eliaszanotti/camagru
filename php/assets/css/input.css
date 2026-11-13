@@ -3,6 +3,13 @@
     themes: false;
 }
 
+.post-title-truncate {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 @plugin "daisyui/theme" {
     name: "dark";
     default: false;
