@@ -20,6 +20,8 @@ $comments = $commentHandler->getComments();
 $likeModel = new Like();
 $likesCount = $likeModel->getCount($postId);
 $isLiked = isset($_SESSION['user_id']) ? $likeModel->isLiked($postId, $_SESSION['user_id']) : false;
+$flashToast = $_SESSION['flash_toast'] ?? null;
+unset($_SESSION['flash_toast']);
 
 if ($commentHandler->shouldClearForm()) {
     unset($_POST['content']);
@@ -36,6 +38,17 @@ if ($commentHandler->shouldClearForm()) {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             window.showToast(<?= json_encode($formService->getSuccess(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+        });
+    </script>
+<?php endif; ?>
+
+<?php if ($flashToast && isset($flashToast['message'], $flashToast['type'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.showToast(
+                <?= json_encode($flashToast['message'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+                <?= json_encode($flashToast['type'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+            );
         });
     </script>
 <?php endif; ?>

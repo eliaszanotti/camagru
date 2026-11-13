@@ -27,7 +27,7 @@ class UnpublishedHistoryComponent
                                     alt="Photo by <?php echo htmlspecialchars($post['username'] ?? 'Unknown'); ?>"
                                     class="w-full aspect-square object-cover rounded-box">
                                 <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="deletePost(<?php echo $post['id']; ?>)"
+                                    <button onclick="openDeletePostDialog(<?php echo (int) $post['id']; ?>)"
                                         class="btn btn-error">
                                         Delete
                                     </button>
@@ -40,31 +40,52 @@ class UnpublishedHistoryComponent
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+                <dialog id="delete-draft-photo-dialog" class="modal"
+                    onclick="if (event.target === this) this.close()"
+                    onkeydown="if (event.key === 'Enter') { event.preventDefault(); this.querySelector('[data-confirm-delete]').click(); }">
+                    <div class="modal-box">
+                        <h3 class="text-lg font-bold">Delete this photo?</h3>
+                        <p class="py-4 text-base-content/70">This action cannot be undone.</p>
+                        <div class="modal-action">
+                            <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+                            <button type="button" class="btn btn-error" data-confirm-delete onclick="confirmDeletePost()">Delete photo</button>
+                        </div>
+                    </div>
+                </dialog>
             </div>
         </div>
         <script>
-            function deletePost(postId) {
-                if (confirm('Delete this photo?')) {
-                    fetch('delete-post.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: 'post_id=' + postId
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            } else {
-                                alert('Failed to delete photo');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Failed to delete photo');
-                        });
+            let postIdToDelete = null;
+
+            function openDeletePostDialog(postId) {
+                postIdToDelete = postId;
+                document.getElementById('delete-draft-photo-dialog').showModal();
+            }
+
+            function confirmDeletePost() {
+                if (postIdToDelete === null) {
+                    return;
                 }
+
+                fetch('delete-post.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'post_id=' + postIdToDelete
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Failed to delete photo');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to delete photo');
+                    });
             }
         </script>
 <?php
