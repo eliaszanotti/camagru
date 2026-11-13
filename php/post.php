@@ -98,8 +98,8 @@ if ($commentHandler->shouldClearForm()) {
                         </form>
                     </div>
                 <?php else: ?>
-                    <div class="alert alert-info">
-                        <p>Please <a href="login.php" class="link link-primary">login</a> to add comments.</p>
+                    <div class="alert alert-primary">
+                        <p>Please <a href="login.php" class="link">login</a> to add comments.</p>
                     </div>
                 <?php endif; ?>
 
