@@ -20,7 +20,11 @@ class GalleryComponent
             <?php else: ?>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     <?php foreach ($userPosts as $post): ?>
-                        <div class="card bg-base-200">
+                        <div class="card bg-base-200 cursor-pointer"
+                            role="link"
+                            tabindex="0"
+                            aria-label="<?php echo $post['is_published'] ? 'Edit photo' : 'Share photo'; ?>"
+                            data-href="share.php?post=<?php echo (int) $post['id']; ?>">
                             <figure class="aspect-square">
                                 <img src="<?php echo htmlspecialchars($post['image_path'] ?? ''); ?>"
                                     alt="Photo by <?php echo htmlspecialchars($post['username'] ?? 'Unknown'); ?>"
@@ -44,7 +48,7 @@ class GalleryComponent
                                     </button>
                                     <a href="share.php?post=<?php echo $post['id']; ?>"
                                         class="btn btn-primary btn-sm">
-                                        Share
+                                        <?php echo $post['is_published'] ? 'Edit' : 'Share'; ?>
                                     </a>
                                 </div>
                             </div>
@@ -54,6 +58,23 @@ class GalleryComponent
             <?php endif; ?>
         </div>
         <script>
+            document.querySelectorAll('.card[data-href]').forEach((card) => {
+                card.addEventListener('click', (event) => {
+                    if (event.target.closest('button, a')) {
+                        return;
+                    }
+
+                    window.location.href = card.dataset.href;
+                });
+
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        window.location.href = card.dataset.href;
+                    }
+                });
+            });
+
             function deletePost(postId) {
                 if (confirm('Delete this photo?')) {
                     fetch('delete-post.php', {
