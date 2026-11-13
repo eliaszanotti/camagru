@@ -13,12 +13,12 @@ require_once __DIR__ . '/../../components/Fieldset.php';
                 <span class="text-base-content/50">Email:</span>
                 <span><?php echo htmlspecialchars($user['email']); ?></span>
             </div>
-            <div class="flex flex-col justify-between items-center">
+            <div class="flex justify-between items-center gap-3">
                 <span class="text-base-content/50">Email Verified:</span>
-                <div class="flex gap-2">
+                <div class="flex items-center gap-2">
                     <span class="badge <?php echo ($user['is_verified'] ?? false) ? 'badge-success' : 'badge-error'; ?>"><?php echo ($user['is_verified'] ?? false) ? 'Verified' : 'Not verified'; ?></span>
                     <?php if (!($user['is_verified'] ?? false)): ?>
-                        <form method="POST" class="mt-2">
+                        <form method="POST" class="m-0">
                             <?php
                             Fieldset::csrfToken();
                             Fieldset::formType('resend_verification');
