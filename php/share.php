@@ -53,12 +53,12 @@ require_once 'includes/header.php';
                 </div>
 
                 <div class="flex justify-end gap-4">
+                    <a href="gallery.php" class="btn btn-ghost">
+                        Cancel
+                    </a>
                     <button type="submit" class="btn btn-primary" id="shareBtn">
                         Update Post
                     </button>
-                    <a href="create.php" class="btn btn-ghost">
-                        Cancel
-                    </a>
                 </div>
             </form>
         </div>
