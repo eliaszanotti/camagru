@@ -76,6 +76,44 @@ return [
         }
     },
 
+    'rejects a username that belongs to another account' => static function (): void {
+        $user = PageTestSupport::createUser();
+        $otherUser = PageTestSupport::createUser();
+
+        try {
+            $cookie = PageTestSupport::loginAs($user['username'], $user['password']);
+            $response = PageTestSupport::postWithCsrf(
+                'profile.php',
+                ['form_type' => 'profile_username', 'username' => $otherUser['username']],
+                $cookie
+            );
+
+            PageTestSupport::assertContains('Username is already taken', $response['body']);
+        } finally {
+            PageTestSupport::deleteUser($user['id']);
+            PageTestSupport::deleteUser($otherUser['id']);
+        }
+    },
+
+    'rejects an email address that belongs to another account without sending email' => static function (): void {
+        $user = PageTestSupport::createUser();
+        $otherUser = PageTestSupport::createUser();
+
+        try {
+            $cookie = PageTestSupport::loginAs($user['username'], $user['password']);
+            $response = PageTestSupport::postWithCsrf(
+                'profile.php',
+                ['form_type' => 'profile_email', 'email' => $otherUser['email']],
+                $cookie
+            );
+
+            PageTestSupport::assertContains('Email is already registered', $response['body']);
+        } finally {
+            PageTestSupport::deleteUser($user['id']);
+            PageTestSupport::deleteUser($otherUser['id']);
+        }
+    },
+
     'changes the password after checking the current password' => static function (): void {
         $user = PageTestSupport::createUser();
         $newPassword = 'ChangedPagePass2!';
@@ -106,6 +144,28 @@ return [
             );
             PageTestSupport::assertContains('Profile updated successfully!', $response['body']);
             PageTestSupport::loginAs($user['username'], $newPassword);
+        } finally {
+            PageTestSupport::deleteUser($user['id']);
+        }
+    },
+
+    'rejects a new password when its confirmation does not match' => static function (): void {
+        $user = PageTestSupport::createUser();
+
+        try {
+            $cookie = PageTestSupport::loginAs($user['username'], $user['password']);
+            $response = PageTestSupport::postWithCsrf(
+                'profile.php',
+                [
+                    'form_type' => 'password_change',
+                    'current_password' => $user['password'],
+                    'new_password' => 'NewProfilePass2!',
+                    'confirm_password' => 'DifferentProfilePass3!',
+                ],
+                $cookie
+            );
+
+            PageTestSupport::assertContains('Passwords do not match', $response['body']);
         } finally {
             PageTestSupport::deleteUser($user['id']);
         }
@@ -143,6 +203,30 @@ return [
                 'profile.php',
                 'POST',
                 ['form_type' => 'profile_username', 'username' => 'forged_name'],
+                $cookie
+            );
+
+            if ($response['status'] !== 403) {
+                throw new RuntimeException('Expected HTTP 403, got HTTP ' . $response['status'] . '.');
+            }
+        } finally {
+            PageTestSupport::deleteUser($user['id']);
+        }
+    },
+
+    'rejects profile updates with an invalid CSRF token' => static function (): void {
+        $user = PageTestSupport::createUser();
+
+        try {
+            $cookie = PageTestSupport::loginAs($user['username'], $user['password']);
+            $response = PageTestSupport::request(
+                'profile.php',
+                'POST',
+                [
+                    'form_type' => 'profile_username',
+                    'username' => 'forged_name',
+                    'csrf_token' => 'invalid-token',
+                ],
                 $cookie
             );
 
